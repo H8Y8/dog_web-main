@@ -1,0 +1,503 @@
+# 蘇格蘭梗犬舍與寵物服務平台 - 產品需求文件
+
+## 專案概述
+將現有的 React 應用程式完整遷移到 Next.js 14 App Router 架構，確保所有現有功能、動畫、連結、圖片和樣式都完全保持原始狀態。專案包含複雜的互動動畫、輪播功能、滾動效果，以及完整的響應式設計。
+
+## 現有技術棧分析
+
+### 當前使用的技術
+- **框架**: React 18.2.0
+- **路由**: React Router DOM 6.22.1
+- **樣式**: TailwindCSS 3.4.1 (自定義顏色主題)
+- **動畫**: AOS 2.3.4 (Animate on Scroll)
+- **輪播**: Swiper 11.2.4 (含複雜的Ken Burns效果)
+- **圖示**: Heroicons 2.1.1
+- **滾動**: React Scroll 1.9.0
+- **構建**: React Scripts 5.0.1
+
+### 現有組件結構
+```
+src/
+├── components/
+│   ├── Navbar.jsx (複雜的響應式導航)
+│   ├── Footer.jsx
+│   ├── Hero.jsx (含AOS動畫)
+│   ├── HeroSlider.jsx (Swiper輪播+Ken Burns效果)
+│   ├── ScrollText.jsx (複雜的滾動互動動畫)
+│   ├── About.jsx
+│   ├── Contact.jsx
+│   ├── Certificate.jsx
+│   ├── Diary.jsx
+│   ├── Members.jsx
+│   ├── Projects.jsx
+│   ├── Puppies.jsx
+│   └── admin/ (管理後台組件)
+└── pages/
+    ├── HomePage.jsx
+    ├── AboutPage.jsx
+    ├── DiaryPage.jsx
+    ├── PuppiesPage.jsx
+    ├── ContactPage.jsx
+    └── AdminPage.jsx
+```
+
+### 需要新增的組件
+```
+src/
+├── components/
+│   └── Environment.jsx (環境介紹組件)
+└── pages/
+    └── EnvironmentPage.jsx (環境介紹頁面)
+```
+
+### 導航選單調整
+現有導航選單：
+- 關於我們 (/about)
+- 日誌 (/diary)
+- 新生幼犬 (/puppies)
+- 聯絡我們 (/contact)
+
+調整後導航選單：
+- 關於我們 (/about)
+- 環境介紹 (/environment) **[新增]**
+- 日誌 (/diary)
+- 新生幼犬 (/puppies)
+- 聯絡我們 (/contact)
+
+### 現有關鍵功能
+1. **Hero輪播系統**: 使用Swiper.js實現淡入效果和隨機Ken Burns動畫
+2. **滾動互動**: ScrollText組件包含複雜的視差效果和動態點位元標示
+3. **響應式導航**: 桌面版和手機版不同的導航樣式
+4. **自定義顏色系統**: primary、earth、nature色彩主題
+5. **AOS動畫**: 全站滾動動畫效果
+6. **管理後台**: 含認證和內容管理功能
+7. **內容展示**: 關於我們、日誌、新生幼犬、聯絡我們頁面
+
+## 遷移技術需求
+
+### 目標架構
+- **前端**: Next.js 14 App Router
+- **樣式**: TailwindCSS (保持現有配置)
+- **後端**: Supabase (數據庫 + 認證 + 儲存)
+- **部署**: Zeabur
+- **類型**: TypeScript
+
+### 關鍵保持要求
+1. **完全保持現有樣式**: 所有TailwindCSS類別和自定義樣式
+2. **保持所有動畫**: AOS、Swiper、自定義滾動動畫
+3. **保持所有連結**: 路由結構和導航功能
+4. **保持所有圖片**: 圖片路徑和載入方式
+5. **保持響應式設計**: 所有斷點和響應式行為
+
+## 遷移實施計劃
+
+### Phase 1: 基礎架構遷移 (關鍵階段)
+**目標**: 確保所有現有功能在新架構中正常運作
+
+1. **Next.js 專案初始化**
+   - 建立Next.js 14 App Router專案
+   - 配置TypeScript支援
+   - 遷移TailwindCSS配置 (完全保持現有配置)
+   - 遷移所有自定義樣式檔案
+
+2. **依賴項遷移與修正**
+   - **移除**: React Router DOM、React Scroll
+   - **新增**: @supabase/ssr、TypeScript類型定義
+   - **重新配置**: AOS動畫庫 (添加客戶端檢查)
+   - **重新配置**: Swiper.js (添加'use client'指令)
+   - **保持**: Heroicons、TailwindCSS配置
+
+3. **資源遷移**
+   - 遷移所有圖片到public目錄
+   - 保持所有圖片路徑不變
+   - 遷移自定義CSS檔案 (slider.css等)
+
+### Phase 2: Layout 與路由遷移
+**目標**: 建立完整的頁面結構和導航
+
+1. **Layout組件建立**
+   - 建立RootLayout (app/layout.tsx)
+   - 遷移Navbar組件 (完全保持現有功能)
+   - **調整導航選單**: 在現有選單中加入「環境介紹」項目
+   - 遷移Footer組件
+   - 確保AOS初始化正確運作
+
+2. **路由結構建立**
+   - **移除**: 所有React Router相關代碼 (BrowserRouter, Routes, Route, useLocation, useNavigate)
+   - **建立**: App Router頁面結構 (app/page.tsx, app/about/page.tsx等)
+   - **替換**: 所有React Router Link為Next.js Link
+   - **遷移**: 所有頁面組件並確保路由正常
+
+3. **頁面組件遷移**
+   ```
+   app/
+   ├── layout.tsx
+   ├── page.tsx (HomePage)
+   ├── about/page.tsx
+   ├── environment/page.tsx (環境介紹)
+   ├── diary/page.tsx
+   ├── puppies/page.tsx
+   ├── contact/page.tsx
+   └── admin/page.tsx
+   ```
+
+### Phase 3: 複雜組件遷移
+**目標**: 遷移所有複雜的互動組件
+
+1. **Hero與輪播系統**
+   - **遷移Hero組件**: 保持所有AOS動畫，確保useEffect中的AOS初始化
+   - **遷移HeroSlider組件**: 添加'use client'指令，保持Swiper配置
+   - **修正Ken Burns效果**: 確保自定義CSS正確載入
+   - **測試輪播功能**: 驗證SSR和客戶端水合正常
+
+2. **滾動互動組件**
+   - **遷移ScrollText組件**: 添加'use client'指令，移除React Scroll依賴
+   - **替換滾動功能**: 使用原生scrollIntoView或window.scrollTo
+   - **保持動態點位元標示**: 確保滾動監聽在客戶端正常運作
+   - **測試響應式行為**: 驗證所有斷點和互動效果
+
+3. **其他互動組件**
+   - 遷移所有業務組件
+   - **新建環境介紹組件**: 建立Environment.jsx和EnvironmentPage.jsx
+   - 確保所有hover效果和轉場動畫
+   - 測試所有互動功能
+
+### Phase 4: SEO 與效能優化
+**目標**: 增強SEO和載入效能
+
+1. **Next.js SEO功能**
+   - 實作動態metadata
+   - 建立sitemap.xml
+   - 配置robots.txt
+   - 實作結構化數據
+
+2. **效能優化**
+   - 圖片優化 (Next.js Image組件)
+   - 代碼分割配置
+   - 快取策略實作
+   - 載入效能測試
+
+### Phase 5: 後端整合
+**目標**: 整合Supabase作為後端服務
+
+1. **Supabase設置**
+   - 建立Supabase專案
+   - 配置認證系統
+   - 建立數據庫架構
+   - 配置Storage服務
+
+2. **API整合**
+   - 建立Next.js API路由
+   - 實作CRUD功能
+   - 整合認證機制
+   - 實作管理後台功能
+
+### Phase 6: 部署與測試
+**目標**: 部署到生產環境
+
+1. **Zeabur部署**
+   - 配置部署環境
+   - 設定環境變數
+   - 配置自動部署
+   - SSL證書配置
+
+2. **全面測試**
+   - 功能測試
+   - 效能測試
+   - 響應式測試
+   - SEO測試
+
+## 風險控制與質量保證
+
+### 遷移風險管控
+1. **樣式完整性**: 逐組件驗證，確保所有樣式正確
+2. **動畫功能**: 詳細測試所有動畫效果，特別關注AOS和Swiper的SSR問題
+3. **路由遷移**: 徹底移除React Router，確保所有連結使用Next.js Link
+4. **客戶端組件**: 正確使用'use client'指令，避免水合錯誤
+5. **響應式設計**: 全斷點測試
+6. **圖片載入**: 確保所有圖片正確顯示，考慮使用Next.js Image組件
+
+### 質量檢查清單
+- [ ] 所有頁面正確渲染 (SSR + 客戶端水合)
+- [ ] 移除所有React Router相關代碼
+- [ ] 所有動畫效果正常 (AOS、Swiper、自定義動畫)
+- [ ] 客戶端組件正確使用'use client'指令
+- [ ] 所有圖片正確載入
+- [ ] 所有連結使用Next.js Link組件
+- [ ] 響應式設計完整
+- [ ] 無SSR/客戶端水合錯誤
+- [ ] 效能指標達標
+- [ ] SEO配置正確
+- [ ] Supabase SSR正常運作
+- [ ] 後端功能正常
+
+## 技術細節說明
+
+### TailwindCSS配置保持
+```javascript
+// 完全保持現有的顏色配置
+colors: {
+  primary: { /* 現有配置 */ },
+  earth: { /* 現有配置 */ },
+  nature: { /* 現有配置 */ },
+}
+```
+
+### 關鍵依賴項遷移與兼容性問題
+**⚠️ 需要移除的套件:**
+- **React Router DOM 6.22.1**: 與Next.js App Router衝突，需完全移除
+- **React Scroll 1.9.0**: 可能有SSR水合問題，建議替換為原生滾動
+
+**⚠️ 需要特別配置的套件:**
+- **AOS 2.3.4**: 需使用'use client'指令，並檢查`typeof window !== 'undefined'`
+- **Swiper 11.2.4**: 需添加'use client'指令，使用動態導入避免SSR問題
+
+**✅ 需要新增的套件:**
+- **@supabase/ssr**: Next.js App Router的Supabase SSR支援
+- **@types/node, @types/react, @types/react-dom**: TypeScript類型支援
+
+**✅ 完全兼容的套件:**
+- **Next.js 14, React 18.2.0, TailwindCSS 3.4.1, Heroicons 2.1.1**: 無兼容性問題
+
+### 組件遷移策略
+- 逐一遷移，保持所有功能
+- 使用'use client'指令處理客戶端組件 (AOS, Swiper, ScrollText)
+- 確保所有事件處理器正常運作
+
+### 建議的package.json配置
+```json
+{
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.1",
+    "aos": "^2.3.4",
+    "swiper": "^11.2.4",
+    "@heroicons/react": "^2.1.1",
+    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/ssr": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35"
+  }
+}
+```
+
+### 移除的套件
+- react-router-dom (與Next.js App Router衝突)
+- react-scroll (SSR兼容性問題)
+- react-scripts (Next.js內建構建工具)
+
+## 成功標準
+1. **功能完整性**: 所有現有功能100%正常運作
+2. **視覺一致性**: 所有樣式和動畫與原版完全一致
+3. **效能提升**: 頁面載入速度改善20%以上
+4. **SEO優化**: Core Web Vitals分數達到90+
+5. **用戶體驗**: 所有互動功能流暢無誤
+
+## 優先級排序
+1. **最高優先級**: 基礎架構遷移、樣式保持、核心組件功能
+2. **高優先級**: 動畫效果、互動功能、響應式設計
+3. **中優先級**: SEO優化、效能提升、後端整合
+4. **低優先級**: 進階功能、部署優化、監控配置
+
+這個遷移計劃確保在轉換到Next.js的過程中，完全保持現有應用程式的所有功能、樣式和用戶體驗。
+
+# 蘇格蘭梗犬舍與寵物服務平台 - 產品需求文檔
+
+<context>
+# Overview  
+我們的平台是一個專業的蘇格蘭梗犬舍與綜合寵物服務網站，致力於創造美好的人寵生活。我們提供高品質的蘇格蘭梗繁殖、專業寵物訓練、舒適的寵物住宿服務，以及豐富的寵物生活內容分享。目標用戶包括蘇格蘭梗愛好者、尋找專業寵物服務的飼主，以及對寵物生活感興趣的社群。
+
+# Core Features  
+## 1. 犬舍展示系統
+- 展示優質蘇格蘭梗血統、證書、健康檢查報告
+- 小狗資訊展示（照片、年齡、健康狀況、價格）
+- 環境介紹詳細資訊
+- 血統證書和健康證明文件管理
+
+## 2. 環境介紹
+- 犬舍環境展示
+- 設施介紹
+- 生活環境照片
+- 專業設備展示
+
+## 3. 日記與內容分享
+- 專業寵物飼養日記
+- 訓練心得與技巧分享
+- 蘇格蘭梗生活記錄
+- 支持圖片、影片上傳
+- 分類標籤系統
+
+## 4. 聯絡與客戶服務
+- 多種聯絡方式（表單、電話、地址）
+- 常見問題 FAQ
+- 即時諮詢功能
+- 客戶回饋收集
+
+## 5. 管理後台系統
+- 管理員認證
+- 內容管理
+- 圖片管理
+- 日記發佈管理
+
+# User Experience  
+## 用戶角色
+- **潛在飼主**: 尋找優質蘇格蘭梗幼犬
+- **寵物愛好者**: 瀏覽犬舍資訊和環境介紹
+- **內容訪客**: 瀏覽寵物相關內容和日記
+- **管理員**: 後台內容管理
+
+## 關鍵用戶流程
+1. 首次訪客 → 瀏覽犬舍資訊 → 查看環境介紹 → 瀏覽新生幼犬 → 聯絡洽詢
+2. 回訪用戶 → 瀏覽最新日記 → 查看幼犬更新 → 了解犬舍環境
+3. 管理員 → 後台登入 → 發佈日記內容 → 更新犬舍資訊 → 管理圖片
+
+## UI/UX 考量
+- 溫馨友善的設計風格，體現人寵情感連結
+- 清晰的導航結構，易於找到所需服務
+- 響應式設計，適配各種設備
+- 快速載入，優秀的使用體驗
+</context>
+
+<PRD>
+# Technical Architecture  
+## 技術棧遷移
+- **前端**: 從 React 遷移至 Next.js 14+ (App Router)
+- **樣式**: 繼續使用 TailwindCSS
+- **狀態管理**: React Context + useState/useReducer
+- **數據庫**: Supabase PostgreSQL
+- **認證**: Supabase Auth
+- **檔案存儲**: Supabase Storage
+- **部署**: Zeabur
+
+## 系統架構
+### 前端組件結構
+- Layout 組件 (含 Navbar, Footer)
+- 頁面組件 (Home, About, Services, Diary, Contact, Admin)
+- 業務組件 (DiaryCard, PuppyCard, EnvironmentCard)
+- UI 組件 (Button, Modal, DatePicker)
+
+### 後端 API 設計
+- `/api/admin` - 管理員功能
+- `/api/diary` - 日記 CRUD
+- `/api/puppies` - 小狗資訊
+- `/api/environment` - 環境介紹
+- `/api/contact` - 聯絡表單
+
+### 數據模型 (Supabase Tables)
+- admin_users (管理員)
+- diary_posts (日記文章)
+- puppies (小狗資訊)
+- environment_info (環境介紹)
+- certificates (證書文件)
+- storage_files (Supabase Storage 文件管理)
+
+# Development Roadmap  
+## Phase 1: 基礎架構遷移 (MVP)
+- 設置 Next.js 專案結構
+- 遷移現有 React 組件至 Next.js App Router
+- 建立基礎 Layout 和路由
+- 實作響應式設計
+- 基礎 SEO 優化 (metadata, sitemap)
+
+## Phase 2: 核心功能開發
+- 實作聯絡表單與基礎互動
+- 建立犬舍展示頁面 (靜態內容)
+- 基礎日記顯示功能
+- 服務介紹頁面
+
+## Phase 3: 動態功能與數據庫
+- 設置數據庫與 ORM
+- 建立 API 路由
+- 實作日記 CRUD 功能
+- 環境介紹功能
+
+## Phase 4: 內容管理系統
+- 日記內容管理
+- 圖片上傳功能
+- 環境介紹管理
+- 幼犬資訊管理
+
+## Phase 5: 管理後台
+- 管理員認證
+- 日記內容管理
+- 小狗資訊管理
+- 環境介紹管理
+
+## Phase 6: 進階功能
+- 檔案上傳 (證書、照片)
+- 搜索與篩選功能
+- 聯絡表單增強
+- 進階 SEO 與效能優化
+
+# Logical Dependency Chain
+## 基礎建設 (必須優先)
+1. Next.js 專案設置與環境配置
+2. TailwindCSS 樣式系統建立
+3. 基礎 Layout 組件開發
+4. 路由結構建立
+
+## 核心頁面 (快速可見成果)
+1. 首頁重構 (展示主要服務)
+2. 犬舍展示頁面 (靜態內容優先)
+3. 服務介紹頁面
+4. 聯絡頁面
+
+## 數據層建設
+1. 數據庫設計與設置
+2. API 路由基礎架構
+3. 認證系統建立
+
+## 動態功能開發
+1. 日記系統 (展示 → 管理 → 發佈)
+2. 環境介紹系統 (內容 → 圖片 → 管理)
+3. 幼犬資訊系統 (展示 → 管理 → 更新)
+
+## 管理功能
+1. 基礎管理介面
+2. 內容管理功能
+3. 業務管理工具
+
+# Risks and Mitigations  
+## 技術風險
+- **Next.js 遷移複雜度**: 分階段遷移，保持功能完整性
+- **SEO 實作**: 使用 Next.js 內建 SEO 功能，定期檢測
+- **效能優化**: 圖片最佳化、代碼分割、快取策略
+
+## 功能風險
+- **內容管理複雜度**: 從簡單內容開始，逐步增加功能
+- **用戶體驗**: 定期用戶測試，收集回饋
+- **數據安全**: 實作適當的認證與授權機制
+
+## 資源風險
+- **開發時間**: 合理規劃各階段目標，避免過度設計
+- **技術學習曲線**: 充分利用 Next.js 文檔與社群資源
+
+# Appendix  
+## 現有技術棧
+- React.js
+- TailwindCSS
+- 響應式設計已部分實作
+
+## 需要研究的技術
+- Next.js App Router 最佳實踐
+- Supabase 整合設計模式
+- Supabase Storage 圖片最佳化方案
+- Zeabur 部署優化與配置
+- 內容管理系統設計模式
+
+## 參考資源
+- Next.js 官方文檔
+- Supabase 官方文檔
+- TailwindCSS 組件庫
+- Zeabur 部署指南
+- 寵物服務網站設計案例
+- SEO 最佳實踐指南
+</PRD> 
