@@ -1,5 +1,6 @@
 import React from 'react'
 import HeroSlider from './components/HeroSlider'
+import ScrollText from './components/ScrollText'
 
 export default function HomePage() {
   return (
@@ -51,24 +52,8 @@ export default function HomePage() {
         </div>
       </div>
       
-      {/* ScrollText Section - 暫時占位符 */}
-      <div className="py-16 bg-earth-50">
-        <div className="container mx-auto px-4 text-center">
-          <h3 
-            className="text-3xl font-bold text-primary-700 mb-4"
-            data-aos="fade-up"
-          >
-            服務項目
-          </h3>
-          <p 
-            className="text-earth-600"
-            data-aos="fade-up"
-            data-aos-delay="100"
-          >
-            ScrollText組件正在遷移中...
-          </p>
-        </div>
-      </div>
+      {/* ScrollText Section */}
+      <ScrollText />
       
       {/* Contact Section - 暫時占位符 */}
       <div className="py-16 bg-white">

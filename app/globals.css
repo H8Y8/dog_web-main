@@ -10,6 +10,8 @@
   --end: 360;
   --lightness: 65%;
   --base-chroma: 0.3;
+  --primary-400: #ecc565;
+  --primary-500: #e8b744;
 }
 
 @property --hue {
