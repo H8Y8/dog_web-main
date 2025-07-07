@@ -33,7 +33,7 @@ const Contact = () => {
 
             {/* 右側聯絡資訊 */}
             <div className="p-8 space-y-6">
-              <h3 className="text-2xl font-bold text-earth-900 mb-6">蔡毛的狗窩</h3>
+                              <h3 className="text-2xl font-bold text-earth-900 mb-6">雷歐犬舍訓練工作室</h3>
               <div className="space-y-6">
                 <div className="flex items-center space-x-3">
                   <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

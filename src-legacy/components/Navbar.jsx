@@ -42,7 +42,7 @@ const Navbar = () => {
                 onClick={handleLogoClick}
                 className="text-lg sm:text-xl font-bold text-primary-900 hover:text-primary-800 transition duration-300"
               >
-                蔡毛的狗窩
+                雷歐犬舍訓練工作室
               </a>
             </div>
             

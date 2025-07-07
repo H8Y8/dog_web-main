@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "optimize-photos": "node scripts/optimize-photos.js",
+    "optimize-all": "node scripts/optimize-photos.js all",
+    "optimize-existing": "node scripts/optimize-existing.js",
+    "deploy-check": "node scripts/deploy-check.js",
+    "pre-deploy": "npm run deploy-check && npm run build"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
@@ -27,6 +32,7 @@
     "eslint-config-next": "14.0.0",
     "ignore-loader": "^0.1.2",
     "postcss": "^8.4.35",
+    "sharp": "^0.34.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },

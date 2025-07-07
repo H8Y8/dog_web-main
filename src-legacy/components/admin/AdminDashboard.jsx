@@ -10,7 +10,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-earth-50">
       <nav className="bg-earth-800 text-white px-4 py-3">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">蔡毛的狗窩後台管理</h1>
+          <h1 className="text-xl font-bold">雷歐犬舍訓練工作室後台管理</h1>
           <button
             onClick={() => {
               setSelectedDiary(null);

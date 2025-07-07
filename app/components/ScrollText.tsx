@@ -163,7 +163,9 @@ const ScrollText = () => {
                   `
                 }}
               >
-                <div className="animate-bounce text-3xl">🐕</div>
+                <div className="animate-bounce text-3xl">
+                  <img src="/images/SCROLL.png" alt="小狗" className="w-64 h-6" />
+                </div>
               </div>
             </div>
 

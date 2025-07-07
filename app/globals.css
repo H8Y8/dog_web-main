@@ -139,9 +139,9 @@ p {
   transform: scale(1.2);
 }
 
-/* Ken Burns 效果 */
+/* Ken Burns 效果 - 調整為較小的縮放比例 */
 .slide-image {
-  transform: scale(1.1);
+  transform: scale(1.03);
   animation: random-ken-burns 20s ease-out forwards;
 }
 
@@ -151,10 +151,10 @@ p {
 
 @keyframes random-ken-burns {
   0% {
-    transform: scale(1.1) translateX(0) translateY(0);
+    transform: scale(1.03) translateX(0) translateY(0);
   }
   100% {
-    transform: scale(1.1) translateX(var(--translate-x, 0)) translateY(var(--translate-y, 0));
+    transform: scale(1.03) translateX(var(--translate-x, 0)) translateY(var(--translate-y, 0));
   }
 }
 

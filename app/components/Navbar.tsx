@@ -19,6 +19,7 @@ const Navbar = () => {
 
   const menuItems = [
     { title: '關於我們', href: '/about' },
+    { title: '環境介紹', href: '/environment' },
     { title: '日誌', href: '/diary' },
     { title: '新生幼犬', href: '/puppies' },
     { title: '聯絡我們', href: '/contact' },
@@ -42,7 +43,7 @@ const Navbar = () => {
                 onClick={handleLogoClick}
                 className="text-lg sm:text-xl font-bold text-primary-900 hover:text-primary-800 transition duration-300"
               >
-                蔡毛的狗窩
+                雷歐犬舍訓練工作室
               </Link>
             </div>
             

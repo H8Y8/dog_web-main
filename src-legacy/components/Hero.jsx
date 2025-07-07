@@ -14,7 +14,7 @@ const Hero = () => {
           data-aos="fade-down"
           data-aos-delay="100"
         >
-          蔡毛的狗窩
+          雷歐犬舍訓練工作室
         </h1>
         <p 
           className="text-xl sm:text-2xl mb-8 max-w-2xl mx-auto drop-shadow-lg text-earth-	50"

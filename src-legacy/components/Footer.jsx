@@ -4,7 +4,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">關於蔡毛的狗窩</h3>
+            <h3 className="text-xl font-bold mb-4">關於雷歐犬舍訓練工作室</h3>
             <p className="text-gray-400">
               我們致力於為毛小孩提供最優質的服務與資訊，讓每一隻狗狗都能過得健康快樂。
             </p>
@@ -67,7 +67,7 @@ const Footer = () => {
         
         <div className="mt-8 border-t border-gray-800 pt-8 text-center">
           <p className="text-gray-400">
-            © {new Date().getFullYear()} 蔡毛的狗窩. All rights reserved.
+            © {new Date().getFullYear()} 雷歐犬舍訓練工作室. All rights reserved.
           </p>
         </div>
       </div>

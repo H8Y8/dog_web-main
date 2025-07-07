@@ -3,7 +3,7 @@ import React from 'react'
 export default function DiaryPage() {
   return (
     <div className="pt-32 min-h-screen">
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-earth-50">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold text-primary-700 mb-8 text-center">日誌</h1>
           <div className="max-w-4xl mx-auto">

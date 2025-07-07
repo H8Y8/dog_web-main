@@ -10,16 +10,31 @@ import 'swiper/css/pagination';
 
 const slides = [
   {
-    image: '/images/28764790_l.jpg',
+    image: '/images/hero/首頁輪播001.jpg',
   },
   {
-    image: '/images/1000_F_184323995_qYc0OuK8t48JlXNp8AyIvQeFo283FG1w.jpg',
+    image: '/images/hero/首頁輪播002.jpg',
   },
   {
-    image: '/images/scottish-dog-names-4843331-hero-cc1388c0fc5a4b609a9bc46dc566397e.jpg',
+    image: '/images/hero/首頁輪播003.jpg',
   },
   {
-    image: '/images/Scottishterrieroutside-5af801f8056a4a00a01b032a8da8eabf.jpg',
+    image: '/images/hero/首頁輪播004.jpg',
+  },
+  {
+    image: '/images/hero/首頁輪播006.jpg',
+  },
+  {
+    image: '/images/hero/首頁輪播007.jpg',
+  },
+  {
+    image: '/images/hero/首頁輪播008.jpg',
+  },
+  {
+    image: '/images/hero/首頁輪播009.jpg',
+  },
+  {
+    image: '/images/hero/首頁輪播010.jpg',
   }
 ];
 
@@ -28,14 +43,14 @@ const HeroSlider = () => {
 
   const getRandomTransform = useCallback(() => {
     const transforms = [
-      { x: '2%', y: '2%' },
-      { x: '-2%', y: '2%' },
-      { x: '2%', y: '-2%' },
-      { x: '-2%', y: '-2%' },
-      { x: '0', y: '2%' },
-      { x: '0', y: '-2%' },
-      { x: '2%', y: '0' },
-      { x: '-2%', y: '0' },
+      { x: '1%', y: '1%' },
+      { x: '-1%', y: '1%' },
+      { x: '1%', y: '-1%' },
+      { x: '-1%', y: '-1%' },
+      { x: '0', y: '1%' },
+      { x: '0', y: '-1%' },
+      { x: '1%', y: '0' },
+      { x: '-1%', y: '0' },
     ];
     return transforms[Math.floor(Math.random() * transforms.length)];
   }, []);
@@ -95,8 +110,8 @@ const HeroSlider = () => {
             <div className="relative h-full w-full overflow-hidden">
               <img
                 src={slide.image}
-                alt="蘇格蘭㹴"
-                className="w-full h-full object-cover object-[center_35%] slide-image"
+                alt="雷歐犬舍訓練工作室 - 專業蘇格蘭㹴犬舍"
+                className="w-full h-full object-cover object-[center_50%] sm:object-[center_45%] md:object-[center_42%] lg:object-[center_35%] slide-image"
                 loading={index === 0 ? "eager" : "lazy"}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-earth-800/20 via-earth-700/10 to-earth-800/20"></div>
