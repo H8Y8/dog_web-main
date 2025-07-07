@@ -1,0 +1,25 @@
+# Task ID: 6
+# Title: Migrate AOS Animation Library
+# Status: pending
+# Dependencies: 1
+# Priority: medium
+# Description: Integrate the AOS library into the Next.js project and ensure it works with SSR.
+# Details:
+Install AOS using `npm install aos`. Import AOS in the layout component and initialize it in a useEffect hook, ensuring to check for `typeof window !== 'undefined'`.
+
+# Test Strategy:
+Test that AOS animations trigger correctly on scroll.
+
+# Subtasks:
+## 1. Install AOS Library [pending]
+### Dependencies: None
+### Description: Add the AOS library to the Next.js project using npm or yarn.
+### Details:
+Run the command 'npm install aos' or 'yarn add aos' in the terminal to install the AOS library.
+
+## 2. Initialize AOS in Next.js [pending]
+### Dependencies: 6.1
+### Description: Set up AOS in the Next.js project to ensure it works with server-side rendering.
+### Details:
+Import AOS in the _app.js file and initialize it in a useEffect hook to ensure it runs on the client side. Also, include the AOS CSS in the global styles.
+

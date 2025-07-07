@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200" width="100" height="200">
+  <!-- 樹幹 -->
+  <rect x="45" y="100" width="10" height="80" fill="#8B5A2B" />
+  
+  <!-- 樹葉（三角形） -->
+  <polygon points="50,10 10,80 90,80" fill="#89A861" />
+  <polygon points="50,40 15,100 85,100" fill="#739E52" />
+  <polygon points="50,70 20,120 80,120" fill="#5C8944" />
+</svg> 

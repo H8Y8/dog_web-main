@@ -1,0 +1,25 @@
+# Task ID: 8
+# Title: Migrate ScrollText Component
+# Status: pending
+# Dependencies: 2
+# Priority: medium
+# Description: Migrate the ScrollText component and replace React Scroll functionality with native scrolling.
+# Details:
+Remove the React Scroll dependency and implement scrolling using `scrollIntoView` or `window.scrollTo`. Add the 'use client' directive to the ScrollText component.
+
+# Test Strategy:
+Test that the scrolling functionality works as expected and that all animations are intact.
+
+# Subtasks:
+## 1. Analyze Current React Scroll Implementation [pending]
+### Dependencies: None
+### Description: Review the existing React Scroll functionality to understand how it is integrated and identify the key features that need to be replicated with native scrolling methods.
+### Details:
+Focus on the components and methods used for scrolling, including any props or state management related to scroll behavior.
+
+## 2. Implement Native Scrolling Methods [pending]
+### Dependencies: 8.1
+### Description: Replace the identified React Scroll functionality with native scrolling methods, ensuring that all features are preserved and performance is optimized.
+### Details:
+Utilize native JavaScript methods such as scrollTo and scrollIntoView, and ensure compatibility across different browsers.
+

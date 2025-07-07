@@ -1,0 +1,31 @@
+# Task ID: 2
+# Title: Migrate Existing Components
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Migrate all existing React components to the Next.js App Router structure.
+# Details:
+Move components from the React app to the Next.js app structure. Ensure that each component is properly imported and used in the new layout. Pay special attention to the Navbar and Footer components.
+
+# Test Strategy:
+Check that all components render correctly in the new structure and maintain their original functionality.
+
+# Subtasks:
+## 1. List Navbar Components [pending]
+### Dependencies: None
+### Description: Identify all components that make up the Navbar, including links, dropdowns, and branding elements.
+### Details:
+Ensure to note any specific functionality or styling that needs to be preserved during migration.
+
+## 2. List Footer Components [pending]
+### Dependencies: None
+### Description: Identify all components that make up the Footer, including copyright information, links, and social media icons.
+### Details:
+Document any specific considerations for responsiveness and accessibility in the Footer components.
+
+## 3. Analyze Complexity of Migration [pending]
+### Dependencies: 2.1, 2.2
+### Description: Evaluate the complexity of migrating the identified Navbar and Footer components, considering their structure and functionality.
+### Details:
+Create a complexity report that outlines potential challenges and required resources for the migration process.
+

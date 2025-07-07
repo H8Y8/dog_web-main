@@ -1,0 +1,57 @@
+/* 視差效果相關樣式 */
+.parallax-container {
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+.parallax-layer {
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+/* 互動式路徑動畫樣式 */
+.path-line {
+  background: linear-gradient(to bottom, rgba(236, 197, 101, 0.1), rgba(236, 197, 101, 0.5), rgba(236, 197, 101, 0.1));
+}
+
+.path-dot {
+  box-shadow: 0 0 10px rgba(236, 197, 101, 0.5);
+  transition: all 0.3s ease;
+}
+
+.path-dot.active {
+  box-shadow: 0 0 15px rgba(236, 197, 101, 0.8);
+}
+
+.path-icon {
+  filter: drop-shadow(0 0 3px rgba(236, 197, 101, 0.7));
+}
+
+/* 動畫效果 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.floating {
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.pulsing {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* 添加旋轉動畫 */
+@keyframes slow-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinning {
+  animation: slow-spin 20s linear infinite;
+} 

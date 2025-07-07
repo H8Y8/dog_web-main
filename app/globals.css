@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
+
+/* CSS 自定義屬性 - 來自原始React應用 */
+:root {
+  --start: 0;
+  --end: 360;
+  --lightness: 65%;
+  --base-chroma: 0.3;
+}
+
+@property --hue {
+  initial-value: 0;
+  syntax: '<number>';
+  inherits: false;
+}
+
+@property --chroma {
+  initial-value: 0;
+  syntax: '<number>';
+  inherits: true;
+}
+
+/* 自定義滾動條 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e8b744;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d8b88e;
+}
+
+/* 基本樣式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 標題文字加粗效果優化 - 來自原始React應用 */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* 內文字體優化 - 來自原始React應用 */
+p {
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  line-height: 1.75;
+}
+
+/* 滾動動畫效果 - 來自原始React應用 */
+@supports (animation-timeline: scroll()) and (animation-range: 0% 100%) {
+  .word-list li {
+    opacity: 0.2;
+    animation: brighten linear both;
+    animation-timeline: view();
+    animation-range: cover 40% cover 60%;
+  }
+}
+
+@keyframes brighten {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* HeroSlider 樣式 */
+.hero-swiper .swiper-button-next,
+.hero-swiper .swiper-button-prev {
+  color: rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.3s ease;
+}
+
+.hero-swiper .swiper-button-next:hover,
+.hero-swiper .swiper-button-prev:hover {
+  color: white !important;
+  transform: scale(1.1);
+}
+
+.hero-swiper .swiper-button-next::after,
+.hero-swiper .swiper-button-prev::after {
+  font-size: 24px !important;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* 分頁器樣式 */
+.hero-swiper .swiper-pagination {
+  bottom: 30px !important;
+}
+
+.hero-swiper .swiper-pagination-bullet {
+  width: 12px !important;
+  height: 12px !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  margin: 0 6px !important;
+}
+
+.hero-swiper .swiper-pagination-bullet-active {
+  background: white !important;
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Ken Burns 效果 */
+.slide-image {
+  transform: scale(1.1);
+  animation: random-ken-burns 20s ease-out forwards;
+}
+
+.swiper-slide-active .slide-image {
+  animation: random-ken-burns 20s ease-out forwards;
+}
+
+@keyframes random-ken-burns {
+  0% {
+    transform: scale(1.1) translateX(0) translateY(0);
+  }
+  100% {
+    transform: scale(1.1) translateX(var(--translate-x, 0)) translateY(var(--translate-y, 0));
+  }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .hero-swiper .swiper-button-next,
+  .hero-swiper .swiper-button-prev {
+    display: none !important;
+  }
+  
+  .hero-swiper .swiper-pagination {
+    bottom: 20px !important;
+  }
+  
+  .hero-swiper .swiper-pagination-bullet {
+    width: 8px !important;
+    height: 8px !important;
+    margin: 0 4px !important;
+  }
+} 

@@ -1,0 +1,795 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Initialize Next.js Project",
+        "description": "Set up a new Next.js 14 project with TypeScript support and TailwindCSS configuration.",
+        "details": "Use the command `npx create-next-app@latest --typescript` to initialize the project. Install TailwindCSS by following the official documentation for Next.js integration. Ensure to keep the existing TailwindCSS configuration intact.",
+        "testStrategy": "Verify that the Next.js application starts without errors and that TailwindCSS styles are applied correctly.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Initialize Next.js Project",
+            "description": "Create a new Next.js project using the create-next-app command.",
+            "dependencies": [],
+            "details": "Run the command 'npx create-next-app@latest my-next-app' to set up the project structure.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Configure TailwindCSS",
+            "description": "Install and configure TailwindCSS in the Next.js project.",
+            "dependencies": [
+              1
+            ],
+            "details": "Follow the TailwindCSS installation guide to add Tailwind to your project, including installing dependencies and setting up the configuration files.",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Migrate Existing Components",
+        "description": "Migrate all existing React components to the Next.js App Router structure.",
+        "details": "Move components from the React app to the Next.js app structure. Ensure that each component is properly imported and used in the new layout. Pay special attention to the Navbar and Footer components.",
+        "testStrategy": "Check that all components render correctly in the new structure and maintain their original functionality.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "List Navbar Components",
+            "description": "Identify all components that make up the Navbar, including links, dropdowns, and branding elements.",
+            "dependencies": [],
+            "details": "Ensure to note any specific functionality or styling that needs to be preserved during migration.\n<info added on 2025-07-07T06:47:28.350Z>\nNavbar component analysis completed:\nMain findings:\n- use of React Router DOM (Link, useLocation, useNavigate) requiring migration to Next.js navigation\n- state management via useState for mobile menu toggle\n- responsive design for desktop and mobile menus\n- navigation items: /about, /diary, /puppies, /contact\n- active state detection\n- TailwindCSS custom theme colors (earth-600, primary-300, etc.)\n- smooth scrolling feature\n\nMigration requirements:\n1. Replace react-router-dom with next/link and next/navigation\n2. Preserve existing styling and responsive behavior\n3. Adjust route-checking logic for Next.js\n4. Retain all functionality (mobile menu toggle, active states, etc.)\n\nComplexity assessment: Medium (primarily routing system replacement)\n</info added on 2025-07-07T06:47:28.350Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "List Footer Components",
+            "description": "Identify all components that make up the Footer, including copyright information, links, and social media icons.",
+            "dependencies": [],
+            "details": "Document any specific considerations for responsiveness and accessibility in the Footer components.\n<info added on 2025-07-07T06:47:53.656Z>\nFooter component analysis completed:\n\nKey findings:\n- Purely static component with no complex state management\n- TailwindCSS responsive layout (grid-cols-1 on mobile, md:grid-cols-3 on desktop)\n- Three main sections: About, Contact, Social Media Links\n- Inline SVG icons for Facebook, Instagram, and Line\n- Dynamic year display using new Date().getFullYear()\n- External links include target=\"_blank\" and rel=\"noopener noreferrer\"\n- Uses gray-900 background color rather than custom theme colors\n\nComponent structure:\n1. About section: company description text  \n2. Contact section: email, service hotline, business hours, address  \n3. Social Media section: links to Facebook, Instagram, and Line  \n4. Copyright section: dynamic year and copyright notice\n\nMigration requirements:\n- No routing modifications required (no react-router-dom dependency)\n- Preserve existing styling and responsive behavior\n- Retain SVG icons and external link functionality\n- Evaluate unifying background color with custom theme\n\nComplexity assessment: Low (basic static component, straightforward migration)\n</info added on 2025-07-07T06:47:53.656Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Analyze Complexity of Migration",
+            "description": "Evaluate the complexity of migrating the identified Navbar and Footer components, considering their structure and functionality.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Create a complexity report that outlines potential challenges and required resources for the migration process.\n<info added on 2025-07-07T06:48:42.064Z>\n✅ 組件遷移複雜度分析完成：\n\n## 📊 整體複雜度評估\n\n### 🔥 高複雜度組件 (需要特別注意)\n1. **HeroSlider.jsx** - 複雜度: 7/10\n   - Swiper.js需要客戶端渲染處理\n   - 自定義Ken Burns效果需要保留\n   - 圖片載入優化需要調整為Next.js Image\n\n2. **Admin組件群** - 複雜度: 6-8/10\n   - AdminDashboard, AdminLogin, DiaryEditor, DiaryList\n   - 可能涉及狀態管理和API整合\n   - 需要身份驗證邏輯\n\n### ⚠️ 中等複雜度組件\n1. **Navbar.jsx** - 複雜度: 6/10\n   - React Router → Next.js navigation遷移\n   - 路由檢查邏輯需要重寫\n   - 狀態管理保持不變\n\n2. **ScrollText.jsx** - 複雜度: 5/10\n   - 已使用原生滾動，遷移相對簡單\n   - 複雜的動畫邏輯需要測試\n\n### ✅ 低複雜度組件\n1. **Footer.jsx** - 複雜度: 2/10\n   - 純靜態組件，直接遷移\n\n2. **其他組件** - 複雜度: 2-4/10\n   - About, Certificate, Contact, Diary, Hero, Members, Projects, Puppies\n   - 主要是樣式和少量狀態管理\n\n## 🎯 遷移策略建議\n1. **優先級1**: 先遷移低複雜度組件建立基礎\n2. **優先級2**: 處理Navbar導航系統\n3. **優先級3**: 特殊處理HeroSlider和Admin組件\n4. **預估時間**: 總遷移時間約2-3個工作日\n\n## ⚡ 主要挑戰\n- React Router依賴替換\n- Swiper.js SSR兼容性\n- 圖片優化適配Next.js\n- Admin系統重構\n</info added on 2025-07-07T06:48:42.064Z>",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Setup Layout Component",
+        "description": "Create a RootLayout component to wrap all pages and include Navbar and Footer.",
+        "details": "Create a new layout file at `app/layout.tsx` that includes the Navbar and Footer components. Ensure that the layout is responsive and maintains the existing styles.",
+        "testStrategy": "Test the layout by navigating through different pages to ensure the Navbar and Footer are displayed correctly.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design the RootLayout Component",
+            "description": "Create the initial design and structure for the RootLayout component, including header, footer, and main content areas.",
+            "dependencies": [],
+            "details": "Focus on a clean and modular design that can accommodate various content types. Use CSS Grid or Flexbox for layout.\n<info added on 2025-07-07T06:54:04.667Z>\nNow that the RootLayout structure is in place, implement responsive design optimizations and testing:\n\n• Define and apply TailwindCSS breakpoints (sm, md, lg, xl) across Navbar, main content and Footer  \n• Adjust Navbar menu behavior and layout for mobile (≤640px), tablet (≤768px) and desktop screens  \n• Collapse Footer’s three-column layout into a stacked layout on small viewports and ensure consistent spacing  \n• Ensure the main content area flexibly resizes with appropriate padding and margins at each breakpoint  \n• Test the complete layout on key viewports (e.g. 320px, 768px, 1440px) using both browser dev tools and physical devices  \n• Verify no unexpected layout shifts, maintain SEO metadata/Open Graph tag integrity, and confirm smooth navigation across screen sizes\n</info added on 2025-07-07T06:54:04.667Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Responsive Design",
+            "description": "Apply responsive design techniques to the RootLayout component to ensure it works well on different screen sizes.",
+            "dependencies": [
+              1
+            ],
+            "details": "Utilize media queries and flexible units (like percentages and viewport units) to adjust the layout for mobile, tablet, and desktop views.",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Implement Routing Structure",
+        "description": "Establish the routing structure using Next.js App Router.",
+        "details": "Create the necessary page files in the `app` directory for Home, About, Environment, Diary, Puppies, Contact, and Admin. Replace all React Router Links with Next.js Link components.",
+        "testStrategy": "Verify that all routes are accessible and that navigation works as expected.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Identify Current Routes",
+            "description": "Review the existing React Router setup to identify all current routes and their corresponding components.",
+            "dependencies": [],
+            "details": "List all routes defined in the React Router configuration, including paths and components.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create Next.js Pages",
+            "description": "For each identified route, create a corresponding page in the Next.js pages directory.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure that each page is named according to the route structure and includes the necessary component logic.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Replace Links with Next.js Links",
+            "description": "Replace all instances of React Router Links with Next.js Link components in the application.",
+            "dependencies": [
+              2
+            ],
+            "details": "Ensure that the Link components are properly configured with the correct href attributes and any necessary props.",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Migrate TailwindCSS Configuration",
+        "description": "Ensure that the existing TailwindCSS configuration is migrated and functional.",
+        "details": "Copy the existing TailwindCSS configuration from the React app to the new Next.js project. Ensure that custom colors and styles are preserved.",
+        "testStrategy": "Check that all TailwindCSS styles are applied correctly across all components.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Identify Configurations for Migration",
+            "description": "Compile a comprehensive list of all configurations that need to be migrated to the new system.",
+            "dependencies": [],
+            "details": "Review existing documentation and system settings to ensure all configurations are accounted for.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Verify Functionality of Migrated Configurations",
+            "description": "Test the functionality of each migrated configuration to ensure they work as intended in the new environment.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create test cases for each configuration and document the results to confirm successful migration.",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Migrate AOS Animation Library",
+        "description": "Integrate the AOS library into the Next.js project and ensure it works with SSR.",
+        "details": "Install AOS using `npm install aos`. Import AOS in the layout component and initialize it in a useEffect hook, ensuring to check for `typeof window !== 'undefined'`.",
+        "testStrategy": "Test that AOS animations trigger correctly on scroll.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Install AOS Library",
+            "description": "Add the AOS library to the Next.js project using npm or yarn.",
+            "dependencies": [],
+            "details": "Run the command 'npm install aos' or 'yarn add aos' in the terminal to install the AOS library.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Initialize AOS in Next.js",
+            "description": "Set up AOS in the Next.js project to ensure it works with server-side rendering.",
+            "dependencies": [
+              1
+            ],
+            "details": "Import AOS in the _app.js file and initialize it in a useEffect hook to ensure it runs on the client side. Also, include the AOS CSS in the global styles.\n<info added on 2025-07-07T07:22:06.373Z>\nCreated an AOSInit.tsx client component with the ‘use client’ directive, a useEffect hook to initialize AOS, an SSR compatibility check (typeof window), and animation settings (duration: 1000ms, once: true, offset: 100px). Installed @types/aos for type definitions. Integrated the AOSInit component into layout.tsx. Added fade-down and fade-up test animations on the homepage. AOS is now fully configured and SSR-compatible.\n</info added on 2025-07-07T07:22:06.373Z>",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Migrate Swiper Component",
+        "description": "Migrate the HeroSlider component using Swiper.js and ensure Ken Burns effect is preserved.",
+        "details": "Install Swiper using `npm install swiper`. Add the 'use client' directive at the top of the HeroSlider component file. Ensure that the Ken Burns effect is implemented correctly using custom CSS.",
+        "testStrategy": "Verify that the Swiper component functions correctly and that the Ken Burns effect is visible.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Migrate HeroSlider Component",
+            "description": "Transfer the HeroSlider component code to the new framework while ensuring all functionalities are preserved.",
+            "dependencies": [],
+            "details": "Review the existing HeroSlider code, identify dependencies, and rewrite the component in the new framework syntax. Test the component for basic functionality after migration.\n<info added on 2025-07-07T07:25:58.147Z>\nHeroSlider component migration completed and integrated into the homepage:\n- Created app/components/HeroSlider.tsx with 'use client' directive, all Swiper functionality (autoplay, fade, navigation, pagination) and TypeScript fixes\n- Migrated CSS to app/globals.css (navigation buttons, pagination, Ken Burns animations, responsive styles)\nComponent now prepared for Ken Burns effect implementation.\n</info added on 2025-07-07T07:25:58.147Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Ken Burns Effect",
+            "description": "Add the Ken Burns effect to the migrated HeroSlider component to enhance visual appeal.",
+            "dependencies": [
+              1
+            ],
+            "details": "Research the Ken Burns effect implementation techniques, integrate the effect into the HeroSlider, and conduct thorough testing to ensure smooth animations and transitions.\n<info added on 2025-07-07T07:26:42.477Z>\nKen Burns effect successfully implemented:\n- getRandomTransform() generates eight translation combinations (–2%, 0, +2% on x/y axes)\n- CSS variables --translate-x and --translate-y are set dynamically via style.setProperty on each slide change\n- @keyframes random-ken-burns defines a 20-second ease animation starting at scale(1.1) and using CSS variables for panning\n- slidechange event listener initializes and recalculates transforms so each image follows a unique movement path\n</info added on 2025-07-07T07:26:42.477Z>",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Migrate ScrollText Component",
+        "description": "Migrate the ScrollText component and replace React Scroll functionality with native scrolling.",
+        "details": "Remove the React Scroll dependency and implement scrolling using `scrollIntoView` or `window.scrollTo`. Add the 'use client' directive to the ScrollText component.",
+        "testStrategy": "Test that the scrolling functionality works as expected and that all animations are intact.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Analyze Current React Scroll Implementation",
+            "description": "Review the existing React Scroll functionality to understand how it is integrated and identify the key features that need to be replicated with native scrolling methods.",
+            "dependencies": [],
+            "details": "Focus on the components and methods used for scrolling, including any props or state management related to scroll behavior.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Native Scrolling Methods",
+            "description": "Replace the identified React Scroll functionality with native scrolling methods, ensuring that all features are preserved and performance is optimized.",
+            "dependencies": [
+              1
+            ],
+            "details": "Utilize native JavaScript methods such as scrollTo and scrollIntoView, and ensure compatibility across different browsers.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Create Environment Component",
+        "description": "Develop the new Environment component and corresponding page.",
+        "details": "Create `Environment.jsx` in the components directory and `environment/page.tsx` in the pages directory. Ensure it follows the design and functionality outlined in the PRD.",
+        "testStrategy": "Verify that the Environment page renders correctly and displays the intended content.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design the Environment Component",
+            "description": "Create a design mockup for the Environment component, considering its layout, color scheme, and user interactions.",
+            "dependencies": [],
+            "details": "Use design tools like Figma or Sketch to create a visual representation of the component. Ensure it aligns with the overall project theme.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement the Environment Page",
+            "description": "Develop the Environment page that utilizes the Environment component, ensuring proper functionality and integration.",
+            "dependencies": [
+              1
+            ],
+            "details": "Code the page using the chosen framework (e.g., React, Angular) and ensure it fetches and displays relevant data. Test for responsiveness and usability.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Implement SEO Features",
+        "description": "Add SEO features such as dynamic metadata and sitemap generation.",
+        "details": "Utilize Next.js built-in SEO capabilities to set up dynamic metadata for each page. Create a sitemap.xml file for better indexing.",
+        "testStrategy": "Check that the metadata is correctly applied and that the sitemap is accessible.",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "status": "in-progress",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Research Next.js Metadata Capabilities",
+            "description": "Investigate how Next.js handles dynamic metadata and the best practices for implementation.",
+            "dependencies": [],
+            "details": "Look into Next.js documentation and community resources to understand how to set dynamic metadata for pages.\n<info added on 2025-07-07T07:13:25.513Z>\nCompleted research on Next.js metadata features and best practices. Fixed metadata.metadataBase warning by setting the base URL to https://scottish-terrier-kennel.com. Ensured Open Graph and Twitter images parse correctly.\n</info added on 2025-07-07T07:13:25.513Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Dynamic Metadata in Next.js",
+            "description": "Set up dynamic metadata for the application based on the research findings.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a function to generate metadata dynamically for each page and ensure it integrates with Next.js routing.\n<info added on 2025-07-07T07:13:31.595Z>\nImplemented basic dynamic metadata configuration, including: setting metadataBase to resolve warnings; configuring complete OpenGraph metadata; setting correct robots and SEO tags; configuring social media sharing tags. Completed Chinese and English titles, descriptions, and keywords for foundational SEO elements.\n</info added on 2025-07-07T07:13:31.595Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Create and Test Sitemap",
+            "description": "Develop a sitemap for the application and test its correctness for SEO purposes.",
+            "dependencies": [
+              2
+            ],
+            "details": "Use a sitemap generation library compatible with Next.js and verify that all routes are included and accessible.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Setup Supabase Integration",
+        "description": "Integrate Supabase for database, authentication, and storage functionalities.",
+        "details": "Install Supabase client using `npm install @supabase/supabase-js`. Configure Supabase in the application and set up authentication and storage services.",
+        "testStrategy": "Test the Supabase connection and ensure that authentication works as expected.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set up Supabase Project",
+            "description": "Create a new Supabase project through the Supabase dashboard.",
+            "dependencies": [],
+            "details": "Go to the Supabase website, sign in or create an account, and create a new project by providing a name and selecting a database region.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Configure Authentication Settings",
+            "description": "Set up authentication options in the Supabase project.",
+            "dependencies": [
+              1
+            ],
+            "details": "Navigate to the 'Authentication' section in the Supabase dashboard, enable email/password sign-up, and configure any additional authentication providers as needed.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Set up Storage for Files",
+            "description": "Configure storage settings for file uploads in the Supabase project.",
+            "dependencies": [
+              1
+            ],
+            "details": "Go to the 'Storage' section in the Supabase dashboard, create a new bucket for file storage, and set the appropriate permissions for public or private access.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Create API Routes",
+        "description": "Establish API routes for managing diary posts, puppies, environment info, and contact forms.",
+        "details": "Create API routes in the `pages/api` directory for each required functionality. Implement CRUD operations for diary posts and puppies.",
+        "testStrategy": "Test each API route to ensure they respond correctly and perform the intended operations.",
+        "priority": "medium",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define API Routes",
+            "description": "Outline the necessary API routes for the application.",
+            "dependencies": [],
+            "details": "Identify routes for creating, reading, updating, and deleting resources.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Create Operation",
+            "description": "Develop the API route for creating new resources.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure the route accepts necessary data and returns appropriate responses.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Read Operation",
+            "description": "Develop the API route for retrieving existing resources.",
+            "dependencies": [
+              1
+            ],
+            "details": "Include options for retrieving single or multiple resources.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Update and Delete Operations",
+            "description": "Develop the API routes for updating and deleting resources.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure routes handle data validation and return correct status codes.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "Implement Diary Management System",
+        "description": "Develop the diary management system for creating, updating, and deleting diary posts.",
+        "details": "Create the necessary components and API routes to manage diary posts. Ensure that users can create, edit, and delete posts.",
+        "testStrategy": "Verify that diary posts can be created, updated, and deleted successfully.",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Diary Post Model",
+            "description": "Create a data model for diary posts that includes fields such as title, content, date, and author.",
+            "dependencies": [],
+            "details": "The model should be structured to support CRUD operations and include validation rules.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Set Up API Routes for Diary Posts",
+            "description": "Establish RESTful API routes for creating, reading, updating, and deleting diary posts.",
+            "dependencies": [
+              1
+            ],
+            "details": "Routes should include POST /diary, GET /diary/:id, PUT /diary/:id, and DELETE /diary/:id.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Frontend Components for Diary Management",
+            "description": "Develop frontend components for displaying, creating, and editing diary posts.",
+            "dependencies": [
+              2
+            ],
+            "details": "Components should include a diary list, a diary form, and a diary detail view.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Integrate API with Frontend",
+            "description": "Connect the frontend components to the backend API to enable data fetching and manipulation.",
+            "dependencies": [
+              3
+            ],
+            "details": "Ensure that the frontend can handle API responses and update the UI accordingly.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "Implement Environment Management System",
+        "description": "Develop the environment management system for managing environment information and images.",
+        "details": "Create components and API routes for managing environment information. Ensure that images can be uploaded and displayed correctly.",
+        "testStrategy": "Test that environment information can be added, updated, and deleted.",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Environment Model",
+            "description": "Create a data model for storing environment information including fields like name, type, and configuration.",
+            "dependencies": [],
+            "details": "The model should include validation rules and relationships with other models if necessary.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement API Routes for Environment Management",
+            "description": "Set up API routes for CRUD operations on environment information.",
+            "dependencies": [
+              1
+            ],
+            "details": "Routes should include GET, POST, PUT, and DELETE methods for managing environments.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Create Frontend Components for Environment Management",
+            "description": "Develop user interface components for displaying and managing environment information.",
+            "dependencies": [
+              2
+            ],
+            "details": "Components should allow users to view, add, edit, and delete environments.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Testing and Documentation",
+            "description": "Write tests for the API and frontend components, and document the API routes and usage.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Ensure that all functionalities are covered and provide clear documentation for future reference.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "Implement Puppy Information Management",
+        "description": "Develop the puppy information management system for displaying and managing puppy details.",
+        "details": "Create components and API routes for managing puppy information. Ensure that all relevant details are displayed correctly.",
+        "testStrategy": "Verify that puppy information can be added, updated, and deleted.",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Puppy Model",
+            "description": "Create a data model for puppies that includes attributes such as name, breed, age, and health status.",
+            "dependencies": [],
+            "details": "The model should be structured to support CRUD operations and validation rules.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Set Up API Routes",
+            "description": "Establish API routes for managing puppy information, including routes for creating, reading, updating, and deleting puppy records.",
+            "dependencies": [
+              1
+            ],
+            "details": "Routes should follow RESTful conventions and include error handling.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Puppy Controller",
+            "description": "Develop a controller that handles the logic for the API routes defined, including interaction with the puppy model.",
+            "dependencies": [
+              2
+            ],
+            "details": "The controller should manage requests and responses, ensuring data integrity.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Integrate Frontend Components",
+            "description": "Create frontend components that interact with the API to display and manage puppy information.",
+            "dependencies": [
+              3
+            ],
+            "details": "Components should include forms for input and lists for displaying puppy data.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 16,
+        "title": "Conduct Performance Optimization",
+        "description": "Optimize the application for performance, including image optimization and code splitting.",
+        "details": "Utilize Next.js Image component for image optimization. Implement code splitting and caching strategies to enhance performance.",
+        "testStrategy": "Measure performance improvements using tools like Lighthouse.",
+        "priority": "low",
+        "dependencies": [
+          10
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Image Optimization Techniques Research",
+            "description": "Research various techniques for optimizing images, including compression, format selection, and responsive images.",
+            "dependencies": [],
+            "details": "Focus on lossless and lossy compression methods, image formats like WebP and JPEG, and how to implement responsive images using srcset.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Image Optimization",
+            "description": "Apply the researched image optimization techniques to the project images.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use tools like ImageMagick or online services to compress images, convert formats, and implement responsive images in the codebase.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Code Splitting Implementation",
+            "description": "Implement code splitting in the project to improve loading times and performance.",
+            "dependencies": [
+              2
+            ],
+            "details": "Utilize dynamic imports and configure the build tool (like Webpack) to split the code into smaller chunks that can be loaded on demand.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "title": "Deploy Application to Zeabur",
+        "description": "Configure and deploy the application to the Zeabur platform.",
+        "details": "Set up the deployment environment on Zeabur, configure environment variables, and ensure SSL certificates are in place.",
+        "testStrategy": "Verify that the application is accessible on the deployed URL and functions correctly.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up Deployment Environment",
+            "description": "Configure the server and necessary software for deployment.",
+            "dependencies": [],
+            "details": "Install required software packages, configure server settings, and ensure network accessibility.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Install SSL Certificate",
+            "description": "Obtain and install an SSL certificate on the server.",
+            "dependencies": [
+              1
+            ],
+            "details": "Purchase an SSL certificate from a trusted provider, generate a CSR, and install the certificate on the server.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Test SSL Configuration",
+            "description": "Verify that the SSL certificate is correctly installed and functioning.",
+            "dependencies": [
+              2
+            ],
+            "details": "Use online tools and browser checks to ensure the SSL certificate is valid and the site is accessible via HTTPS.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "title": "Conduct Comprehensive Testing",
+        "description": "Perform thorough testing of all functionalities, including unit tests and user acceptance testing.",
+        "details": "Create unit tests for critical components and conduct user acceptance testing to ensure all features work as intended.",
+        "testStrategy": "Ensure all tests pass and gather user feedback for any necessary adjustments.",
+        "priority": "high",
+        "dependencies": [
+          17
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Unit Testing Strategy",
+            "description": "Outline the approach for unit testing, including the frameworks and tools to be used.",
+            "dependencies": [],
+            "details": "Identify the programming languages and frameworks that will be used for unit testing, such as JUnit for Java or pytest for Python. Specify the criteria for what constitutes a unit test and how tests will be organized.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create User Acceptance Testing Plan",
+            "description": "Develop a plan for user acceptance testing (UAT) that outlines the objectives and criteria for success.",
+            "dependencies": [],
+            "details": "Define the goals of UAT, the target user group, and the acceptance criteria that must be met for the product to be considered acceptable by users.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Develop Unit Test Cases",
+            "description": "Create specific unit test cases based on the defined unit testing strategy.",
+            "dependencies": [
+              1
+            ],
+            "details": "Write test cases that cover various scenarios for each unit of code, ensuring edge cases and error handling are included.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Conduct User Acceptance Testing",
+            "description": "Execute the user acceptance testing plan with real users to validate the product.",
+            "dependencies": [
+              2
+            ],
+            "details": "Organize sessions with users to test the product against the acceptance criteria, gather feedback, and document any issues encountered.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-05T16:25:31.127Z",
+      "updated": "2025-07-07T07:26:53.753Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+# Task ID: 15
+# Title: Implement Puppy Information Management
+# Status: pending
+# Dependencies: 12
+# Priority: medium
+# Description: Develop the puppy information management system for displaying and managing puppy details.
+# Details:
+Create components and API routes for managing puppy information. Ensure that all relevant details are displayed correctly.
+
+# Test Strategy:
+Verify that puppy information can be added, updated, and deleted.
+
+# Subtasks:
+## 1. Define Puppy Model [pending]
+### Dependencies: None
+### Description: Create a data model for puppies that includes attributes such as name, breed, age, and health status.
+### Details:
+The model should be structured to support CRUD operations and validation rules.
+
+## 2. Set Up API Routes [pending]
+### Dependencies: 15.1
+### Description: Establish API routes for managing puppy information, including routes for creating, reading, updating, and deleting puppy records.
+### Details:
+Routes should follow RESTful conventions and include error handling.
+
+## 3. Implement Puppy Controller [pending]
+### Dependencies: 15.2
+### Description: Develop a controller that handles the logic for the API routes defined, including interaction with the puppy model.
+### Details:
+The controller should manage requests and responses, ensuring data integrity.
+
+## 4. Integrate Frontend Components [pending]
+### Dependencies: 15.3
+### Description: Create frontend components that interact with the API to display and manage puppy information.
+### Details:
+Components should include forms for input and lists for displaying puppy data.
+

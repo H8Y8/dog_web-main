@@ -1,0 +1,31 @@
+# Task ID: 4
+# Title: Implement Routing Structure
+# Status: pending
+# Dependencies: 3
+# Priority: high
+# Description: Establish the routing structure using Next.js App Router.
+# Details:
+Create the necessary page files in the `app` directory for Home, About, Environment, Diary, Puppies, Contact, and Admin. Replace all React Router Links with Next.js Link components.
+
+# Test Strategy:
+Verify that all routes are accessible and that navigation works as expected.
+
+# Subtasks:
+## 1. Identify Current Routes [pending]
+### Dependencies: None
+### Description: Review the existing React Router setup to identify all current routes and their corresponding components.
+### Details:
+List all routes defined in the React Router configuration, including paths and components.
+
+## 2. Create Next.js Pages [pending]
+### Dependencies: 4.1
+### Description: For each identified route, create a corresponding page in the Next.js pages directory.
+### Details:
+Ensure that each page is named according to the route structure and includes the necessary component logic.
+
+## 3. Replace Links with Next.js Links [pending]
+### Dependencies: 4.2
+### Description: Replace all instances of React Router Links with Next.js Link components in the application.
+### Details:
+Ensure that the Link components are properly configured with the correct href attributes and any necessary props.
+
