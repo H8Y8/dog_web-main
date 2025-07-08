@@ -374,44 +374,66 @@
       {
         "id": 11,
         "title": "Setup Supabase Integration",
-        "description": "Integrate Supabase for database, authentication, and storage functionalities.",
-        "details": "Install Supabase client using `npm install @supabase/supabase-js`. Configure Supabase in the application and set up authentication and storage services.",
-        "testStrategy": "Test the Supabase connection and ensure that authentication works as expected.",
-        "priority": "high",
+        "description": "Integrate Supabase for database, authentication, and storage functionalities, including database schema creation (posts, members, puppies, environments), Row-Level Security (RLS) policies, and four storage buckets as specified in the PRD.",
+        "status": "done",
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Install the Supabase client using `npm install @supabase/supabase-js`. Configure Supabase in the application: set up authentication, define the database schema with tables for posts, members, puppies, and environments, enable RLS with basic policies, and configure storage services with four buckets per PRD requirements.",
+        "testStrategy": "Run smoke tests to validate the Supabase connection; verify authentication flows including JWT token issuance and validation; confirm that the database schema tables exist and RLS policies enforce access controls correctly; test file uploads/downloads in all four storage buckets.",
         "subtasks": [
           {
             "id": 1,
             "title": "Set up Supabase Project",
             "description": "Create a new Supabase project through the Supabase dashboard.",
+            "status": "done",
             "dependencies": [],
             "details": "Go to the Supabase website, sign in or create an account, and create a new project by providing a name and selecting a database region.",
-            "status": "pending",
             "testStrategy": ""
           },
           {
             "id": 2,
             "title": "Configure Authentication Settings",
             "description": "Set up authentication options in the Supabase project.",
+            "status": "done",
             "dependencies": [
               1
             ],
-            "details": "Navigate to the 'Authentication' section in the Supabase dashboard, enable email/password sign-up, and configure any additional authentication providers as needed.",
-            "status": "pending",
+            "details": "Navigate to the 'Authentication' section in the Supabase dashboard, enable email/password sign-up, configure additional providers as needed, and ensure JWT token settings are properly configured.",
             "testStrategy": ""
           },
           {
             "id": 3,
-            "title": "Set up Storage for Files",
-            "description": "Configure storage settings for file uploads in the Supabase project.",
+            "title": "Configure Storage Buckets",
+            "description": "Configure four storage buckets for file uploads as specified in the PRD.",
+            "status": "done",
             "dependencies": [
               1
             ],
-            "details": "Go to the 'Storage' section in the Supabase dashboard, create a new bucket for file storage, and set the appropriate permissions for public or private access.",
-            "status": "pending",
+            "details": "Go to the 'Storage' section in the Supabase dashboard, create four buckets as specified in the PRD, and set appropriate public or private permissions for each bucket.",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Create Database Schema",
+            "description": "Define tables for posts, members, puppies, and environments in Supabase.",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "details": "Use the Supabase SQL editor or migrations to create the tables: posts, members, puppies, and environments, including necessary columns, data types, and foreign key relationships.",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Configure Row-Level Security (RLS)",
+            "description": "Enable RLS and add basic policies for the new tables.",
+            "status": "done",
+            "dependencies": [
+              4
+            ],
+            "details": "For each table (posts, members, puppies, environments), enable Row-Level Security and create policies that allow authenticated users to select, insert, update, and delete only their own records as appropriate.",
             "testStrategy": ""
           }
         ]
@@ -426,7 +448,7 @@
         "dependencies": [
           11
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -434,7 +456,7 @@
             "description": "Outline the necessary API routes for the application.",
             "dependencies": [],
             "details": "Identify routes for creating, reading, updating, and deleting resources.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -445,7 +467,7 @@
               1
             ],
             "details": "Ensure the route accepts necessary data and returns appropriate responses.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -456,7 +478,7 @@
               1
             ],
             "details": "Include options for retrieving single or multiple resources.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -467,7 +489,7 @@
               1
             ],
             "details": "Ensure routes handle data validation and return correct status codes.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -784,11 +806,143 @@
             "testStrategy": ""
           }
         ]
+      },
+      {
+        "id": 24,
+        "title": "Implement CRUD for Posts",
+        "description": "Develop the Create, Read, Update, and Delete functionalities for managing posts in the CMS.",
+        "details": "Utilize React hooks and Supabase client to implement CRUD operations. Ensure to handle form submissions and state management effectively.",
+        "testStrategy": "Test each CRUD operation to ensure data is correctly created, read, updated, and deleted.",
+        "priority": "high",
+        "dependencies": [
+          "11"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Implement Image Upload for Posts",
+        "description": "Add functionality for uploading cover images for posts using Supabase storage.",
+        "details": "Integrate the `next/image` component for optimized image handling and use Supabase storage for uploading images.",
+        "testStrategy": "Verify that images can be uploaded and are correctly associated with the respective posts.",
+        "priority": "medium",
+        "dependencies": [
+          24
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Implement CRUD for Members",
+        "description": "Develop the CRUD functionalities for managing members in the CMS.",
+        "details": "Similar to posts, implement CRUD operations for members using React hooks and Supabase client.",
+        "testStrategy": "Test each CRUD operation for members to ensure data integrity.",
+        "priority": "high",
+        "dependencies": [
+          "11"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "Implement Image Upload for Members",
+        "description": "Add functionality for uploading avatars for members using Supabase storage.",
+        "details": "Utilize the same image upload strategy as posts for member avatars, ensuring proper handling and storage.",
+        "testStrategy": "Verify that member avatars can be uploaded and displayed correctly.",
+        "priority": "medium",
+        "dependencies": [
+          26
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Implement CRUD for Puppies",
+        "description": "Develop the CRUD functionalities for managing puppies in the CMS.",
+        "details": "Implement CRUD operations for puppies, ensuring to include the available toggle feature as specified in the PRD.",
+        "testStrategy": "Test each CRUD operation for puppies to ensure data integrity.",
+        "priority": "high",
+        "dependencies": [
+          "11"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 29,
+        "title": "Implement Image Upload for Puppies",
+        "description": "Add functionality for uploading images for puppies using Supabase storage.",
+        "details": "Implement image upload functionality similar to posts and members for puppy images.",
+        "testStrategy": "Verify that puppy images can be uploaded and displayed correctly.",
+        "priority": "medium",
+        "dependencies": [
+          28
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Implement CRUD for Environments",
+        "description": "Develop the CRUD functionalities for managing environments in the CMS.",
+        "details": "Implement CRUD operations for environments, ensuring to handle multiple image uploads as specified in the PRD.",
+        "testStrategy": "Test each CRUD operation for environments to ensure data integrity.",
+        "priority": "high",
+        "dependencies": [
+          "11"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 31,
+        "title": "Implement Image Upload for Environments",
+        "description": "Add functionality for uploading images for environments using Supabase storage.",
+        "details": "Utilize the same image upload strategy as posts and members for environment images.",
+        "testStrategy": "Verify that environment images can be uploaded and displayed correctly.",
+        "priority": "medium",
+        "dependencies": [
+          30
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 32,
+        "title": "Implement Supabase Auth",
+        "description": "Completed integration of Supabase authentication for user login, session management, and admin role management in the CMS.",
+        "status": "done",
+        "dependencies": [
+          "11"
+        ],
+        "priority": "high",
+        "details": "• lib/auth.ts: login/logout, session management, admin permission checks, admin user creation\n• lib/hooks/useAuth.ts: React hook for auth logic, auto state handling, helper functions\n• app/admin/page.tsx: real Supabase auth, admin permission enforcement, loading and error states, email login\n• lib/admin-setup.ts: development‐mode quick setup, custom admin creation, error handling\n• app/admin/setup/page.tsx: visual UI for admin creation, quick and custom setup flows, user feedback\n• Security: JWT stored in HttpOnly cookies, permission checks, robust error handling\n• Usage: 1) Visit /admin/setup to create an admin user; 2) Visit /admin to log in; 3) Default test account: admin@example.com / admin123456",
+        "testStrategy": "Verify full authentication flows: login, logout, session persistence, admin setup UI, role‐based access control, error handling, and JWT cookie security.",
+        "subtasks": []
+      },
+      {
+        "id": 33,
+        "title": "Modernize Admin Dashboard UI with Design System and Responsive Features",
+        "description": "Redesign the admin dashboard UI with a modern design language, implement a responsive, component-based design system, optimize navigation and information architecture, and add dark mode and interactive states.",
+        "details": "1. Redesign the entire admin interface using a modern UI language (e.g., TailwindCSS v3, Figma-to-code workflows). Define design tokens (color palette, typography scales, spacing, and shadows).\n2. Build a unified component library (buttons, forms, modals, tables, cards, alerts) and a living design system documented in Storybook.\n3. Implement responsive layouts with CSS Grid and Flexbox to support desktop and tablet breakpoints (>=1024px, >=768px).\n4. Optimize navigation structure and information architecture: define main sections, sub-sections, and user flows.\n5. Develop sidebar navigation with collapsible menus, top navigation bar with user actions, and breadcrumb components to reflect route hierarchy.\n6. Design data display screens: responsive tables with sorting/pagination, card-based dashboard widgets, and interactive charts (e.g., using Recharts or Chart.js).\n7. Add dark mode support using CSS variables or Tailwind theming; ensure smooth theme switching.\n8. Implement interactive states: skeleton loaders for data fetching, spinner and progress indicators, error banners and state views, and form validation feedback.\n9. Ensure accessibility (ARIA labels, keyboard navigation, contrast ratios) and cross-browser compatibility.",
+        "testStrategy": "1. Validate responsive behavior by testing in browser dev tools at desktop and tablet breakpoints.\n2. Use Storybook to test component variations, dark mode, and accessibility checks with axe.\n3. Manually verify sidebar, top nav, and breadcrumb navigation across key routes.\n4. Simulate loading and error states using network throttling and mock API failures; confirm skeletons and error banners display correctly.\n5. Review design tokens against Figma designs for color and typography consistency.\n6. Conduct cross-browser testing on Chrome, Firefox, Safari, and Edge.\n7. Gather UI feedback from stakeholders to ensure improved user experience.",
+        "status": "done",
+        "dependencies": [
+          1,
+          11,
+          32
+        ],
+        "priority": "high",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-07-05T16:25:31.127Z",
-      "updated": "2025-07-07T13:46:46.426Z",
+      "updated": "2025-07-08T15:24:47.157Z",
       "description": "Tasks for master context"
     }
   }

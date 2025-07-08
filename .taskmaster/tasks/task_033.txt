@@ -1,0 +1,25 @@
+# Task ID: 33
+# Title: Modernize Admin Dashboard UI with Design System and Responsive Features
+# Status: pending
+# Dependencies: 1, 11, 32
+# Priority: high
+# Description: Redesign the admin dashboard UI with a modern design language, implement a responsive, component-based design system, optimize navigation and information architecture, and add dark mode and interactive states.
+# Details:
+1. Redesign the entire admin interface using a modern UI language (e.g., TailwindCSS v3, Figma-to-code workflows). Define design tokens (color palette, typography scales, spacing, and shadows).
+2. Build a unified component library (buttons, forms, modals, tables, cards, alerts) and a living design system documented in Storybook.
+3. Implement responsive layouts with CSS Grid and Flexbox to support desktop and tablet breakpoints (>=1024px, >=768px).
+4. Optimize navigation structure and information architecture: define main sections, sub-sections, and user flows.
+5. Develop sidebar navigation with collapsible menus, top navigation bar with user actions, and breadcrumb components to reflect route hierarchy.
+6. Design data display screens: responsive tables with sorting/pagination, card-based dashboard widgets, and interactive charts (e.g., using Recharts or Chart.js).
+7. Add dark mode support using CSS variables or Tailwind theming; ensure smooth theme switching.
+8. Implement interactive states: skeleton loaders for data fetching, spinner and progress indicators, error banners and state views, and form validation feedback.
+9. Ensure accessibility (ARIA labels, keyboard navigation, contrast ratios) and cross-browser compatibility.
+
+# Test Strategy:
+1. Validate responsive behavior by testing in browser dev tools at desktop and tablet breakpoints.
+2. Use Storybook to test component variations, dark mode, and accessibility checks with axe.
+3. Manually verify sidebar, top nav, and breadcrumb navigation across key routes.
+4. Simulate loading and error states using network throttling and mock API failures; confirm skeletons and error banners display correctly.
+5. Review design tokens against Figma designs for color and typography consistency.
+6. Conduct cross-browser testing on Chrome, Firefox, Safari, and Edge.
+7. Gather UI feedback from stakeholders to ensure improved user experience.

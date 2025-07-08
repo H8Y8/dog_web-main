@@ -1,0 +1,11 @@
+# Task ID: 29
+# Title: Implement Image Upload for Puppies
+# Status: pending
+# Dependencies: 28
+# Priority: medium
+# Description: Add functionality for uploading images for puppies using Supabase storage.
+# Details:
+Implement image upload functionality similar to posts and members for puppy images.
+
+# Test Strategy:
+Verify that puppy images can be uploaded and displayed correctly.

@@ -1,8 +1,4 @@
 {
-  "/environment/page": "app/environment/page.js",
   "/page": "app/page.js",
-  "/diary/page": "app/diary/page.js",
-  "/puppies/page": "app/puppies/page.js",
-  "/about/page": "app/about/page.js",
-  "/contact/page": "app/contact/page.js"
+  "/admin/page": "app/admin/page.js"
 }

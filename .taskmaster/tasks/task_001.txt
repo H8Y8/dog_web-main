@@ -1,6 +1,6 @@
 # Task ID: 1
 # Title: Initialize Next.js Project
-# Status: pending
+# Status: done
 # Dependencies: None
 # Priority: high
 # Description: Set up a new Next.js 14 project with TypeScript support and TailwindCSS configuration.
@@ -11,13 +11,13 @@ Use the command `npx create-next-app@latest --typescript` to initialize the proj
 Verify that the Next.js application starts without errors and that TailwindCSS styles are applied correctly.
 
 # Subtasks:
-## 1. Initialize Next.js Project [pending]
+## 1. Initialize Next.js Project [done]
 ### Dependencies: None
 ### Description: Create a new Next.js project using the create-next-app command.
 ### Details:
 Run the command 'npx create-next-app@latest my-next-app' to set up the project structure.
 
-## 2. Configure TailwindCSS [pending]
+## 2. Configure TailwindCSS [done]
 ### Dependencies: 1.1
 ### Description: Install and configure TailwindCSS in the Next.js project.
 ### Details:

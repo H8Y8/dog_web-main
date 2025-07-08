@@ -1,6 +1,6 @@
 # Task ID: 12
 # Title: Create API Routes
-# Status: pending
+# Status: done
 # Dependencies: 11
 # Priority: medium
 # Description: Establish API routes for managing diary posts, puppies, environment info, and contact forms.
@@ -11,25 +11,25 @@ Create API routes in the `pages/api` directory for each required functionality. 
 Test each API route to ensure they respond correctly and perform the intended operations.
 
 # Subtasks:
-## 1. Define API Routes [pending]
+## 1. Define API Routes [done]
 ### Dependencies: None
 ### Description: Outline the necessary API routes for the application.
 ### Details:
 Identify routes for creating, reading, updating, and deleting resources.
 
-## 2. Implement Create Operation [pending]
+## 2. Implement Create Operation [done]
 ### Dependencies: 12.1
 ### Description: Develop the API route for creating new resources.
 ### Details:
 Ensure the route accepts necessary data and returns appropriate responses.
 
-## 3. Implement Read Operation [pending]
+## 3. Implement Read Operation [done]
 ### Dependencies: 12.1
 ### Description: Develop the API route for retrieving existing resources.
 ### Details:
 Include options for retrieving single or multiple resources.
 
-## 4. Implement Update and Delete Operations [pending]
+## 4. Implement Update and Delete Operations [done]
 ### Dependencies: 12.1
 ### Description: Develop the API routes for updating and deleting resources.
 ### Details:

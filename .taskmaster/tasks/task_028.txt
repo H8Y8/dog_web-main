@@ -1,0 +1,11 @@
+# Task ID: 28
+# Title: Implement CRUD for Puppies
+# Status: pending
+# Dependencies: 11
+# Priority: high
+# Description: Develop the CRUD functionalities for managing puppies in the CMS.
+# Details:
+Implement CRUD operations for puppies, ensuring to include the available toggle feature as specified in the PRD.
+
+# Test Strategy:
+Test each CRUD operation for puppies to ensure data integrity.

@@ -1,31 +1,43 @@
 # Task ID: 11
 # Title: Setup Supabase Integration
-# Status: pending
+# Status: done
 # Dependencies: 1
 # Priority: high
-# Description: Integrate Supabase for database, authentication, and storage functionalities.
+# Description: Integrate Supabase for database, authentication, and storage functionalities, including database schema creation (posts, members, puppies, environments), Row-Level Security (RLS) policies, and four storage buckets as specified in the PRD.
 # Details:
-Install Supabase client using `npm install @supabase/supabase-js`. Configure Supabase in the application and set up authentication and storage services.
+Install the Supabase client using `npm install @supabase/supabase-js`. Configure Supabase in the application: set up authentication, define the database schema with tables for posts, members, puppies, and environments, enable RLS with basic policies, and configure storage services with four buckets per PRD requirements.
 
 # Test Strategy:
-Test the Supabase connection and ensure that authentication works as expected.
+Run smoke tests to validate the Supabase connection; verify authentication flows including JWT token issuance and validation; confirm that the database schema tables exist and RLS policies enforce access controls correctly; test file uploads/downloads in all four storage buckets.
 
 # Subtasks:
-## 1. Set up Supabase Project [pending]
+## 1. Set up Supabase Project [done]
 ### Dependencies: None
 ### Description: Create a new Supabase project through the Supabase dashboard.
 ### Details:
 Go to the Supabase website, sign in or create an account, and create a new project by providing a name and selecting a database region.
 
-## 2. Configure Authentication Settings [pending]
+## 2. Configure Authentication Settings [done]
 ### Dependencies: 11.1
 ### Description: Set up authentication options in the Supabase project.
 ### Details:
-Navigate to the 'Authentication' section in the Supabase dashboard, enable email/password sign-up, and configure any additional authentication providers as needed.
+Navigate to the 'Authentication' section in the Supabase dashboard, enable email/password sign-up, configure additional providers as needed, and ensure JWT token settings are properly configured.
 
-## 3. Set up Storage for Files [pending]
+## 3. Configure Storage Buckets [done]
 ### Dependencies: 11.1
-### Description: Configure storage settings for file uploads in the Supabase project.
+### Description: Configure four storage buckets for file uploads as specified in the PRD.
 ### Details:
-Go to the 'Storage' section in the Supabase dashboard, create a new bucket for file storage, and set the appropriate permissions for public or private access.
+Go to the 'Storage' section in the Supabase dashboard, create four buckets as specified in the PRD, and set appropriate public or private permissions for each bucket.
+
+## 4. Create Database Schema [done]
+### Dependencies: 11.1
+### Description: Define tables for posts, members, puppies, and environments in Supabase.
+### Details:
+Use the Supabase SQL editor or migrations to create the tables: posts, members, puppies, and environments, including necessary columns, data types, and foreign key relationships.
+
+## 5. Configure Row-Level Security (RLS) [done]
+### Dependencies: 11.4
+### Description: Enable RLS and add basic policies for the new tables.
+### Details:
+For each table (posts, members, puppies, environments), enable Row-Level Security and create policies that allow authenticated users to select, insert, update, and delete only their own records as appropriate.
 

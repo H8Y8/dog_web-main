@@ -1,6 +1,6 @@
 # Task ID: 6
 # Title: Migrate AOS Animation Library
-# Status: pending
+# Status: done
 # Dependencies: 1
 # Priority: medium
 # Description: Integrate the AOS library into the Next.js project and ensure it works with SSR.
@@ -11,15 +11,18 @@ Install AOS using `npm install aos`. Import AOS in the layout component and init
 Test that AOS animations trigger correctly on scroll.
 
 # Subtasks:
-## 1. Install AOS Library [pending]
+## 1. Install AOS Library [done]
 ### Dependencies: None
 ### Description: Add the AOS library to the Next.js project using npm or yarn.
 ### Details:
 Run the command 'npm install aos' or 'yarn add aos' in the terminal to install the AOS library.
 
-## 2. Initialize AOS in Next.js [pending]
+## 2. Initialize AOS in Next.js [done]
 ### Dependencies: 6.1
 ### Description: Set up AOS in the Next.js project to ensure it works with server-side rendering.
 ### Details:
 Import AOS in the _app.js file and initialize it in a useEffect hook to ensure it runs on the client side. Also, include the AOS CSS in the global styles.
+<info added on 2025-07-07T07:22:06.373Z>
+Created an AOSInit.tsx client component with the ‘use client’ directive, a useEffect hook to initialize AOS, an SSR compatibility check (typeof window), and animation settings (duration: 1000ms, once: true, offset: 100px). Installed @types/aos for type definitions. Integrated the AOSInit component into layout.tsx. Added fade-down and fade-up test animations on the homepage. AOS is now fully configured and SSR-compatible.
+</info added on 2025-07-07T07:22:06.373Z>
 

@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: '管理後台 | 蘇格蘭㹴犬舍',
-  description: '蘇格蘭㹴犬舍管理後台',
+  description: '蘇格蘭㹴犬舍管理後台 - 專業的犬舍管理平台',
   robots: {
     index: false,
     follow: false,

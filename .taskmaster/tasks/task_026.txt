@@ -1,0 +1,11 @@
+# Task ID: 26
+# Title: Implement CRUD for Members
+# Status: pending
+# Dependencies: 11
+# Priority: high
+# Description: Develop the CRUD functionalities for managing members in the CMS.
+# Details:
+Similar to posts, implement CRUD operations for members using React hooks and Supabase client.
+
+# Test Strategy:
+Test each CRUD operation for members to ensure data integrity.

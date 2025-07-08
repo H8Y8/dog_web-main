@@ -1,0 +1,11 @@
+# Task ID: 24
+# Title: Implement CRUD for Posts
+# Status: pending
+# Dependencies: 11
+# Priority: high
+# Description: Develop the Create, Read, Update, and Delete functionalities for managing posts in the CMS.
+# Details:
+Utilize React hooks and Supabase client to implement CRUD operations. Ensure to handle form submissions and state management effectively.
+
+# Test Strategy:
+Test each CRUD operation to ensure data is correctly created, read, updated, and deleted.

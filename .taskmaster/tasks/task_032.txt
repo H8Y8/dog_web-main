@@ -1,0 +1,11 @@
+# Task ID: 32
+# Title: Implement Supabase Auth
+# Status: pending
+# Dependencies: 11
+# Priority: high
+# Description: Integrate Supabase authentication for user login and role management in the CMS.
+# Details:
+Use the Supabase Auth API to implement user login, ensuring JWT is stored in HttpOnly cookies for security.
+
+# Test Strategy:
+Test user login and role-based access to ensure proper functionality.

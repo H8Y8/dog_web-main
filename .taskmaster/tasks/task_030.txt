@@ -1,0 +1,11 @@
+# Task ID: 30
+# Title: Implement CRUD for Environments
+# Status: pending
+# Dependencies: 11
+# Priority: high
+# Description: Develop the CRUD functionalities for managing environments in the CMS.
+# Details:
+Implement CRUD operations for environments, ensuring to handle multiple image uploads as specified in the PRD.
+
+# Test Strategy:
+Test each CRUD operation for environments to ensure data integrity.

@@ -1,6 +1,6 @@
 # Task ID: 3
 # Title: Setup Layout Component
-# Status: pending
+# Status: done
 # Dependencies: 2
 # Priority: high
 # Description: Create a RootLayout component to wrap all pages and include Navbar and Footer.
@@ -11,13 +11,23 @@ Create a new layout file at `app/layout.tsx` that includes the Navbar and Footer
 Test the layout by navigating through different pages to ensure the Navbar and Footer are displayed correctly.
 
 # Subtasks:
-## 1. Design the RootLayout Component [pending]
+## 1. Design the RootLayout Component [done]
 ### Dependencies: None
 ### Description: Create the initial design and structure for the RootLayout component, including header, footer, and main content areas.
 ### Details:
 Focus on a clean and modular design that can accommodate various content types. Use CSS Grid or Flexbox for layout.
+<info added on 2025-07-07T06:54:04.667Z>
+Now that the RootLayout structure is in place, implement responsive design optimizations and testing:
 
-## 2. Implement Responsive Design [pending]
+• Define and apply TailwindCSS breakpoints (sm, md, lg, xl) across Navbar, main content and Footer  
+• Adjust Navbar menu behavior and layout for mobile (≤640px), tablet (≤768px) and desktop screens  
+• Collapse Footer’s three-column layout into a stacked layout on small viewports and ensure consistent spacing  
+• Ensure the main content area flexibly resizes with appropriate padding and margins at each breakpoint  
+• Test the complete layout on key viewports (e.g. 320px, 768px, 1440px) using both browser dev tools and physical devices  
+• Verify no unexpected layout shifts, maintain SEO metadata/Open Graph tag integrity, and confirm smooth navigation across screen sizes
+</info added on 2025-07-07T06:54:04.667Z>
+
+## 2. Implement Responsive Design [done]
 ### Dependencies: 3.1
 ### Description: Apply responsive design techniques to the RootLayout component to ensure it works well on different screen sizes.
 ### Details:

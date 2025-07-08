@@ -1,0 +1,139 @@
+# 後台 CMS 擴充 PRD（backoffice-cms-extension-prd.txt）
+## 版本
+v1.0 – 2025‑07‑08
+
+## 目標 (Goals)
+1. 讓站長（Editor）可透過單一後台管理網站內容：日誌（Posts）、成員（Members）、新生幼犬（Puppies）、環境介紹（Environments）。
+2. 以 Supabase 提供資料庫、Storage 與 Auth 功能，並透過 Row‑Level Security (RLS) 控管權限。
+3. 保持 Next.js 前台的 SEO 友善（SSG／ISR、JSON‑LD）及 Core Web Vitals 表現。
+4. 四週內交付，MVP（M1）需在第二週結束前可上線。
+
+---
+
+## 前置 Epic：Supabase 基礎建置 (M0)
+| 任務 | 說明 | Story Points | 優先級 |
+|------|------|--------------|--------|
+| Init Supabase Project | 註冊帳號、建立專案，取得 `SUPABASE_URL` & `ANON_KEY` | 1 | P0 |
+| Create Schema & Buckets | 依 PRD SQL 建立 4 張表與 4 個 Storage bucket | 2 | P0 |
+| Enable RLS & Basic Policy | 開啟 RLS，貼上通用 Editor 及作者政策 | 2 | P0 |
+| Smoke Test Connection | 在 Next.js 用 `createClient` 讀取 `posts`，確定連線與 JWT 有效 | 1 | P0 |
+
+**完成標準 (Exit Criteria)**  
+- 所有表與桶已存在且 RLS 啟動。  
+- `npm run dev` 能讀取 Supabase 並列出空的 `posts` 陣列。  
+- `SUPABASE_*` 變數已加入 Zeabur／本地 `.env`。
+
+---
+
+## 使用者角色 (Personas)
+| 角色 | 權限 | 主要任務 |
+|------|------|----------|
+| **Editor (站長)** | 登入後台，CRUD 全部內容、上傳圖片 | 維護網站 |
+| **Viewer (訪客)** | 只讀前台 | 瀏覽內容 |
+
+---
+
+## 資料模型 (Data Model)
+### 1. posts
+- `id` uuid (PK)  
+- `slug` text UNIQUE  
+- `title` text  
+- `excerpt` text  
+- `body_md` text (Markdown)  
+- `cover_url` text  
+- `status` text draft/published  
+- `author_id` uuid → auth.users  
+- `published_at` timestamptz  
+- `created_at` timestamptz default now()
+
+### 2. members
+- `id` uuid (PK)  
+- `name` text  
+- `role` text  
+- `bio_md` text  
+- `avatar_url` text  
+- `created_at` timestamptz default now()
+
+### 3. puppies
+- `id` uuid (PK)  
+- `name` text  
+- `birth_date` date  
+- `breed` text  
+- `cover_url` text  
+- `available` boolean default false
+
+### 4. environments
+- `id` uuid (PK)  
+- `title` text  
+- `body_md` text  
+- `image_urls` text[]  
+- `published_at` timestamptz
+
+### Storage Buckets
+| Bucket | 用途 | Public | 說明 |
+|--------|------|--------|------|
+| `post_covers` | 文章封面 | 否 | 簽名 URL |
+| `avatars` | 成員頭像 | 否 | – |
+| `puppy_photos` | 幼犬照片 | 否 | – |
+| `env_imgs` | 環境相簿 | 公開 | SEO & LCP |
+
+---
+
+## Row‑Level Security (範例)
+```sql
+create role editor;
+
+create policy "Editors manage all"
+  on all for all
+  using ( auth.role() = 'editor' );
+
+create policy "Author can edit own post"
+  on posts for update using ( author_id = auth.uid() );
+```
+
+---
+
+## 功能需求 (Functional Req.)
+| 模組 | M1 (MVP) | M2 (Nice‑to‑have) |
+|------|----------|-------------------|
+| Posts | CRUD、封面上傳、ISR webhook | Rich‑text 編輯、全文搜尋 |
+| Members | CRUD、頭像上傳 | 社群連結欄位 |
+| Puppies | CRUD、封面上傳、available toggle | 多張相簿、銷售統計 |
+| Environments | CRUD、相簿上傳 | 圖片批次排序、Lightbox |
+| 全域 | Supabase Auth、RLS | RBAC UI、Audit log |
+
+---
+
+## 非功能需求 (NFR)
+1. **可維護性**：Refine v5 + TypeScript，Hook 組件化 < 1k LOC / 模組。  
+2. **效能**：首頁 LCP < 2.5 s、CLS < 0.1。  
+3. **安全**：HTTPS、JWT 於 HttpOnly cookie，RLS 全開。  
+4. **可存取性**：Lighthouse a11y ≥ 90。  
+
+---
+
+## 里程碑 & 估點 (Story Points)
+| Milestone | 內容 | 時間 | SP |
+|-----------|------|------|----|
+| **M0** | Supabase 起手四任務 | 第 1 週 | 6 |
+| **M1** | posts + members CRUD、RLS、ISR webhook | 第 1–2 週 | 20 |
+| **M2** | puppies & environments 模組、圖片批次、一級 SEO | 第 3 週 | 13 |
+| **M3** | RBAC UI、Audit log、Lighthouse 改善 | 第 4 週 | 8 |
+
+---
+
+## 接受標準 (Acceptance Criteria)
+- [ ] M0：本地與 Zeabur 環境皆能連線 Supabase；RLS 被啟動。  
+- [ ] M1：Editor 新建文章後前台於 60 s 內更新；封面圖簽名 URL 運作正常。  
+- [ ] M2：幼犬與環境相簿頁面均通過 LCP/Lighthouse 測試。  
+- [ ] M3：訪客無存取 /admin；Editor RBAC 開關、審計紀錄可查。  
+
+---
+
+## 風險 & 緩解
+* **Supabase 學習曲線** → 透過官方 QuickStart 一條龍流程，把 M0 縮在 1–2 天內完成。  
+* **圖片過大拖慢 LCP** → 使用 Supabase Image Transformation + `next/image` placeholder。  
+* **ISR webhook 失敗** → 保留 fallback `revalidateTag('all')` 按鈕給 Editor。  
+
+---  
+(文件結束)

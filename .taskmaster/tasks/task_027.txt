@@ -1,0 +1,11 @@
+# Task ID: 27
+# Title: Implement Image Upload for Members
+# Status: pending
+# Dependencies: 26
+# Priority: medium
+# Description: Add functionality for uploading avatars for members using Supabase storage.
+# Details:
+Utilize the same image upload strategy as posts for member avatars, ensuring proper handling and storage.
+
+# Test Strategy:
+Verify that member avatars can be uploaded and displayed correctly.
