@@ -88,8 +88,8 @@ function AdminLogin() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">管理後台</h1>
-            <p className="text-white/70">蘇格蘭㹴犬舍管理系統</p>
+                         <h1 className="text-3xl font-bold text-white mb-2">管理後台</h1>
+             <p className="text-white/70">雷歐犬舍訓練工作室管理系統</p>
           </div>
 
           {error && (
@@ -266,15 +266,15 @@ function AdminDashboard({ user, onSignOut }: { user: any, onSignOut: () => Promi
         {/* Logo 區域 */}
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">蘇</span>
-            </div>
-            {!sidebarCollapsed && (
-              <div className="ml-3">
-                <h2 className="text-lg font-bold text-gray-900">蘇格蘭㹴犬舍</h2>
-                <p className="text-xs text-gray-500">管理系統</p>
-              </div>
-            )}
+                         <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+               <span className="text-white font-bold text-sm">雷</span>
+             </div>
+             {!sidebarCollapsed && (
+               <div className="ml-3">
+                 <h2 className="text-lg font-bold text-gray-900">雷歐犬舍訓練工作室</h2>
+                 <p className="text-xs text-gray-500">管理系統</p>
+               </div>
+             )}
           </div>
         </div>
 
@@ -449,13 +449,13 @@ function DashboardContent() {
       {/* 歡迎區域 */}
       <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 rounded-2xl shadow-xl">
         <div className="px-8 py-12 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl font-bold text-white mb-4">
-              歡迎來到蘇格蘭㹴犬舍管理系統
-            </h1>
-            <p className="text-purple-100 text-lg leading-relaxed">
-              專業的犬舍管理平台，讓您輕鬆管理犬舍的日常運營、幼犬資訊和會員服務
-            </p>
+                     <div className="max-w-4xl mx-auto">
+             <h1 className="text-4xl font-bold text-white mb-4">
+               歡迎來到雷歐犬舍訓練工作室管理系統
+             </h1>
+             <p className="text-purple-100 text-lg leading-relaxed">
+               專業的犬舍管理平台，讓您輕鬆管理犬舍的日常運營、幼犬資訊和會員服務
+             </p>
             <div className="mt-8 flex justify-center space-x-4">
               <Button variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30">
                 查看統計報告

@@ -1,8 +1,8 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import './globals.css'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+import ConditionalNavbar from './components/ConditionalNavbar'
+import ConditionalFooter from './components/ConditionalFooter'
 import AOSInit from './components/AOSInit'
 
 export const metadata: Metadata = {
@@ -56,16 +56,16 @@ export default function RootLayout({
       <body className="antialiased bg-earth-50">
         <AOSInit />
         <div className="min-h-screen flex flex-col bg-earth-50">
-          {/* Navigation Bar */}
-          <Navbar />
+          {/* Conditional Navigation Bar */}
+          <ConditionalNavbar />
           
           {/* Main Content Area */}
           <main className="flex-grow bg-earth-50">
             {children}
           </main>
           
-          {/* Footer */}
-          <Footer />
+          {/* Conditional Footer */}
+          <ConditionalFooter />
         </div>
       </body>
     </html>

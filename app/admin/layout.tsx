@@ -2,8 +2,8 @@ import React from 'react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '管理後台 | 蘇格蘭㹴犬舍',
-  description: '蘇格蘭㹴犬舍管理後台 - 專業的犬舍管理平台',
+  title: '管理後台 | 雷歐犬舍訓練工作室',
+  description: '雷歐犬舍訓練工作室管理後台 - 專業的犬舍管理平台',
   robots: {
     index: false,
     follow: false,
