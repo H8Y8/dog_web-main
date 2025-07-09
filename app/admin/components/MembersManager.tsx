@@ -202,6 +202,12 @@ export default function MembersManager() {
     refresh()
   }
 
+  // 處理成員更新（例如照片上傳）
+  const handleMemberUpdated = () => {
+    // 重新載入列表資料以顯示最新的頭像
+    refresh()
+  }
+
   // 返回列表
   const handleBack = () => {
     setCurrentView('list')
@@ -253,6 +259,7 @@ export default function MembersManager() {
           memberId={selectedMember.id}
           onEdit={() => setCurrentView('edit')}
           onBack={handleBack}
+          onMemberUpdated={handleMemberUpdated}
         />
       )}
 

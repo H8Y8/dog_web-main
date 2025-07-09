@@ -210,10 +210,11 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
   const [currentView, setCurrentView] = useState('dashboard')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [postsCount, setPostsCount] = useState(0)
+  const [membersCount, setMembersCount] = useState(0)
 
-  // 獲取文章數量
+  // 獲取文章數量和成員數量
   useEffect(() => {
-    const fetchPostsCount = async () => {
+    const fetchCounts = async () => {
       try {
         const headers: HeadersInit = {
           'Content-Type': 'application/json'
@@ -223,28 +224,46 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
           headers['Authorization'] = `Bearer ${session.access_token}`
         }
 
+        // 獲取文章數量
         console.log('Fetching posts count...') // 調試信息
 
-        const response = await fetch('/api/posts?count=true', {
+        const postsResponse = await fetch('/api/posts?count=true', {
           headers,
         })
 
-        console.log('Response status:', response.status) // 調試信息
+        console.log('Posts response status:', postsResponse.status) // 調試信息
 
-        if (response.ok) {
-          const data = await response.json()
-          console.log('Posts count data:', data) // 調試信息
-          setPostsCount(data.data?.total || 0)
+        if (postsResponse.ok) {
+          const postsData = await postsResponse.json()
+          console.log('Posts count data:', postsData) // 調試信息
+          setPostsCount(postsData.data?.total || 0)
         } else {
-          console.error('Failed to fetch posts count:', response.status, response.statusText)
+          console.error('Failed to fetch posts count:', postsResponse.status, postsResponse.statusText)
+        }
+
+        // 獲取成員數量
+        console.log('Fetching members count...') // 調試信息
+
+        const membersResponse = await fetch('/api/members', {
+          headers,
+        })
+
+        console.log('Members response status:', membersResponse.status) // 調試信息
+
+        if (membersResponse.ok) {
+          const membersData = await membersResponse.json()
+          console.log('Members count data:', membersData) // 調試信息
+          setMembersCount(membersData.data?.pagination?.total || 0)
+        } else {
+          console.error('Failed to fetch members count:', membersResponse.status, membersResponse.statusText)
         }
       } catch (error) {
-        console.error('Error fetching posts count:', error)
+        console.error('Error fetching counts:', error)
       }
     }
 
     if (session) {
-      fetchPostsCount()
+      fetchCounts()
     }
   }, [session])
 
@@ -262,7 +281,7 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
       children: [
         { id: 'posts', label: '日誌管理', badge: postsCount.toString() },
         { id: 'puppies', label: '幼犬管理', badge: '3' },
-        { id: 'members', label: '成員管理', badge: '2' },
+        { id: 'members', label: '成員管理', badge: membersCount.toString() },
         { id: 'environments', label: '環境管理', badge: '1' },
       ],
     },

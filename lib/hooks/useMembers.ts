@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import { supabase } from '../supabase'
 import { 
   getMembers, 
   getMemberById, 
@@ -186,9 +187,10 @@ export function useMembers(options: MemberQueryOptions = {}) {
     return state.members.filter(member => member.status === status)
   }, [state.members])
 
-  // 初始載入 - 只在初次掛載時執行
+  // 初始載入和即時訂閱 - 只在初次掛載時執行
   useEffect(() => {
     let isMounted = true
+    let channel: any = null
     
     const initialFetch = async () => {
       if (isMounted) {
@@ -196,10 +198,72 @@ export function useMembers(options: MemberQueryOptions = {}) {
       }
     }
     
-    initialFetch()
+    // 設置即時訂閱
+    const setupRealtimeSubscription = () => {
+      channel = supabase
+        .channel('members-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'members' },
+          (payload) => {
+            console.log('Members table change detected:', payload)
+            
+            if (!isMounted) return
+            
+            // 根據事件類型更新本地狀態
+            setState(prev => {
+              switch (payload.eventType) {
+                case 'INSERT':
+                  // 新增成員
+                  const newMember = payload.new as Member
+                  if (prev.members.find(m => m.id === newMember.id)) {
+                    return prev // 避免重複
+                  }
+                  return {
+                    ...prev,
+                    members: [...prev.members, newMember],
+                    count: prev.count + 1
+                  }
+                
+                case 'UPDATE':
+                  // 更新成員
+                  const updatedMember = payload.new as Member
+                  return {
+                    ...prev,
+                    members: prev.members.map(member => 
+                      member.id === updatedMember.id ? updatedMember : member
+                    )
+                  }
+                
+                case 'DELETE':
+                  // 刪除成員
+                  const deletedMember = payload.old as Member
+                  return {
+                    ...prev,
+                    members: prev.members.filter(member => member.id !== deletedMember.id),
+                    count: prev.count - 1
+                  }
+                
+                default:
+                  return prev
+              }
+            })
+          }
+        )
+        .subscribe()
+    }
+    
+    // 初始載入後設置即時訂閱
+    initialFetch().then(() => {
+      if (isMounted) {
+        setupRealtimeSubscription()
+      }
+    })
     
     return () => {
       isMounted = false
+      if (channel) {
+        supabase.removeChannel(channel)
+      }
     }
   }, []) // 移除 fetchMembers 依賴，避免無限循環
 

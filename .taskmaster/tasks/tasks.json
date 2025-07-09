@@ -933,7 +933,7 @@
         "dependencies": [
           26
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -941,7 +941,7 @@
             "description": "Set up the Supabase storage bucket 'member_photos' and update the members database table to include fields for avatar_url, album_urls, pedigree_urls, and health_check_urls.",
             "dependencies": [],
             "details": "In the Supabase dashboard or via CLI, create a new storage bucket named 'member_photos'. In your database migration, alter the 'members' table to add columns: avatar_url (text), album_urls (text[]), pedigree_urls (text[]), health_check_urls (text[]). Set up RLS policies to allow authenticated users to upload and read their own files.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify bucket existence and column additions via Supabase UI or CLI; manually test RLS policies by attempting uploads, reads, and unauthorized access."
           },
           {
@@ -952,7 +952,7 @@
               1
             ],
             "details": "Create RESTful endpoints under '/members/:memberId/photos'. Use the Supabase client to upload files to 'member_photos' at path '{memberId}/{type}/{uuid}'. On upload success, update the member record: replace avatar_url or append/remove entries in album_urls, pedigree_urls, or health_check_urls arrays. Implement DELETE endpoints to remove files from storage and update DB columns accordingly.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Write unit tests for upload and delete endpoints, mocking the Supabase client to assert correct storage paths and DB mutations; perform integration tests uploading and deleting actual files."
           },
           {
@@ -963,7 +963,7 @@
               1
             ],
             "details": "Install a library such as 'browser-image-compression'. Create a helper function that accepts a File object, compresses it to a specified maximum size/quality, and returns a Blob or File ready for upload. Ensure support for JPEG, PNG, and WebP formats.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Write unit tests that pass sample image files into the helper and assert that output file sizes are reduced and image integrity is maintained."
           },
           {
@@ -974,7 +974,7 @@
               3
             ],
             "details": "Using your frontend framework (e.g., React or Vue), build a component containing a drop zone for file input, a photo type selector (avatar, album, pedigree, health_check), and thumbnail previews of selected files. Include accessible labels and keyboard interactions.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Manually verify drag-and-drop and file selection for each photo type; write snapshot tests to ensure consistent rendering of the component."
           },
           {
@@ -986,7 +986,7 @@
               4
             ],
             "details": "In the upload component, on file drop or selection, call the compression helper, then send a POST request to '/members/{memberId}/photos' with multipart/form-data including the compressed file and photo type. Manage loading states, catch errors, and update component state or invoke callbacks with the new photo URLs on success.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Write integration tests simulating file uploads with mocked API responses; verify that the UI displays loading states, handles errors properly, and updates previews on success."
           },
           {
@@ -997,7 +997,7 @@
               5
             ],
             "details": "On the member profile or edit page, fetch photo URLs and render sections for avatar (single image), album (grid with drag-to-reorder), pedigree, and health check (galleries). Implement delete buttons that call DELETE endpoints and update the UI. For album photos, enable drag-and-drop reordering and persist the new order via a PATCH endpoint.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Perform end-to-end tests: upload each photo type, verify display, delete photos and confirm removal, reorder album photos and verify order is saved correctly."
           }
         ]
@@ -1101,7 +1101,7 @@
         "description": "Fetch and display member data managed in the admin CMS on the public About Us page, including member list, role-based grouping, and individual biographies, fully synchronized with the back-end CRUD and image upload features.",
         "details": "1. Create or update the About Us page (e.g., app/about/page.tsx) to fetch member records from Supabase (members table) via the existing CRUD API. Select fields: id, name, role, bio, avatar_url.\n2. Use the design system’s card or list components to render each member’s avatar, name, role, and biography. Ensure responsive layout (grid on desktop, list on mobile).\n3. Implement role-based filtering or tabs (e.g., “All”, “Developers”, “Designers”) that group members by their role. When a filter is active, display only matching members.\n4. Handle loading states (skeleton cards) and error states (friendly error message and retry button).\n5. Subscribe to Supabase real-time updates on the members table or re-fetch on page navigation to ensure the front-end display stays in sync with CRUD operations and image uploads.\n6. Ensure accessibility: use semantic HTML, ARIA labels for filters, and alt text for avatars.",
         "testStrategy": "1. Verify initial page load fetches and displays all members sorted by name, showing avatar, role, and bio.\n2. Test each role filter/tab: click to filter, confirm only members with that role appear.\n3. Perform member add, update, and delete operations in the admin CMS and confirm the About Us page reflects changes on refresh and via real-time updates.\n4. Upload or change a member avatar in the admin CMS and verify the updated image appears on the About Us page.\n5. Simulate loading (slow network) and server error states to confirm skeletons and error UI appear as expected.\n6. Check responsive layout at multiple breakpoints and run basic accessibility audit (keyboard navigation, screen reader labels).",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           26,
           27
@@ -1114,7 +1114,7 @@
             "description": "Create or update the Dog Members page (e.g., app/members/page.tsx) to fetch dog member records from Supabase using the existing CRUD API. Select fields: id, name, role, bio, avatar_url, pedigree, health_status, personality, achievements, gallery_urls, certificate_urls.",
             "dependencies": [],
             "details": "In app/members/page.tsx, import the Supabase client instance and define a fetchMembers function that queries the 'members' table selecting the specified fields. Use getServerSideProps or a client data‐fetching hook (e.g., useSWR) to retrieve data. Export the page component skeleton returning fetched props or hook data.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Unit test fetchMembers with a mocked Supabase client to verify correct query. Integration test by mocking API responses and asserting data is passed to the page component."
           },
           {
@@ -1125,7 +1125,7 @@
               1
             ],
             "details": "Create components/DogMemberCard.tsx. Accept a DogMember prop interface. Use the design system Card or styled divs. Render avatar with alt text, name as an h3, role as subtitle, and structured sections for pedigree, health_status, personality, and achievements. Ensure semantic HTML and responsive styling.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Unit test with React Testing Library: render DogMemberCard with sample props and assert presence of each field and correct alt attributes."
           },
           {
@@ -1136,7 +1136,7 @@
               2
             ],
             "details": "In the page component, derive the set of roles from fetched data. Implement an accessible Tabs component (using ARIA roles) for each role. On tab selection update a filter state and render only DogMemberCard components matching the selected role, or all when ‘All’ is active.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Unit test tab interactions: simulate tab clicks and assert that only cards with matching roles are rendered."
           },
           {
@@ -1147,7 +1147,7 @@
               2
             ],
             "details": "Wrap data fetching in useSWR or custom hook. While loading, render skeleton versions of DogMemberCard. On fetch error display a friendly message and a Retry button that re‐invokes the fetch. Use next/head to set meta title, description, and Open Graph tags reflecting the dog members content for SEO.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Mock data fetch pending and error states to test loading skeletons and error UI. Use a head tag inspection in integration tests to verify correct meta tags."
           },
           {
@@ -1159,7 +1159,7 @@
               4
             ],
             "details": "In the data fetch hook or page component, initialize a Supabase channel subscription on the 'members' table for INSERT, UPDATE, DELETE events to trigger data revalidation or state updates. In DogMemberCard, render a carousel or grid of images from gallery_urls and badge thumbnails linked to certificate_urls. Ensure accessibility of carousel controls and image alt text.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Use end-to-end tests with Supabase emulator to emit real-time events and verify UI updates automatically. Test gallery/carousel renders all images and alt texts correctly."
           }
         ]
@@ -1196,7 +1196,7 @@
     ],
     "metadata": {
       "created": "2025-07-05T16:25:31.127Z",
-      "updated": "2025-07-09T15:08:49.463Z",
+      "updated": "2025-07-09T16:27:12.760Z",
       "description": "Tasks for master context"
     }
   }

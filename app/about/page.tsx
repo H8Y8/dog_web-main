@@ -1,9 +1,22 @@
 'use client'
 
 import React, { useState } from 'react'
+import Head from 'next/head'
+import { useMembers } from '../../lib/hooks/useMembers'
+import { MemberRole, ROLE_LABELS } from '../../lib/types'
+import DogMemberCard from '@/app/components/DogMemberCard'
 
 export default function AboutPage() {
   const [, setActiveId] = useState<number | null>(null);
+  const [selectedRole, setSelectedRole] = useState<MemberRole | 'all'>('all')
+  
+  // 獲取成員資料
+  const { members, loading, error } = useMembers()
+
+  // 根據角色篩選成員
+  const filteredMembers = selectedRole === 'all' 
+    ? members 
+    : members.filter(member => member.role === selectedRole)
 
   const certificates = [
     {
@@ -29,29 +42,29 @@ export default function AboutPage() {
     }
   ];
 
-  const members = [
-    {
-      id: 1,
-      name: "小狗一號",
-      age: "約3歲",
-      gender: "男孩",
-      description: "是一隻充滿活力與好奇心的蘇格蘭㹴，經過嚴格基因檢測篩選，擁有絕佳的健康基因。他個性堅毅、聰明且樂於探索，無論是家庭的日常散步還是戶外冒險，總能展現出蘇格蘭㹴特有的靈敏反應與活力。經過專業訓練，不僅在服從訓練上表現出色，更在與家人互動中充滿溫情，是每個家庭理想的忠實守護者與好夥伴。",
-      image: "/images/members/1.jpg",
-      traits: ["活力充沛", "聰明好學", "忠誠護主", "愛好冒險"]
-    },
-    {
-      id: 2,
-      name: "小狗二號",
-      age: "約2.5歲",
-      gender: "女孩",
-      description: "她溫柔、聰慧的性格贏得了無數喜愛，同樣通過嚴謹的基因檢測，確保了她健康的血統與活潑的天性。她擁有蘇格蘭㹴獨有的優雅風範，不僅在家中成為大家的心靈慰藉，也在專業訓練中展示了卓越的學習能力。喜歡與人互動，溫暖的眼神與甜美的叫聲能瞬間拉近與家人之間的距離，讓每一天都充滿了無限的愛與活力。",
-      image: "/images/members/2.jpg",
-      traits: ["優雅溫柔", "聰慧伶俐", "親人友善", "學習力強"]
-    }
-  ];
+  // 獲取可用的角色選項
+  const availableRoles = Array.from(new Set(members.map(member => member.role)))
+  const roleOptions = [
+    { value: 'all', label: '全部' },
+    ...availableRoles.map(role => ({ value: role, label: ROLE_LABELS[role] }))
+  ]
 
   return (
-    <div className="pt-32 min-h-screen">
+    <>
+      <Head>
+        <title>關於我們 - 蔡毛的蘇格蘭㹴專業犬舍</title>
+        <meta name="description" content="認識蔡毛的蘇格蘭㹴專業犬舍，我們擁有超過十年的育種經驗，專注於培育優質、健康的蘇格蘭㹴幼犬。了解我們的專業團隊、優秀成員和嚴格的基因檢測流程。" />
+        <meta name="keywords" content="蘇格蘭㹴,專業犬舍,狗狗繁育,寵物,蔡毛,基因檢測,健康狗狗" />
+        <meta property="og:title" content="關於我們 - 蔡毛的蘇格蘭㹴專業犬舍" />
+        <meta property="og:description" content="認識我們專業的蘇格蘭㹴犬舍，擁有優秀的種犬和專業的繁育經驗。" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="蔡毛的蘇格蘭㹴專業犬舍" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="關於我們 - 蔡毛的蘇格蘭㹴專業犬舍" />
+        <meta name="twitter:description" content="認識我們專業的蘇格蘭㹴犬舍，擁有優秀的種犬和專業的繁育經驗。" />
+        <link rel="canonical" href="/about" />
+      </Head>
+      <div className="pt-32 min-h-screen">
       {/* About Section */}
       <section className="py-16 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -215,74 +228,102 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">成員介紹</h2>
-            <p className="text-xl text-earth-700" data-aos="fade-up" data-aos-delay="100">
+            <p className="text-xl text-earth-700 mb-8" data-aos="fade-up" data-aos-delay="100">
               認識我們可愛的蘇格蘭㹴家族
             </p>
+            
+            {/* 角色篩選標籤 */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8" data-aos="fade-up" data-aos-delay="200">
+              {roleOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedRole(option.value as MemberRole | 'all')}
+                  className={`px-6 py-2 rounded-full transition-all duration-300 ${
+                    selectedRole === option.value
+                      ? 'bg-primary-500 text-white shadow-lg transform scale-105'
+                      : 'bg-white text-earth-700 hover:bg-primary-50 hover:text-primary-700 shadow-md'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {members.map((member) => (
-              <div
-                key={member.id}
-                className="relative group"
-                data-aos="fade-up"
-                data-aos-delay={member.id * 200}
-                onMouseEnter={() => setActiveId(member.id)}
-                onMouseLeave={() => setActiveId(null)}
-              >
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-102">
-                  <div className="relative h-80 overflow-hidden">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover transition-all duration-500 group-hover:brightness-110 group-hover:saturate-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-earth-900/80 via-earth-900/40 to-transparent 
-                      transition-opacity duration-500 group-hover:opacity-75"></div>
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform transition-transform duration-500">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-2xl font-bold group-hover:text-primary-200 transition-colors duration-300">
-                          {member.name}
-                        </h3>
-                        <div className="flex items-center space-x-2">
-                          <span className="px-3 py-1 bg-primary-500/80 backdrop-blur-sm rounded-full text-sm">
-                            {member.gender}
-                          </span>
-                          <span className="px-3 py-1 bg-primary-500/80 backdrop-blur-sm rounded-full text-sm">
-                            {member.age}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {member.traits.map((trait, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-earth-700/50 backdrop-blur-sm rounded-full text-sm 
-                              transform transition-transform duration-300 hover:scale-105"
-                          >
-                            {trait}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <p className="text-earth-700 leading-relaxed">
-                      {member.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 裝飾元素 */}
-                <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary-500/20 rounded-full blur-xl 
-                  transition-all duration-300 group-hover:scale-125 group-hover:bg-primary-500/30"></div>
-                <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-earth-500/20 rounded-full blur-xl 
-                  transition-all duration-300 group-hover:scale-125 group-hover:bg-earth-500/30"></div>
+          {/* 載入狀態 */}
+          {loading && (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+              <span className="ml-4 text-earth-700 text-lg">載入成員資料中...</span>
+            </div>
+          )}
+          
+          {/* 錯誤狀態 */}
+          {error && (
+            <div className="text-center py-12">
+              <div className="text-red-500 mb-4">
+                <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </div>
-            ))}
-          </div>
+              <h3 className="text-xl font-medium text-earth-900 mb-2">載入失敗</h3>
+              <p className="text-earth-600 mb-4">{error.message}</p>
+              <button 
+                onClick={() => window.location.reload()}
+                className="px-6 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors duration-300"
+              >
+                重新載入
+              </button>
+            </div>
+          )}
+          
+          {/* 成員列表 */}
+          {!loading && !error && (
+            <>
+              {filteredMembers.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-earth-400 mb-4">
+                    <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-medium text-earth-900 mb-2">暫無成員</h3>
+                  <p className="text-earth-600">
+                    {selectedRole === 'all' ? '還沒有新增任何成員' : `沒有符合「${roleOptions.find(r => r.value === selectedRole)?.label}」條件的成員`}
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                  {filteredMembers.map((member, index) => (
+                    <div
+                      key={member.id}
+                      data-aos="fade-up"
+                      data-aos-delay={index * 200}
+                    >
+                      <DogMemberCard
+                        member={member}
+                        onMouseEnter={() => setActiveId(parseInt(member.id))}
+                        onMouseLeave={() => setActiveId(null)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* 統計資訊 */}
+              {filteredMembers.length > 0 && (
+                <div className="text-center mt-12 pt-8 border-t border-earth-200">
+                  <p className="text-earth-600">
+                    總共 {members.length} 位成員
+                    {selectedRole !== 'all' && ` • 顯示 ${filteredMembers.length} 位符合條件的成員`}
+                  </p>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </section>
     </div>
+    </>
   )
 } 
