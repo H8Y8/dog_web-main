@@ -1,0 +1,22 @@
+# Task ID: 36
+# Title: Implement Front-End Puppies Display on New Puppies Page
+# Status: pending
+# Dependencies: 28, 29
+# Priority: high
+# Description: Fetch and display puppy records from the CMS on the public New Puppies page, including listing, sale status filtering, and detailed views, fully synchronized with the backend CRUD and image upload features.
+# Details:
+1. Create or update the New Puppies page (e.g., app/puppies/page.tsx) to fetch puppy records from Supabase (puppies table) via the existing CRUD API. Query fields: id, name, breed, age, price, status, image_url, description.
+2. Use the design system’s card or list components to render each puppy’s image, name, breed, age, price, and sale status. Ensure a responsive grid layout on desktop and list view on mobile.
+3. Implement sale status filter controls (e.g., tabs or dropdown: All, Available, Sold) that apply server-side filtering via query parameters.
+4. Add clickable puppy cards that navigate to a detailed puppy page (e.g., app/puppies/[id]/page.tsx). Fetch and display detailed information including description, additional images, and pedigree details.
+5. Handle loading, error, and empty states with spinners, alerts, and fallback messages.
+6. Optimize image loading using next/image or equivalent with lazy loading.
+7. Ensure front-end reflects back-end CRUD changes: test by adding, updating, and deleting puppies in the admin CMS and verifying updates refresh on the public page.
+
+# Test Strategy:
+1. Load the New Puppies page and verify all puppies from the CMS display correctly with images, names, breeds, ages, prices, and statuses.
+2. Test sale status filters by selecting each option and confirming correct puppies are shown.
+3. Click a puppy card to open its detail page; verify detailed information and images display correctly.
+4. Perform add/update/delete operations in the admin CMS and confirm the public page and detail views reflect changes after reload.
+5. Test responsive behavior across breakpoints (mobile, tablet, desktop).
+6. Simulate network delays/failures to verify loading and error states display appropriate UI feedback.

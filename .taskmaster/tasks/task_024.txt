@@ -1,6 +1,6 @@
 # Task ID: 24
 # Title: Implement CRUD for Posts
-# Status: pending
+# Status: done
 # Dependencies: 11
 # Priority: high
 # Description: Develop the Create, Read, Update, and Delete functionalities for managing posts in the CMS.

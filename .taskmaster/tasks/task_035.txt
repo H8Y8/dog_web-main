@@ -1,0 +1,21 @@
+# Task ID: 35
+# Title: Implement Front-End Members Display on About Us Page
+# Status: pending
+# Dependencies: 26, 27
+# Priority: medium
+# Description: Fetch and display member data managed in the admin CMS on the public About Us page, including member list, role-based grouping, and individual biographies, fully synchronized with the back-end CRUD and image upload features.
+# Details:
+1. Create or update the About Us page (e.g., app/about/page.tsx) to fetch member records from Supabase (members table) via the existing CRUD API. Select fields: id, name, role, bio, avatar_url.
+2. Use the design system’s card or list components to render each member’s avatar, name, role, and biography. Ensure responsive layout (grid on desktop, list on mobile).
+3. Implement role-based filtering or tabs (e.g., “All”, “Developers”, “Designers”) that group members by their role. When a filter is active, display only matching members.
+4. Handle loading states (skeleton cards) and error states (friendly error message and retry button).
+5. Subscribe to Supabase real-time updates on the members table or re-fetch on page navigation to ensure the front-end display stays in sync with CRUD operations and image uploads.
+6. Ensure accessibility: use semantic HTML, ARIA labels for filters, and alt text for avatars.
+
+# Test Strategy:
+1. Verify initial page load fetches and displays all members sorted by name, showing avatar, role, and bio.
+2. Test each role filter/tab: click to filter, confirm only members with that role appear.
+3. Perform member add, update, and delete operations in the admin CMS and confirm the About Us page reflects changes on refresh and via real-time updates.
+4. Upload or change a member avatar in the admin CMS and verify the updated image appears on the About Us page.
+5. Simulate loading (slow network) and server error states to confirm skeletons and error UI appear as expected.
+6. Check responsive layout at multiple breakpoints and run basic accessibility audit (keyboard navigation, screen reader labels).

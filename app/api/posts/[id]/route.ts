@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, createAuthenticatedSupabaseClient } from '@/lib/supabase'
 import { 
   apiSuccess, 
   apiError, 
@@ -17,7 +17,16 @@ export async function GET(
   try {
     const { id } = params
 
-    const { data, error } = await supabase
+    // 檢查是否有認證token，如果有則使用認證客戶端
+    let queryClient = supabase
+    const authHeader = request.headers.get('authorization')
+    
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7)
+      queryClient = createAuthenticatedSupabaseClient(token)
+    }
+
+    const { data, error } = await queryClient
       .from('posts')
       .select('*')
       .eq('id', id)
@@ -47,13 +56,16 @@ export async function PUT(
     const { id } = params
 
     // 驗證用戶身份
-    const { user, error: authError } = await validateAuth(request)
-    if (authError || !user) {
+    const { user, token, error: authError } = await validateAuth(request)
+    if (authError || !user || !token) {
       return apiError(authError || '需要登入', 'UNAUTHORIZED', 401)
     }
 
+    // 創建帶有用戶認證上下文的Supabase客戶端
+    const authenticatedSupabase = createAuthenticatedSupabaseClient(token)
+
     // 先檢查文章是否存在且用戶有權限
-    const { data: existingPost, error: fetchError } = await supabase
+    const { data: existingPost, error: fetchError } = await authenticatedSupabase
       .from('posts')
       .select('author_id')
       .eq('id', id)
@@ -85,8 +97,8 @@ export async function PUT(
     if (body.cover_image !== undefined) updateData.cover_image = body.cover_image
     if (body.published !== undefined) updateData.published = body.published
 
-    // 更新文章
-    const { data, error } = await supabase
+    // 使用認證客戶端更新文章
+    const { data, error } = await authenticatedSupabase
       .from('posts')
       .update(updateData)
       .eq('id', id)
@@ -114,13 +126,16 @@ export async function DELETE(
     const { id } = params
 
     // 驗證用戶身份
-    const { user, error: authError } = await validateAuth(request)
-    if (authError || !user) {
+    const { user, token, error: authError } = await validateAuth(request)
+    if (authError || !user || !token) {
       return apiError(authError || '需要登入', 'UNAUTHORIZED', 401)
     }
 
+    // 創建帶有用戶認證上下文的Supabase客戶端
+    const authenticatedSupabase = createAuthenticatedSupabaseClient(token)
+
     // 先檢查文章是否存在且用戶有權限
-    const { data: existingPost, error: fetchError } = await supabase
+    const { data: existingPost, error: fetchError } = await authenticatedSupabase
       .from('posts')
       .select('author_id')
       .eq('id', id)
@@ -137,8 +152,8 @@ export async function DELETE(
       return apiError('您沒有權限刪除此文章', 'FORBIDDEN', 403)
     }
 
-    // 刪除文章
-    const { error } = await supabase
+    // 使用認證客戶端刪除文章
+    const { error } = await authenticatedSupabase
       .from('posts')
       .delete()
       .eq('id', id)

@@ -1,0 +1,24 @@
+# Task ID: 34
+# Title: Implement Front-End Posts Display on Blog Page
+# Status: pending
+# Dependencies: 24
+# Priority: high
+# Description: Build the front-end functionality to fetch and display CMS posts on the public blog page, including list view, pagination, and filtering, fully synchronized with back-end CRUD operations.
+# Details:
+1. Create or update the blog listing page (e.g., app/posts/page.tsx) to fetch posts from Supabase via the existing posts table APIs.
+2. Implement list rendering using the shared design system’s card or list components, displaying title, excerpt, author, date, and thumbnail.
+3. Add pagination controls: use limit and offset (or cursor) queries to fetch pages of posts; implement Previous/Next and page number buttons.
+4. Implement filtering controls (e.g., by category, tag, or search keyword): wire filter inputs to API queries and update the displayed list.
+5. Handle loading and error states with UI feedback (skeleton loaders, error messages).
+6. Ensure real-time synchronization by re-fetching or subscribing to changes so front-end reflects CRUD updates immediately.
+7. Apply responsive styles for mobile, tablet, and desktop breakpoints using the design system’s grid and utility classes.
+8. Ensure accessibility: proper semantic markup, keyboard navigation, and ARIA attributes for pagination and filters.
+
+# Test Strategy:
+1. Verify initial page load fetches and displays correct posts sorted by date.
+2. Test pagination: navigate between pages, ensure correct posts load, and controls disable appropriately at bounds.
+3. Test filtering: apply each filter and search term, confirm displayed results match criteria and URL reflects filter state.
+4. Simulate CRUD changes in the admin (Task 24) and confirm the front-end updates (on refresh or real-time) to reflect new, updated, or deleted posts.
+5. Check responsive behavior at key breakpoints (mobile, tablet, desktop).
+6. Run accessibility audit (e.g., axe) on pagination and filter controls.
+7. Test error handling by mocking API failures and verifying user-friendly error messages.

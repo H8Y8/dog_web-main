@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, createAuthenticatedSupabaseClient } from '@/lib/supabase'
 import { 
   apiSuccess, 
   apiError, 
@@ -14,11 +14,55 @@ import {
 // GET /api/posts - 獲取所有文章
 export async function GET(request: NextRequest) {
   try {
-    const { page, limit, sort, order, published, author_id } = parseQueryParams(request)
+    const { page, limit, sort, order, search, published, author_id } = parseQueryParams(request)
+    const searchParams = new URL(request.url).searchParams
+    const countOnly = searchParams.get('count') === 'true'
+
+    // 檢查是否有認證token，如果有則使用認證客戶端
+    let queryClient = supabase
+    const authHeader = request.headers.get('authorization')
+    
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7)
+      queryClient = createAuthenticatedSupabaseClient(token)
+    }
+
+    // 如果只需要數量，直接返回總數
+    if (countOnly) {
+      let countQuery = queryClient
+        .from('posts')
+        .select('*', { count: 'exact', head: true })
+
+      // 添加篩選條件
+      if (published !== null) {
+        countQuery = countQuery.eq('published', published === 'true')
+      }
+
+      if (author_id) {
+        countQuery = countQuery.eq('author_id', author_id)
+      }
+
+      // 添加搜尋功能
+      if (search && search.trim()) {
+        const searchTerm = search.trim()
+        countQuery = countQuery.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%,excerpt.ilike.%${searchTerm}%`)
+      }
+
+      const { count, error } = await countQuery
+
+      if (error) {
+        return handleSupabaseError(error)
+      }
+
+      return apiSuccess({
+        total: count || 0
+      })
+    }
+
     const offset = calculateOffset(page, limit)
 
     // 建立查詢
-    let query = supabase
+    let query = queryClient
       .from('posts')
       .select('*', { count: 'exact' })
       .order(sort, { ascending: order === 'asc' })
@@ -31,6 +75,12 @@ export async function GET(request: NextRequest) {
 
     if (author_id) {
       query = query.eq('author_id', author_id)
+    }
+
+    // 添加搜尋功能
+    if (search && search.trim()) {
+      const searchTerm = search.trim()
+      query = query.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%,excerpt.ilike.%${searchTerm}%`)
     }
 
     const { data, error, count } = await query
@@ -59,10 +109,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // 驗證用戶身份
-    const { user, error: authError } = await validateAuth(request)
-    if (authError || !user) {
+    const { user, token, error: authError } = await validateAuth(request)
+    if (authError || !user || !token) {
       return apiError(authError || '需要登入', 'UNAUTHORIZED', 401)
     }
+
+    // 創建帶有用戶認證上下文的Supabase客戶端
+    const authenticatedSupabase = createAuthenticatedSupabaseClient(token)
 
     // 驗證請求體
     const requiredFields = ['title', 'content']
@@ -82,14 +135,15 @@ export async function POST(request: NextRequest) {
       author_id: user.id
     }
 
-    // 插入到資料庫
-    const { data, error } = await supabase
+    // 使用認證的客戶端插入到資料庫
+    const { data, error } = await authenticatedSupabase
       .from('posts')
       .insert([postData])
       .select()
       .single()
 
     if (error) {
+      console.error('Insert error:', error)
       return handleSupabaseError(error)
     }
 

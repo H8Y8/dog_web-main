@@ -40,24 +40,33 @@ CREATE POLICY "Users can delete their own posts" ON posts
 -- 2. Members 表格 RLS 政策
 -- ===============================================
 
-ALTER TABLE members ENABLE ROW LEVEL SECURITY;
+-- ===============================================
+-- Members 表格 RLS 政策修正版
+-- 解決新增狗隻成員時的權限問題
+-- ===============================================
 
-DROP POLICY IF EXISTS "Members are viewable by everyone" ON members;
+-- 刪除現有的過於嚴格的政策
+DROP POLICY IF EXISTS "Allow authenticated users to read members" ON members;
+DROP POLICY IF EXISTS "Allow admins to modify members" ON members;
+
+-- 創建新的、更寬鬆的政策
+
+-- 1. 允許所有人查看狗隻成員（公開資訊）
 CREATE POLICY "Members are viewable by everyone" ON members
     FOR SELECT USING (true);
 
-DROP POLICY IF EXISTS "Authenticated users can insert members" ON members;
+-- 2. 允許已認證用戶新增狗隻成員
 CREATE POLICY "Authenticated users can insert members" ON members
     FOR INSERT TO authenticated
     WITH CHECK (true);
 
-DROP POLICY IF EXISTS "Authenticated users can update members" ON members;
+-- 3. 允許已認證用戶更新狗隻成員
 CREATE POLICY "Authenticated users can update members" ON members
     FOR UPDATE TO authenticated
     USING (true)
     WITH CHECK (true);
 
-DROP POLICY IF EXISTS "Authenticated users can delete members" ON members;
+-- 4. 允許已認證用戶刪除狗隻成員
 CREATE POLICY "Authenticated users can delete members" ON members
     FOR DELETE TO authenticated
     USING (true);
@@ -176,3 +185,12 @@ DROP POLICY IF EXISTS "environment_images_insert_policy" ON storage.objects;
 CREATE POLICY "environment_images_insert_policy" ON storage.objects 
     FOR INSERT TO authenticated 
     WITH CHECK (bucket_id = 'environment-images'); 
+
+-- ===============================================
+-- 驗證政策是否正確應用
+-- ===============================================
+
+-- 檢查現有政策
+SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual, with_check 
+FROM pg_policies 
+WHERE tablename = 'members'; 

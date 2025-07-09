@@ -817,7 +817,7 @@
         "dependencies": [
           "11"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -830,7 +830,7 @@
         "dependencies": [
           24
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -843,8 +843,85 @@
         "dependencies": [
           "11"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Database Migration: Create members Table",
+            "description": "Add a new migration to define the members table in Supabase with the specified schema: id, name, breed, birth_date, gender, color, role, status, pedigree_info, health_records, personality_traits, avatar_url, description, achievements, created_at, updated_at.",
+            "dependencies": [],
+            "details": "Use the Supabase CLI to generate a new SQL migration. In the up script, write CREATE TABLE members (...columns with appropriate types and constraints, primary key on id, timestamps for created_at/updated_at). In the down script, write DROP TABLE members.\n<info added on 2025-07-09T14:45:10.024Z>\nMethod 1: Supabase Dashboard SQL Editor  \nDirectly run the SQL file at database/members-schema-update.sql in Supabase Dashboard > SQL Editor.  \n\nMethod 2: Supabase CLI  \n1. Create a new migration:  \n   supabase migration new update_members_table_for_dogs  \n2. Open the generated migration file and paste the SQL content.  \n\nStep-by-step operations:  \n• Backup existing data:  \n  CREATE TABLE members_backup AS SELECT * FROM members;  \n• Drop the old table:  \n  DROP TABLE IF EXISTS members CASCADE;  \n• Recreate the dog members table with all required columns (name, breed, birth_date, gender, color, role, status, pedigree_info, health_records, achievements, etc.)  \n• Add appropriate indexes for query optimization  \n• Configure Row Level Security (RLS) policies for access control  \n• Insert sample dog member records for testing  \n\nRefer to database/members-schema-update.sql for the full SQL script and use either the Dashboard SQL Editor or the Supabase CLI commands above to execute it.\n</info added on 2025-07-09T14:45:10.024Z>",
+            "status": "done",
+            "testStrategy": "Run the migration locally and verify the table and column definitions in the Supabase dashboard. Execute sample INSERT and SELECT statements to confirm functionality."
+          },
+          {
+            "id": 2,
+            "title": "Define TypeScript Interfaces for Member",
+            "description": "Create TypeScript types and interfaces representing the Member entity, matching the new table schema.",
+            "dependencies": [
+              1
+            ],
+            "details": "In src/types/member.ts, define an interface Member with fields: id (string), name (string), breed (string), birth_date (string), gender (\"male\"|\"female\"), color (string), role (enum of roles), status (enum of statuses), pedigree_info (string), health_records (string), personality_traits (string), avatar_url (string), description (string), achievements (string), created_at and updated_at (string). Export all types.",
+            "status": "done",
+            "testStrategy": "Run tsc to ensure no type errors. Create a dummy object of type Member and verify IDE autocomplete and type checking."
+          },
+          {
+            "id": 3,
+            "title": "Implement Supabase Data Access Functions",
+            "description": "Develop CRUD functions that interact with the Supabase client to perform operations on the members table.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "In src/lib/api/membersApi.ts, import createClient from @supabase/supabase-js. Write async functions: getMembers(): Promise<Member[]>, getMemberById(id: string): Promise<Member>, createMember(data: Partial<Member>): Promise<Member>, updateMember(id: string, data: Partial<Member>): Promise<Member>, deleteMember(id: string): Promise<void>. Use client.from('members').select()/insert()/update()/delete(). Handle errors by throwing exceptions.",
+            "status": "done",
+            "testStrategy": "Write simple script or unit tests that call each function against a test database. Verify that data is created, read, updated, and deleted correctly."
+          },
+          {
+            "id": 4,
+            "title": "Create React Hooks for Member Operations",
+            "description": "Encapsulate the Supabase data access functions in React hooks to manage loading, error, and data state.",
+            "dependencies": [
+              3
+            ],
+            "details": "Using a data-fetching library (e.g., react-query or SWR), implement useMembers, useMember(id), useCreateMember, useUpdateMember, useDeleteMember. Each hook should call the corresponding API function, return {data, error, isLoading}, and invalidate caches on mutations.",
+            "status": "done",
+            "testStrategy": "Mock the membersApi functions and test that the hooks invoke them correctly. Verify loading and error states in unit tests using React Testing Library."
+          },
+          {
+            "id": 5,
+            "title": "Implement Member Creation Form UI",
+            "description": "Build a React component with a form to create new members, using useCreateMember hook and TypeScript types.",
+            "dependencies": [
+              4
+            ],
+            "details": "In src/components/MemberForm/CreateMemberForm.tsx, use React Hook Form to render inputs for all member fields. Validate required fields. For avatar_url, integrate file upload or URL input. On submit, call useCreateMember.mutate with form data, show success toast or error message, and redirect or reset form.",
+            "status": "done",
+            "testStrategy": "Write integration tests: render form, fill fields, submit, mock API to succeed or fail, assert UI feedback and form reset/redirection."
+          },
+          {
+            "id": 6,
+            "title": "Implement Member Listing and Detail View",
+            "description": "Create components to list all members in a table or grid and show detailed information on selection.",
+            "dependencies": [
+              4
+            ],
+            "details": "In src/components/MemberList/MemberList.tsx, use useMembers to fetch data, display name, breed, role, status in a table with pagination. Each row links to /members/:id. In src/pages/members/[id].tsx, use useMember to fetch by ID and render all fields including avatar and health records.",
+            "status": "done",
+            "testStrategy": "Write UI tests to confirm the list loads items and pagination works. For detail view, mock hook to return a Member and verify all fields render correctly."
+          },
+          {
+            "id": 7,
+            "title": "Implement Member Edit and Delete Features",
+            "description": "Extend the detail view with editing and deletion capabilities using useUpdateMember and useDeleteMember hooks.",
+            "dependencies": [
+              6
+            ],
+            "details": "In the detail page component, add an Edit button that opens the CreateMemberForm pre-filled with current member data, then calls useUpdateMember.mutate on submit. Add a Delete button that prompts for confirmation, then calls useDeleteMember.mutate and navigates back to the list on success.",
+            "status": "done",
+            "testStrategy": "Test that editing updates the record in the mock API and the UI reflects changes. Test delete flow with confirmation modal and verify navigation and API call."
+          }
+        ]
       },
       {
         "id": 27,
@@ -857,7 +934,73 @@
           26
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Configure Supabase Storage Bucket and Database Schema for Member Photos",
+            "description": "Set up the Supabase storage bucket 'member_photos' and update the members database table to include fields for avatar_url, album_urls, pedigree_urls, and health_check_urls.",
+            "dependencies": [],
+            "details": "In the Supabase dashboard or via CLI, create a new storage bucket named 'member_photos'. In your database migration, alter the 'members' table to add columns: avatar_url (text), album_urls (text[]), pedigree_urls (text[]), health_check_urls (text[]). Set up RLS policies to allow authenticated users to upload and read their own files.",
+            "status": "pending",
+            "testStrategy": "Verify bucket existence and column additions via Supabase UI or CLI; manually test RLS policies by attempting uploads, reads, and unauthorized access."
+          },
+          {
+            "id": 2,
+            "title": "Develop Backend API Endpoints for Photo Upload and Management",
+            "description": "Implement server-side API routes to handle uploading, deleting, and retrieving member photos of different types in the 'member_photos' bucket.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create RESTful endpoints under '/members/:memberId/photos'. Use the Supabase client to upload files to 'member_photos' at path '{memberId}/{type}/{uuid}'. On upload success, update the member record: replace avatar_url or append/remove entries in album_urls, pedigree_urls, or health_check_urls arrays. Implement DELETE endpoints to remove files from storage and update DB columns accordingly.",
+            "status": "pending",
+            "testStrategy": "Write unit tests for upload and delete endpoints, mocking the Supabase client to assert correct storage paths and DB mutations; perform integration tests uploading and deleting actual files."
+          },
+          {
+            "id": 3,
+            "title": "Integrate Client-Side Image Compression and Optimization",
+            "description": "Add an image compression library to the project and implement helper functions to compress and optimize images before uploading.",
+            "dependencies": [
+              1
+            ],
+            "details": "Install a library such as 'browser-image-compression'. Create a helper function that accepts a File object, compresses it to a specified maximum size/quality, and returns a Blob or File ready for upload. Ensure support for JPEG, PNG, and WebP formats.",
+            "status": "pending",
+            "testStrategy": "Write unit tests that pass sample image files into the helper and assert that output file sizes are reduced and image integrity is maintained."
+          },
+          {
+            "id": 4,
+            "title": "Build Drag-and-Drop Upload Component",
+            "description": "Create a reusable frontend component with drag-and-drop and file input fallback, allowing users to select images and choose photo types.",
+            "dependencies": [
+              3
+            ],
+            "details": "Using your frontend framework (e.g., React or Vue), build a component containing a drop zone for file input, a photo type selector (avatar, album, pedigree, health_check), and thumbnail previews of selected files. Include accessible labels and keyboard interactions.",
+            "status": "pending",
+            "testStrategy": "Manually verify drag-and-drop and file selection for each photo type; write snapshot tests to ensure consistent rendering of the component."
+          },
+          {
+            "id": 5,
+            "title": "Integrate Upload Component with Backend API",
+            "description": "Wire the drag-and-drop component to call the backend API, using the compression helper, and handle responses to update UI state.",
+            "dependencies": [
+              2,
+              4
+            ],
+            "details": "In the upload component, on file drop or selection, call the compression helper, then send a POST request to '/members/{memberId}/photos' with multipart/form-data including the compressed file and photo type. Manage loading states, catch errors, and update component state or invoke callbacks with the new photo URLs on success.",
+            "status": "pending",
+            "testStrategy": "Write integration tests simulating file uploads with mocked API responses; verify that the UI displays loading states, handles errors properly, and updates previews on success."
+          },
+          {
+            "id": 6,
+            "title": "Implement Photo Preview and Management Interface",
+            "description": "Display uploaded photos categorized by type, allow deleting and reordering (for album), and updating the avatar and other types.",
+            "dependencies": [
+              5
+            ],
+            "details": "On the member profile or edit page, fetch photo URLs and render sections for avatar (single image), album (grid with drag-to-reorder), pedigree, and health check (galleries). Implement delete buttons that call DELETE endpoints and update the UI. For album photos, enable drag-and-drop reordering and persist the new order via a PATCH endpoint.",
+            "status": "pending",
+            "testStrategy": "Perform end-to-end tests: upload each photo type, verify display, delete photos and confirm removal, reorder album photos and verify order is saved correctly."
+          }
+        ]
       },
       {
         "id": 28,
@@ -938,11 +1081,122 @@
         ],
         "priority": "high",
         "subtasks": []
+      },
+      {
+        "id": 34,
+        "title": "Implement Front-End Posts Display on Blog Page",
+        "description": "Build the front-end functionality to fetch and display CMS posts on the public blog page, including list view, pagination, and filtering, fully synchronized with back-end CRUD operations.",
+        "details": "1. Create or update the blog listing page (e.g., app/posts/page.tsx) to fetch posts from Supabase via the existing posts table APIs.\n2. Implement list rendering using the shared design system’s card or list components, displaying title, excerpt, author, date, and thumbnail.\n3. Add pagination controls: use limit and offset (or cursor) queries to fetch pages of posts; implement Previous/Next and page number buttons.\n4. Implement filtering controls (e.g., by category, tag, or search keyword): wire filter inputs to API queries and update the displayed list.\n5. Handle loading and error states with UI feedback (skeleton loaders, error messages).\n6. Ensure real-time synchronization by re-fetching or subscribing to changes so front-end reflects CRUD updates immediately.\n7. Apply responsive styles for mobile, tablet, and desktop breakpoints using the design system’s grid and utility classes.\n8. Ensure accessibility: proper semantic markup, keyboard navigation, and ARIA attributes for pagination and filters.",
+        "testStrategy": "1. Verify initial page load fetches and displays correct posts sorted by date.\n2. Test pagination: navigate between pages, ensure correct posts load, and controls disable appropriately at bounds.\n3. Test filtering: apply each filter and search term, confirm displayed results match criteria and URL reflects filter state.\n4. Simulate CRUD changes in the admin (Task 24) and confirm the front-end updates (on refresh or real-time) to reflect new, updated, or deleted posts.\n5. Check responsive behavior at key breakpoints (mobile, tablet, desktop).\n6. Run accessibility audit (e.g., axe) on pagination and filter controls.\n7. Test error handling by mocking API failures and verifying user-friendly error messages.",
+        "status": "done",
+        "dependencies": [
+          24
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 35,
+        "title": "Implement Front-End Members Display on About Us Page",
+        "description": "Fetch and display member data managed in the admin CMS on the public About Us page, including member list, role-based grouping, and individual biographies, fully synchronized with the back-end CRUD and image upload features.",
+        "details": "1. Create or update the About Us page (e.g., app/about/page.tsx) to fetch member records from Supabase (members table) via the existing CRUD API. Select fields: id, name, role, bio, avatar_url.\n2. Use the design system’s card or list components to render each member’s avatar, name, role, and biography. Ensure responsive layout (grid on desktop, list on mobile).\n3. Implement role-based filtering or tabs (e.g., “All”, “Developers”, “Designers”) that group members by their role. When a filter is active, display only matching members.\n4. Handle loading states (skeleton cards) and error states (friendly error message and retry button).\n5. Subscribe to Supabase real-time updates on the members table or re-fetch on page navigation to ensure the front-end display stays in sync with CRUD operations and image uploads.\n6. Ensure accessibility: use semantic HTML, ARIA labels for filters, and alt text for avatars.",
+        "testStrategy": "1. Verify initial page load fetches and displays all members sorted by name, showing avatar, role, and bio.\n2. Test each role filter/tab: click to filter, confirm only members with that role appear.\n3. Perform member add, update, and delete operations in the admin CMS and confirm the About Us page reflects changes on refresh and via real-time updates.\n4. Upload or change a member avatar in the admin CMS and verify the updated image appears on the About Us page.\n5. Simulate loading (slow network) and server error states to confirm skeletons and error UI appear as expected.\n6. Check responsive layout at multiple breakpoints and run basic accessibility audit (keyboard navigation, screen reader labels).",
+        "status": "pending",
+        "dependencies": [
+          26,
+          27
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Setup Dog Members Page and Data Fetching",
+            "description": "Create or update the Dog Members page (e.g., app/members/page.tsx) to fetch dog member records from Supabase using the existing CRUD API. Select fields: id, name, role, bio, avatar_url, pedigree, health_status, personality, achievements, gallery_urls, certificate_urls.",
+            "dependencies": [],
+            "details": "In app/members/page.tsx, import the Supabase client instance and define a fetchMembers function that queries the 'members' table selecting the specified fields. Use getServerSideProps or a client data‐fetching hook (e.g., useSWR) to retrieve data. Export the page component skeleton returning fetched props or hook data.",
+            "status": "pending",
+            "testStrategy": "Unit test fetchMembers with a mocked Supabase client to verify correct query. Integration test by mocking API responses and asserting data is passed to the page component."
+          },
+          {
+            "id": 2,
+            "title": "Implement DogMemberCard Component",
+            "description": "Build a reusable DogMemberCard component to display each dog's avatar, name, role, pedigree, health status, personality, and achievements in a card layout.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create components/DogMemberCard.tsx. Accept a DogMember prop interface. Use the design system Card or styled divs. Render avatar with alt text, name as an h3, role as subtitle, and structured sections for pedigree, health_status, personality, and achievements. Ensure semantic HTML and responsive styling.",
+            "status": "pending",
+            "testStrategy": "Unit test with React Testing Library: render DogMemberCard with sample props and assert presence of each field and correct alt attributes."
+          },
+          {
+            "id": 3,
+            "title": "Add Role-based Filtering and Tabs",
+            "description": "Implement filter controls (tabs) to group and display dogs by role (breeding_male, breeding_female, training, retired, All).",
+            "dependencies": [
+              2
+            ],
+            "details": "In the page component, derive the set of roles from fetched data. Implement an accessible Tabs component (using ARIA roles) for each role. On tab selection update a filter state and render only DogMemberCard components matching the selected role, or all when ‘All’ is active.",
+            "status": "pending",
+            "testStrategy": "Unit test tab interactions: simulate tab clicks and assert that only cards with matching roles are rendered."
+          },
+          {
+            "id": 4,
+            "title": "Implement Loading, Error Handling, and SEO",
+            "description": "Add loading skeletons, error states with retry, and SEO meta tags for the Dog Members page.",
+            "dependencies": [
+              2
+            ],
+            "details": "Wrap data fetching in useSWR or custom hook. While loading, render skeleton versions of DogMemberCard. On fetch error display a friendly message and a Retry button that re‐invokes the fetch. Use next/head to set meta title, description, and Open Graph tags reflecting the dog members content for SEO.",
+            "status": "pending",
+            "testStrategy": "Mock data fetch pending and error states to test loading skeletons and error UI. Use a head tag inspection in integration tests to verify correct meta tags."
+          },
+          {
+            "id": 5,
+            "title": "Integrate Real-time Sync and Gallery/Certificates Display",
+            "description": "Subscribe to Supabase real-time updates on the members table to keep the page in sync, and extend DogMemberCard to display photo galleries and certificate thumbnails.",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "In the data fetch hook or page component, initialize a Supabase channel subscription on the 'members' table for INSERT, UPDATE, DELETE events to trigger data revalidation or state updates. In DogMemberCard, render a carousel or grid of images from gallery_urls and badge thumbnails linked to certificate_urls. Ensure accessibility of carousel controls and image alt text.",
+            "status": "pending",
+            "testStrategy": "Use end-to-end tests with Supabase emulator to emit real-time events and verify UI updates automatically. Test gallery/carousel renders all images and alt texts correctly."
+          }
+        ]
+      },
+      {
+        "id": 36,
+        "title": "Implement Front-End Puppies Display on New Puppies Page",
+        "description": "Fetch and display puppy records from the CMS on the public New Puppies page, including listing, sale status filtering, and detailed views, fully synchronized with the backend CRUD and image upload features.",
+        "details": "1. Create or update the New Puppies page (e.g., app/puppies/page.tsx) to fetch puppy records from Supabase (puppies table) via the existing CRUD API. Query fields: id, name, breed, age, price, status, image_url, description.\n2. Use the design system’s card or list components to render each puppy’s image, name, breed, age, price, and sale status. Ensure a responsive grid layout on desktop and list view on mobile.\n3. Implement sale status filter controls (e.g., tabs or dropdown: All, Available, Sold) that apply server-side filtering via query parameters.\n4. Add clickable puppy cards that navigate to a detailed puppy page (e.g., app/puppies/[id]/page.tsx). Fetch and display detailed information including description, additional images, and pedigree details.\n5. Handle loading, error, and empty states with spinners, alerts, and fallback messages.\n6. Optimize image loading using next/image or equivalent with lazy loading.\n7. Ensure front-end reflects back-end CRUD changes: test by adding, updating, and deleting puppies in the admin CMS and verifying updates refresh on the public page.",
+        "testStrategy": "1. Load the New Puppies page and verify all puppies from the CMS display correctly with images, names, breeds, ages, prices, and statuses.\n2. Test sale status filters by selecting each option and confirming correct puppies are shown.\n3. Click a puppy card to open its detail page; verify detailed information and images display correctly.\n4. Perform add/update/delete operations in the admin CMS and confirm the public page and detail views reflect changes after reload.\n5. Test responsive behavior across breakpoints (mobile, tablet, desktop).\n6. Simulate network delays/failures to verify loading and error states display appropriate UI feedback.",
+        "status": "pending",
+        "dependencies": [
+          28,
+          29
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 37,
+        "title": "Implement Front-End Environments Display on Environment Introduction Page",
+        "description": "Fetch and display environment information managed in the CMS on the public Environment Introduction page, including type categories, image carousel, and facility highlights, fully synchronized with backend CRUD and image upload.",
+        "details": "1. Create or update the public Environment Introduction page (e.g., app/environments/page.tsx) to use the existing Environment component as a template.\n2. Fetch environment records from the Supabase environments table via the CRUD API endpoints implemented in Task 30. Query fields: id, name, type, description, images (array of URLs), and features (facility icon identifiers and descriptions).\n3. Implement type category tabs or filter controls to group and display environments by their type (e.g., indoor, outdoor).\n4. For each environment entry, render an image carousel using the design system’s carousel component, displaying all associated images from Task 31 with next/previous controls and pagination indicators.\n5. Display facility features as icon-and-text pairs beneath the carousel, pulling icon assets from the design system’s icon library.\n6. Handle loading states with a spinner or skeleton UI, and show user-friendly error messages if the fetch fails.\n7. Ensure a responsive layout: use a grid display on desktop (≥1024px) and a stacked layout on mobile (<768px), adhering to design system breakpoints.\n8. Reuse existing design tokens and styling conventions (colors, typography, spacing) to maintain consistency across the site.",
+        "testStrategy": "1. Load the Environment Introduction page and verify it fetches and displays all environments from the CMS, grouped correctly by type.\n2. Click each type filter/tab and confirm that only environments of the selected type are shown.\n3. Within each environment, navigate the image carousel; ensure all images load, controls (prev/next) work, and indicators update correctly.\n4. Check that facility features (icons and descriptions) are displayed accurately for each environment.\n5. Perform add, update, and delete operations on environment records and images in the admin CMS (Tasks 30 and 31); refresh the public page to confirm that changes are reflected in real time.\n6. Test the page on desktop and mobile viewport sizes to verify responsive behavior.\n7. Use an accessibility audit tool (e.g., axe) to confirm carousel controls, filter tabs, and content meet WCAG AA standards.",
+        "status": "pending",
+        "dependencies": [
+          9,
+          30,
+          31
+        ],
+        "priority": "medium",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-07-05T16:25:31.127Z",
-      "updated": "2025-07-08T15:24:47.157Z",
+      "updated": "2025-07-09T15:08:49.463Z",
       "description": "Tasks for master context"
     }
   }

@@ -1,0 +1,24 @@
+# Task ID: 37
+# Title: Implement Front-End Environments Display on Environment Introduction Page
+# Status: pending
+# Dependencies: 9, 30, 31
+# Priority: medium
+# Description: Fetch and display environment information managed in the CMS on the public Environment Introduction page, including type categories, image carousel, and facility highlights, fully synchronized with backend CRUD and image upload.
+# Details:
+1. Create or update the public Environment Introduction page (e.g., app/environments/page.tsx) to use the existing Environment component as a template.
+2. Fetch environment records from the Supabase environments table via the CRUD API endpoints implemented in Task 30. Query fields: id, name, type, description, images (array of URLs), and features (facility icon identifiers and descriptions).
+3. Implement type category tabs or filter controls to group and display environments by their type (e.g., indoor, outdoor).
+4. For each environment entry, render an image carousel using the design system’s carousel component, displaying all associated images from Task 31 with next/previous controls and pagination indicators.
+5. Display facility features as icon-and-text pairs beneath the carousel, pulling icon assets from the design system’s icon library.
+6. Handle loading states with a spinner or skeleton UI, and show user-friendly error messages if the fetch fails.
+7. Ensure a responsive layout: use a grid display on desktop (≥1024px) and a stacked layout on mobile (<768px), adhering to design system breakpoints.
+8. Reuse existing design tokens and styling conventions (colors, typography, spacing) to maintain consistency across the site.
+
+# Test Strategy:
+1. Load the Environment Introduction page and verify it fetches and displays all environments from the CMS, grouped correctly by type.
+2. Click each type filter/tab and confirm that only environments of the selected type are shown.
+3. Within each environment, navigate the image carousel; ensure all images load, controls (prev/next) work, and indicators update correctly.
+4. Check that facility features (icons and descriptions) are displayed accurately for each environment.
+5. Perform add, update, and delete operations on environment records and images in the admin CMS (Tasks 30 and 31); refresh the public page to confirm that changes are reflected in real time.
+6. Test the page on desktop and mobile viewport sizes to verify responsive behavior.
+7. Use an accessibility audit tool (e.g., axe) to confirm carousel controls, filter tabs, and content meet WCAG AA standards.

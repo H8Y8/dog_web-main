@@ -11,16 +11,10 @@ export interface Post {
   author_id: string
 }
 
-export interface Member {
-  id: string
-  name: string
-  role: string
-  bio?: string
-  avatar_url?: string
-  email?: string
-  created_at: string
-  updated_at: string
-}
+// Member 介面已移至 lib/types/member.ts
+// 新的 Member 介面專為狗隻成員設計
+export type { Member, CreateMemberInput, UpdateMemberInput, PedigreeInfo, HealthRecord, Achievement } from './types/member'
+export { MemberRole, MemberStatus, Gender, ROLE_LABELS, STATUS_LABELS, GENDER_LABELS, PhotoType } from './types/member'
 
 export interface Puppy {
   id: string

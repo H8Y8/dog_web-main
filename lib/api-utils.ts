@@ -29,7 +29,7 @@ export function apiError(error: string, code?: string, status: number = 400): Ne
 }
 
 // 驗證用戶身份
-export async function validateAuth(request: NextRequest): Promise<{ user: any; error?: string }> {
+export async function validateAuth(request: NextRequest): Promise<{ user: any; token?: string; error?: string }> {
   try {
     const authHeader = request.headers.get('authorization')
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -43,7 +43,7 @@ export async function validateAuth(request: NextRequest): Promise<{ user: any; e
       return { user: null, error: '無效的驗證 token' }
     }
 
-    return { user }
+    return { user, token }
   } catch (error) {
     return { user: null, error: '驗證失敗' }
   }
@@ -59,6 +59,7 @@ export function parseQueryParams(request: NextRequest) {
     limit: Math.min(parseInt(searchParams.get('limit') || '10', 10), 100),
     sort: searchParams.get('sort') || 'created_at',
     order: (searchParams.get('order') || 'desc') as 'asc' | 'desc',
+    search: searchParams.get('search'),
     published: searchParams.get('published'),
     available: searchParams.get('available'),
     type: searchParams.get('type'),

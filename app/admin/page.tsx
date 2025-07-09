@@ -4,9 +4,11 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../lib/hooks/useAuth'
 import { Button } from '../../lib/ui/Button'
 import { cn } from '../../lib/ui/utils'
+import PostsManager from './components/PostsManager'
+import MembersManager from './components/MembersManager'
 
 export default function AdminPage() {
-  const { user, loading, isAuthenticated, signOut } = useAuth()
+  const { user, session, loading, isAuthenticated, signOut } = useAuth()
   const [isAdminVerified, setIsAdminVerified] = useState(false)
   const [adminCheckLoading, setAdminCheckLoading] = useState(true)
 
@@ -49,7 +51,7 @@ export default function AdminPage() {
     return <AdminLogin />
   }
 
-  return <AdminDashboard user={user} onSignOut={signOut} />
+  return <AdminDashboard user={user} session={session} onSignOut={signOut} />
 }
 
 function AdminLogin() {
@@ -204,9 +206,47 @@ const BellIcon = () => (
   </svg>
 )
 
-function AdminDashboard({ user, onSignOut }: { user: any, onSignOut: () => Promise<any> }) {
+function AdminDashboard({ user, session, onSignOut }: { user: any, session: any, onSignOut: () => Promise<any> }) {
   const [currentView, setCurrentView] = useState('dashboard')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [postsCount, setPostsCount] = useState(0)
+
+  // 獲取文章數量
+  useEffect(() => {
+    const fetchPostsCount = async () => {
+      try {
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json'
+        }
+
+        if (session?.access_token) {
+          headers['Authorization'] = `Bearer ${session.access_token}`
+        }
+
+        console.log('Fetching posts count...') // 調試信息
+
+        const response = await fetch('/api/posts?count=true', {
+          headers,
+        })
+
+        console.log('Response status:', response.status) // 調試信息
+
+        if (response.ok) {
+          const data = await response.json()
+          console.log('Posts count data:', data) // 調試信息
+          setPostsCount(data.data?.total || 0)
+        } else {
+          console.error('Failed to fetch posts count:', response.status, response.statusText)
+        }
+      } catch (error) {
+        console.error('Error fetching posts count:', error)
+      }
+    }
+
+    if (session) {
+      fetchPostsCount()
+    }
+  }, [session])
 
   const navigationItems = [
     {
@@ -220,7 +260,7 @@ function AdminDashboard({ user, onSignOut }: { user: any, onSignOut: () => Promi
       label: '內容管理',
       icon: <PostsIcon />,
       children: [
-        { id: 'posts', label: '日誌管理', badge: '5' },
+        { id: 'posts', label: '日誌管理', badge: postsCount.toString() },
         { id: 'puppies', label: '幼犬管理', badge: '3' },
         { id: 'members', label: '成員管理', badge: '2' },
         { id: 'environments', label: '環境管理', badge: '1' },
@@ -242,11 +282,11 @@ function AdminDashboard({ user, onSignOut }: { user: any, onSignOut: () => Promi
       case 'dashboard':
         return <DashboardContent />
       case 'posts':
-        return <ComingSoonPage title="日誌管理" description="編輯和管理犬舍日誌文章" />
+        return <PostsManager user={user} session={session} />
       case 'puppies':
         return <ComingSoonPage title="幼犬管理" description="管理幼犬資訊和相片" />
       case 'members':
-        return <ComingSoonPage title="成員管理" description="管理會員資料和權限" />
+        return <MembersManager />
       case 'environments':
         return <ComingSoonPage title="環境管理" description="管理犬舍環境設施資訊" />
       case 'settings':
@@ -353,9 +393,6 @@ function AdminDashboard({ user, onSignOut }: { user: any, onSignOut: () => Promi
                 <BellIcon />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
               </button>
-              <Button variant="primary" size="sm">
-                新增內容
-              </Button>
             </div>
           </div>
         </header>
