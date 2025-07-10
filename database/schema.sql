@@ -54,17 +54,29 @@ CREATE TABLE puppies (
     gender VARCHAR(10) CHECK (gender IN ('male', 'female')) NOT NULL,
     color VARCHAR(50) NOT NULL,
     description TEXT,
+    personality_traits TEXT,
     images TEXT[] DEFAULT '{}',
-    available BOOLEAN DEFAULT true,
+    status VARCHAR(20) DEFAULT 'available' CHECK (status IN ('available', 'reserved', 'sold', 'not_for_sale')),
     price DECIMAL(10,2),
+    currency VARCHAR(10) DEFAULT 'TWD',
+    microchip_id VARCHAR(50),
+    birth_weight INTEGER,
+    current_weight INTEGER,
+    expected_adult_weight INTEGER,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+    
+    -- 約束條件
+    CONSTRAINT check_birth_weight CHECK (birth_weight > 0 AND birth_weight < 10000),
+    CONSTRAINT check_current_weight CHECK (current_weight > 0 AND current_weight < 100000),
+    CONSTRAINT check_expected_adult_weight CHECK (expected_adult_weight > 0 AND expected_adult_weight < 100000)
 );
 
 -- 建立 puppies 表格的索引
 CREATE INDEX puppies_breed_idx ON puppies(breed);
-CREATE INDEX puppies_available_idx ON puppies(available);
+CREATE INDEX puppies_status_idx ON puppies(status);
 CREATE INDEX puppies_birth_date_idx ON puppies(birth_date);
+CREATE INDEX puppies_microchip_id_idx ON puppies(microchip_id) WHERE microchip_id IS NOT NULL;
 
 -- ===============================================
 -- 4. Environments 表格 (環境資訊)

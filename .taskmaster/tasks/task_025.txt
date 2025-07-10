@@ -1,6 +1,6 @@
 # Task ID: 25
 # Title: Implement Image Upload for Posts
-# Status: pending
+# Status: done
 # Dependencies: 24
 # Priority: medium
 # Description: Add functionality for uploading cover images for posts using Supabase storage.

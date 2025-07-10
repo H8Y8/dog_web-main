@@ -1,6 +1,6 @@
 # Task ID: 35
 # Title: Implement Front-End Members Display on About Us Page
-# Status: pending
+# Status: done
 # Dependencies: 26, 27
 # Priority: medium
 # Description: Fetch and display member data managed in the admin CMS on the public About Us page, including member list, role-based grouping, and individual biographies, fully synchronized with the back-end CRUD and image upload features.
@@ -19,3 +19,35 @@
 4. Upload or change a member avatar in the admin CMS and verify the updated image appears on the About Us page.
 5. Simulate loading (slow network) and server error states to confirm skeletons and error UI appear as expected.
 6. Check responsive layout at multiple breakpoints and run basic accessibility audit (keyboard navigation, screen reader labels).
+
+# Subtasks:
+## 1. Setup Dog Members Page and Data Fetching [done]
+### Dependencies: None
+### Description: Create or update the Dog Members page (e.g., app/members/page.tsx) to fetch dog member records from Supabase using the existing CRUD API. Select fields: id, name, role, bio, avatar_url, pedigree, health_status, personality, achievements, gallery_urls, certificate_urls.
+### Details:
+In app/members/page.tsx, import the Supabase client instance and define a fetchMembers function that queries the 'members' table selecting the specified fields. Use getServerSideProps or a client data‐fetching hook (e.g., useSWR) to retrieve data. Export the page component skeleton returning fetched props or hook data.
+
+## 2. Implement DogMemberCard Component [done]
+### Dependencies: 35.1
+### Description: Build a reusable DogMemberCard component to display each dog's avatar, name, role, pedigree, health status, personality, and achievements in a card layout.
+### Details:
+Create components/DogMemberCard.tsx. Accept a DogMember prop interface. Use the design system Card or styled divs. Render avatar with alt text, name as an h3, role as subtitle, and structured sections for pedigree, health_status, personality, and achievements. Ensure semantic HTML and responsive styling.
+
+## 3. Add Role-based Filtering and Tabs [done]
+### Dependencies: 35.2
+### Description: Implement filter controls (tabs) to group and display dogs by role (breeding_male, breeding_female, training, retired, All).
+### Details:
+In the page component, derive the set of roles from fetched data. Implement an accessible Tabs component (using ARIA roles) for each role. On tab selection update a filter state and render only DogMemberCard components matching the selected role, or all when ‘All’ is active.
+
+## 4. Implement Loading, Error Handling, and SEO [done]
+### Dependencies: 35.2
+### Description: Add loading skeletons, error states with retry, and SEO meta tags for the Dog Members page.
+### Details:
+Wrap data fetching in useSWR or custom hook. While loading, render skeleton versions of DogMemberCard. On fetch error display a friendly message and a Retry button that re‐invokes the fetch. Use next/head to set meta title, description, and Open Graph tags reflecting the dog members content for SEO.
+
+## 5. Integrate Real-time Sync and Gallery/Certificates Display [done]
+### Dependencies: 35.3, 35.4
+### Description: Subscribe to Supabase real-time updates on the members table to keep the page in sync, and extend DogMemberCard to display photo galleries and certificate thumbnails.
+### Details:
+In the data fetch hook or page component, initialize a Supabase channel subscription on the 'members' table for INSERT, UPDATE, DELETE events to trigger data revalidation or state updates. In DogMemberCard, render a carousel or grid of images from gallery_urls and badge thumbnails linked to certificate_urls. Ensure accessibility of carousel controls and image alt text.
+

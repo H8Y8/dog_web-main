@@ -1,6 +1,6 @@
 # Task ID: 27
 # Title: Implement Image Upload for Members
-# Status: pending
+# Status: done
 # Dependencies: 26
 # Priority: medium
 # Description: Add functionality for uploading avatars for members using Supabase storage.
@@ -9,3 +9,41 @@ Utilize the same image upload strategy as posts for member avatars, ensuring pro
 
 # Test Strategy:
 Verify that member avatars can be uploaded and displayed correctly.
+
+# Subtasks:
+## 1. Configure Supabase Storage Bucket and Database Schema for Member Photos [done]
+### Dependencies: None
+### Description: Set up the Supabase storage bucket 'member_photos' and update the members database table to include fields for avatar_url, album_urls, pedigree_urls, and health_check_urls.
+### Details:
+In the Supabase dashboard or via CLI, create a new storage bucket named 'member_photos'. In your database migration, alter the 'members' table to add columns: avatar_url (text), album_urls (text[]), pedigree_urls (text[]), health_check_urls (text[]). Set up RLS policies to allow authenticated users to upload and read their own files.
+
+## 2. Develop Backend API Endpoints for Photo Upload and Management [done]
+### Dependencies: 27.1
+### Description: Implement server-side API routes to handle uploading, deleting, and retrieving member photos of different types in the 'member_photos' bucket.
+### Details:
+Create RESTful endpoints under '/members/:memberId/photos'. Use the Supabase client to upload files to 'member_photos' at path '{memberId}/{type}/{uuid}'. On upload success, update the member record: replace avatar_url or append/remove entries in album_urls, pedigree_urls, or health_check_urls arrays. Implement DELETE endpoints to remove files from storage and update DB columns accordingly.
+
+## 3. Integrate Client-Side Image Compression and Optimization [done]
+### Dependencies: 27.1
+### Description: Add an image compression library to the project and implement helper functions to compress and optimize images before uploading.
+### Details:
+Install a library such as 'browser-image-compression'. Create a helper function that accepts a File object, compresses it to a specified maximum size/quality, and returns a Blob or File ready for upload. Ensure support for JPEG, PNG, and WebP formats.
+
+## 4. Build Drag-and-Drop Upload Component [done]
+### Dependencies: 27.3
+### Description: Create a reusable frontend component with drag-and-drop and file input fallback, allowing users to select images and choose photo types.
+### Details:
+Using your frontend framework (e.g., React or Vue), build a component containing a drop zone for file input, a photo type selector (avatar, album, pedigree, health_check), and thumbnail previews of selected files. Include accessible labels and keyboard interactions.
+
+## 5. Integrate Upload Component with Backend API [done]
+### Dependencies: 27.2, 27.4
+### Description: Wire the drag-and-drop component to call the backend API, using the compression helper, and handle responses to update UI state.
+### Details:
+In the upload component, on file drop or selection, call the compression helper, then send a POST request to '/members/{memberId}/photos' with multipart/form-data including the compressed file and photo type. Manage loading states, catch errors, and update component state or invoke callbacks with the new photo URLs on success.
+
+## 6. Implement Photo Preview and Management Interface [done]
+### Dependencies: 27.5
+### Description: Display uploaded photos categorized by type, allow deleting and reordering (for album), and updating the avatar and other types.
+### Details:
+On the member profile or edit page, fetch photo URLs and render sections for avatar (single image), album (grid with drag-to-reorder), pedigree, and health check (galleries). Implement delete buttons that call DELETE endpoints and update the UI. For album photos, enable drag-and-drop reordering and persist the new order via a PATCH endpoint.
+

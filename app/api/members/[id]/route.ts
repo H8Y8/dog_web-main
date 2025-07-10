@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, createAuthenticatedSupabaseClient } from '@/lib/supabase'
 import { 
   apiSuccess, 
   apiError, 
@@ -47,24 +47,13 @@ export async function PUT(
     const { id } = params
 
     // 驗證用戶身份
-    const { user, error: authError } = await validateAuth(request)
-    if (authError || !user) {
+    const { user, token, error: authError } = await validateAuth(request)
+    if (authError || !user || !token) {
       return apiError(authError || '需要登入', 'UNAUTHORIZED', 401)
     }
 
-    // 檢查成員是否存在
-    const { data: existingMember, error: fetchError } = await supabase
-      .from('members')
-      .select('id')
-      .eq('id', id)
-      .single()
-
-    if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        return apiError('成員不存在', 'MEMBER_NOT_FOUND', 404)
-      }
-      return handleSupabaseError(fetchError)
-    }
+    // 創建帶有用戶認證上下文的Supabase客戶端
+    const authenticatedSupabase = createAuthenticatedSupabaseClient(token)
 
     // 驗證請求體
     const { isValid, body, error: validationError } = await validateRequestBody(request, [])
@@ -81,8 +70,8 @@ export async function PUT(
     if (body.avatar_url !== undefined) updateData.avatar_url = body.avatar_url
     if (body.email !== undefined) updateData.email = body.email?.trim()
 
-    // 更新成員
-    const { data, error } = await supabase
+    // 使用認證的客戶端更新成員
+    const { data, error } = await authenticatedSupabase
       .from('members')
       .update(updateData)
       .eq('id', id)
@@ -90,7 +79,12 @@ export async function PUT(
       .single()
 
     if (error) {
+      console.error('Update error:', error)
       return handleSupabaseError(error)
+    }
+
+    if (!data) {
+      return apiError('成員不存在', 'MEMBER_NOT_FOUND', 404)
     }
 
     return apiSuccess(data, '成員更新成功')
@@ -110,36 +104,32 @@ export async function DELETE(
     const { id } = params
 
     // 驗證用戶身份
-    const { user, error: authError } = await validateAuth(request)
-    if (authError || !user) {
+    const { user, token, error: authError } = await validateAuth(request)
+    if (authError || !user || !token) {
       return apiError(authError || '需要登入', 'UNAUTHORIZED', 401)
     }
 
-    // 檢查成員是否存在
-    const { data: existingMember, error: fetchError } = await supabase
-      .from('members')
-      .select('id')
-      .eq('id', id)
-      .single()
+    // 創建帶有用戶認證上下文的Supabase客戶端
+    const authenticatedSupabase = createAuthenticatedSupabaseClient(token)
 
-    if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        return apiError('成員不存在', 'MEMBER_NOT_FOUND', 404)
-      }
-      return handleSupabaseError(fetchError)
-    }
-
-    // 刪除成員
-    const { error } = await supabase
+    // 使用認證的客戶端刪除成員
+    const { data, error } = await authenticatedSupabase
       .from('members')
       .delete()
       .eq('id', id)
+      .select()
+      .single()
 
     if (error) {
+      console.error('Delete error:', error)
       return handleSupabaseError(error)
     }
 
-    return apiSuccess({ deleted: true }, '成員刪除成功')
+    if (!data) {
+      return apiError('成員不存在', 'MEMBER_NOT_FOUND', 404)
+    }
+
+    return apiSuccess(data, '成員刪除成功')
 
   } catch (error) {
     console.error('DELETE /api/members/[id] error:', error)

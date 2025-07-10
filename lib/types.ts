@@ -16,20 +16,32 @@ export interface Post {
 export type { Member, CreateMemberInput, UpdateMemberInput, PedigreeInfo, HealthRecord, Achievement } from './types/member'
 export { MemberRole, MemberStatus, Gender, ROLE_LABELS, STATUS_LABELS, GENDER_LABELS, PhotoType } from './types/member'
 
-export interface Puppy {
-  id: string
-  name: string
-  breed: string
-  birth_date: string
-  gender: 'male' | 'female'
-  color: string
-  description?: string
-  images: string[]
-  available: boolean
-  price?: number
-  created_at: string
-  updated_at: string
-}
+// Puppy 介面已移至 lib/types/puppy.ts
+// 新的 Puppy 介面專為幼犬管理設計
+export type { 
+  Puppy, 
+  CreatePuppyInput, 
+  UpdatePuppyInput, 
+  PuppyFilter,
+  PuppiesResponse,
+  HealthCheck,
+  VaccinationRecord,
+  PuppyPedigree,
+  AddHealthCheckInput,
+  AddVaccinationInput,
+  PuppyApiResponse,
+  PuppiesApiResponse
+} from './types/puppy'
+export { 
+  PuppyGender, 
+  PuppyBreed, 
+  PuppyStatus,
+  PUPPY_GENDER_LABELS,
+  PUPPY_BREED_LABELS,
+  PUPPY_STATUS_LABELS,
+  PUPPY_COLOR_LABELS
+} from './types/puppy'
+export type { PuppyColor } from './types/puppy'
 
 export interface Environment {
   id: string

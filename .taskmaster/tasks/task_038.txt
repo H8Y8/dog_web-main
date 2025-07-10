@@ -1,0 +1,34 @@
+# Task ID: 38
+# Title: Implement Comprehensive Blog System Functionality
+# Status: pending
+# Dependencies: 24, 33, 34
+# Priority: high
+# Description: Develop and integrate a professional-grade blog system featuring a redesigned front-end interface, content organization, user interactions, SEO optimizations, social sharing, analytics, and publishing workflows.
+# Details:
+1. Front-End Redesign: Replace the existing /diary page with a new blog layout using the shared design system; implement responsive grid/list views, hero banner, and post cards showing title, author, date, excerpt, thumbnail.
+2. Article Categories & Tags: Extend the Posts API to support category and tag models (CRUD endpoints); create database tables (categories, tags, post_categories, post_tags); build a category/tag filter UI on the blog listing and post detail pages.
+3. Comment System: Define a comments table in Supabase (id, post_id, author_name, email, content, parent_id, is_admin, created_at); implement API routes for fetching, adding, and moderating comments; build front-end components for guest comments and nested admin replies.
+4. Full-Text Search: Integrate Supabase full-text search on posts (title, content, tags); create a search API endpoint; add a search bar on the blog listing to query and display matching posts.
+5. SEO Optimization: In Next.js app routes, dynamically generate <meta> tags and JSON-LD schema for pages; implement getServerSideProps (or generateMetadata) for posts; create sitemap.xml generator script.
+6. Social Sharing: Add share buttons (Facebook SDK, Line URL, clipboard copy) on post detail pages; ensure proper Open Graph and Twitter Card meta tags.
+7. Related Posts Recommendation: Develop an API to fetch related posts based on shared categories/tags or content similarity (vector search or simple overlap); display recommendations under post content.
+8. Reading Statistics & Popular Posts: On each page view, record a view event (via an analytics table or Supabase edge function); build an API to aggregate views and return top N popular posts; create a sidebar widget to display popular posts.
+9. RSS Feed: Implement an RSS feed endpoint (/feed.xml) that serializes latest published posts into standard RSS 2.0 format.
+10. Archive Page: Create a new /archive route grouping posts by year and month; fetch and display counts with collapsible lists.
+11. Drafts & Scheduled Publishing: Extend admin post editor to support draft status and schedule fields; implement a scheduled publish job (Edge function or cron) to change status to published at the set time.
+12. Rich-Text Editor: Integrate a Markdown-capable editor component (e.g., React Markdown + Slate or TipTap) in the admin UI; support live preview, image uploads via Supabase Storage, and code syntax highlighting.
+
+# Test Strategy:
+• Front-End Redesign: Verify /diary renders new layout on desktop and mobile; check responsive behavior and UI consistency.
+• Categories & Tags: Create, update, delete categories/tags via API and admin UI; assign them to posts; confirm filtering on listing and post detail pages.
+• Comments: Submit guest comments and admin replies; verify nesting, moderation controls, and error handling on invalid input.
+• Search: Enter keywords; confirm search results accurately match title, content, and associated tags.
+• SEO: Inspect page source for correct meta tags and JSON-LD; validate sitemap.xml contains all published posts.
+• Social Sharing: Click share buttons; ensure dialogs open correctly and shared links render proper social previews.
+• Related Posts: Publish test posts with overlapping tags; verify the recommendation widget shows correct related items.
+• Analytics: Simulate page loads; verify view counts increment in database; confirm popular posts widget orders posts by view count.
+• RSS Feed: Fetch /feed.xml; validate XML structure and content against RSS 2.0 specification.
+• Archive: Navigate to /archive; confirm posts are correctly grouped by year and month.
+• Scheduling: Create a draft with future publish date; simulate scheduler run; verify status changes to published and appears on blog.
+• Editor: Test Markdown formatting, preview rendering, image upload, and code block highlighting.
+

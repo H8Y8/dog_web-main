@@ -1,6 +1,6 @@
 # Task ID: 34
 # Title: Implement Front-End Posts Display on Blog Page
-# Status: pending
+# Status: done
 # Dependencies: 24
 # Priority: high
 # Description: Build the front-end functionality to fetch and display CMS posts on the public blog page, including list view, pagination, and filtering, fully synchronized with back-end CRUD operations.

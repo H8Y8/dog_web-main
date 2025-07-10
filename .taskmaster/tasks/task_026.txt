@@ -1,6 +1,6 @@
 # Task ID: 26
 # Title: Implement CRUD for Members
-# Status: pending
+# Status: done
 # Dependencies: 11
 # Priority: high
 # Description: Develop the CRUD functionalities for managing members in the CMS.
@@ -9,3 +9,68 @@ Similar to posts, implement CRUD operations for members using React hooks and Su
 
 # Test Strategy:
 Test each CRUD operation for members to ensure data integrity.
+
+# Subtasks:
+## 1. Database Migration: Create members Table [done]
+### Dependencies: None
+### Description: Add a new migration to define the members table in Supabase with the specified schema: id, name, breed, birth_date, gender, color, role, status, pedigree_info, health_records, personality_traits, avatar_url, description, achievements, created_at, updated_at.
+### Details:
+Use the Supabase CLI to generate a new SQL migration. In the up script, write CREATE TABLE members (...columns with appropriate types and constraints, primary key on id, timestamps for created_at/updated_at). In the down script, write DROP TABLE members.
+<info added on 2025-07-09T14:45:10.024Z>
+Method 1: Supabase Dashboard SQL Editor  
+Directly run the SQL file at database/members-schema-update.sql in Supabase Dashboard > SQL Editor.  
+
+Method 2: Supabase CLI  
+1. Create a new migration:  
+   supabase migration new update_members_table_for_dogs  
+2. Open the generated migration file and paste the SQL content.  
+
+Step-by-step operations:  
+• Backup existing data:  
+  CREATE TABLE members_backup AS SELECT * FROM members;  
+• Drop the old table:  
+  DROP TABLE IF EXISTS members CASCADE;  
+• Recreate the dog members table with all required columns (name, breed, birth_date, gender, color, role, status, pedigree_info, health_records, achievements, etc.)  
+• Add appropriate indexes for query optimization  
+• Configure Row Level Security (RLS) policies for access control  
+• Insert sample dog member records for testing  
+
+Refer to database/members-schema-update.sql for the full SQL script and use either the Dashboard SQL Editor or the Supabase CLI commands above to execute it.
+</info added on 2025-07-09T14:45:10.024Z>
+
+## 2. Define TypeScript Interfaces for Member [done]
+### Dependencies: 26.1
+### Description: Create TypeScript types and interfaces representing the Member entity, matching the new table schema.
+### Details:
+In src/types/member.ts, define an interface Member with fields: id (string), name (string), breed (string), birth_date (string), gender ("male"|"female"), color (string), role (enum of roles), status (enum of statuses), pedigree_info (string), health_records (string), personality_traits (string), avatar_url (string), description (string), achievements (string), created_at and updated_at (string). Export all types.
+
+## 3. Implement Supabase Data Access Functions [done]
+### Dependencies: 26.1, 26.2
+### Description: Develop CRUD functions that interact with the Supabase client to perform operations on the members table.
+### Details:
+In src/lib/api/membersApi.ts, import createClient from @supabase/supabase-js. Write async functions: getMembers(): Promise<Member[]>, getMemberById(id: string): Promise<Member>, createMember(data: Partial<Member>): Promise<Member>, updateMember(id: string, data: Partial<Member>): Promise<Member>, deleteMember(id: string): Promise<void>. Use client.from('members').select()/insert()/update()/delete(). Handle errors by throwing exceptions.
+
+## 4. Create React Hooks for Member Operations [done]
+### Dependencies: 26.3
+### Description: Encapsulate the Supabase data access functions in React hooks to manage loading, error, and data state.
+### Details:
+Using a data-fetching library (e.g., react-query or SWR), implement useMembers, useMember(id), useCreateMember, useUpdateMember, useDeleteMember. Each hook should call the corresponding API function, return {data, error, isLoading}, and invalidate caches on mutations.
+
+## 5. Implement Member Creation Form UI [done]
+### Dependencies: 26.4
+### Description: Build a React component with a form to create new members, using useCreateMember hook and TypeScript types.
+### Details:
+In src/components/MemberForm/CreateMemberForm.tsx, use React Hook Form to render inputs for all member fields. Validate required fields. For avatar_url, integrate file upload or URL input. On submit, call useCreateMember.mutate with form data, show success toast or error message, and redirect or reset form.
+
+## 6. Implement Member Listing and Detail View [done]
+### Dependencies: 26.4
+### Description: Create components to list all members in a table or grid and show detailed information on selection.
+### Details:
+In src/components/MemberList/MemberList.tsx, use useMembers to fetch data, display name, breed, role, status in a table with pagination. Each row links to /members/:id. In src/pages/members/[id].tsx, use useMember to fetch by ID and render all fields including avatar and health records.
+
+## 7. Implement Member Edit and Delete Features [done]
+### Dependencies: 26.6
+### Description: Extend the detail view with editing and deletion capabilities using useUpdateMember and useDeleteMember hooks.
+### Details:
+In the detail page component, add an Edit button that opens the CreateMemberForm pre-filled with current member data, then calls useUpdateMember.mutate on submit. Add a Delete button that prompts for confirmation, then calls useDeleteMember.mutate and navigates back to the list on success.
+

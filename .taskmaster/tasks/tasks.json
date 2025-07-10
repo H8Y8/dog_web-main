@@ -1012,8 +1012,59 @@
         "dependencies": [
           "11"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Individual Puppy API Routes",
+            "description": "Develop individual API routes for GET, PUT, and DELETE operations for puppies.",
+            "dependencies": [],
+            "details": "Implement the routes /api/puppies/[id] for managing individual puppy records, ensuring proper request handling and response formatting.\n<info added on 2025-07-10T03:23:33.630Z>\nRLS permission issue resolved: updated the `/api/puppies` POST route to import and use `createAuthenticatedSupabaseClient(token)` (token from `validateAuth`), and changed the `/api/puppies/[id]` PUT and DELETE routes to use the authenticated client for update and delete operations. Removed unused enum imports and simplified gender validation logic. All CRUD operations now run under the correct user authentication context to satisfy RLS policies.\n</info added on 2025-07-10T03:23:33.630Z>\n<info added on 2025-07-10T03:34:22.663Z>\nSchema alignment fix: added a currency column to the puppies table in database/schema.sql (VARCHAR(10) DEFAULT 'TWD'), created a migration file database/add-currency-to-puppies.sql to add the column, update existing records with the default value, add a check constraint for allowed currencies (TWD, USD, EUR, JPY, CNY, HKD, SGD), and create an index for performance. Ensured TypeScript interface, front-end form, and database schema now match for multi-currency support, restoring full CRUD functionality.\n</info added on 2025-07-10T03:34:22.663Z>\n<info added on 2025-07-10T03:41:01.390Z>\nAdded status column to puppies table in database/schema.sql as VARCHAR(20) DEFAULT 'available' with a check constraint for ['available','reserved','sold','not_for_sale']. Created migration database/add-status-to-puppies.sql to add the status column, backfill initial values from available (true→'available', false→'not_for_sale'), create an index, and enforce status/available logic. Updated TypeScript interface, front-end form, and API routes to handle both status and available fields, ensuring status='available'→available=true and other statuses→available=false, resolving the dual state inconsistency.\n</info added on 2025-07-10T03:41:01.390Z>\n<info added on 2025-07-10T03:53:29.518Z>\nRemoved available column and unified state management  \nFront-end updates:  \n- Updated TypeScript types (lib/types/puppy.ts) to remove available field  \n- Simplified validation logic (lib/validation/puppy.ts), removing available checks  \n- Updated PuppyCreateForm.tsx and PuppyEditForm.tsx to remove available checkbox and use status dropdown only  \n- Updated PuppyDetail.tsx to display status with color-coded badges  \n\nBack-end updates:  \n- Modified parseQueryParams in lib/api-utils.ts to use status filter  \n- Updated app/api/puppies/route.ts GET and POST handlers to use status parameter  \n- Refactored usePuppies hook to replace available filter with filterByStatus  \n\nDatabase migrations prepared:  \n1. database/add-currency-to-puppies.sql  \n2. database/add-status-to-puppies.sql  \n3. database/remove-available-column.sql  \n\nDesign simplification:  \n- Unified state management via status column (available/reserved/sold/not_for_sale)  \n- Removed redundant available boolean  \n- Clarified front-end display logic and streamlined API queries using status\n</info added on 2025-07-10T03:53:29.518Z>\n<info added on 2025-07-10T03:59:54.098Z>\nDatabase schema fix for missing puppy fields: created migration file database/add-missing-puppy-fields.sql to add personality_traits (TEXT), current_weight (INTEGER, grams), expected_adult_weight (INTEGER, grams), birth_weight (INTEGER, grams) and microchip_id (VARCHAR(50)) with constraints enforcing realistic weight ranges and an index on microchip_id. Updated database/schema.sql to include the new columns. Modified app/api/puppies/route.ts POST and PUT handlers to include the new fields in puppyData. Weight fields are stored in grams with integer type; the frontend converts expected_adult_weight to kilograms for display. Added database constraints to validate weight values and microchip_id format. Verified creation and editing of puppies with the new fields through automated and manual tests after running the migration and restarting the application.\n</info added on 2025-07-10T03:59:54.098Z>",
+            "status": "done",
+            "testStrategy": "Unit tests for each API route to verify correct functionality."
+          },
+          {
+            "id": 2,
+            "title": "Develop Admin UI Components",
+            "description": "Create the admin interface components for managing puppies, including forms for CRUD operations.",
+            "dependencies": [],
+            "details": "Design and implement React components for adding, editing, and deleting puppies, ensuring they are user-friendly and responsive.\n<info added on 2025-07-10T03:01:38.830Z>\nImplementation complete:\n\n- PuppiesManager component: card-style list view with full CRUD support, delete confirmation dialog, and ‘list’, ‘detail’, ‘create’, ‘edit’ state views\n- PuppyDetail component: displays full puppy data (photo, info, status/price, description) with edit button and back navigation\n- PuppyCreateForm component: supports all Puppy fields, form validation, error handling, loading states; TypeScript handleInputChange errors fixed\n- PuppyEditForm component: extends PuppyCreateForm for editing, sends only changed fields, smart change detection\n- usePuppies hook: provides usePuppies and usePuppy for CRUD operations, filtering, and real-time subscriptions, based on the useMembers pattern\n- Admin page integration: imported PuppiesManager into app/admin/page.tsx, replacing the ComingSoonPage for puppies\n\nArchitectural and technical highlights:\n- Consistent with existing Members management pattern and shared UI components (lib/ui/Button)\n- Unified hook pattern, error/loading state handling, and visual design language\n- All TypeScript errors resolved with proper type conversions (PuppyColor, PuppyBreed, etc.)\n- Smart form processing (empty value cleaning, change detection) and comprehensive error boundaries\n</info added on 2025-07-10T03:01:38.830Z>\n<info added on 2025-07-10T04:11:39.171Z>\nFix puppy management card status synchronization issue\n\nProblem description\n- Appointment status on puppy cards did not update in the admin interface.\n\nRoot cause analysis\n- PuppiesManager was still using the removed “available” field for card badge, toggle button styling, and handleToggleAvailable logic.\n\nSolution\n- Update card status display to use puppy.status with full state support:\n  • AVAILABLE (green)\n  • RESERVED (yellow)\n  • SOLD (red)\n  • NOT_FOR_SALE (gray)\n- Refactor handleToggleAvailable to toggle between PuppyStatus.AVAILABLE and PuppyStatus.RESERVED using the PuppyStatus enum.\n- Update status badges and toggle buttons to show clear labels and appropriate colors based on puppy.status.\n\nImplementation details\nThe status label logic:\npuppy.status === PuppyStatus.AVAILABLE ? 'Available'\n  : puppy.status === PuppyStatus.RESERVED ? 'Reserved'\n  : puppy.status === PuppyStatus.SOLD ? 'Sold'\n  : 'Not for Sale'\n\nThe toggle logic:\nconst newStatus = puppy.status === PuppyStatus.AVAILABLE\n  ? PuppyStatus.RESERVED\n  : PuppyStatus.AVAILABLE\n\nTesting\n- Verify badge color and label for each status.\n- Confirm toggle button text and action reflect the next state.\n- Ensure card updates immediately and real-time subscriptions reflect changes.\n- Validate the refresh mechanism.\n</info added on 2025-07-10T04:11:39.171Z>",
+            "status": "done",
+            "testStrategy": "Integration tests to ensure components render correctly and handle user interactions."
+          },
+          {
+            "id": 3,
+            "title": "Implement Form Validation and Error Handling",
+            "description": "Add form validation and error handling for the puppy management forms in the admin UI.",
+            "dependencies": [
+              2
+            ],
+            "details": "Ensure that all forms validate input data correctly and provide user feedback for errors.",
+            "status": "done",
+            "testStrategy": "Functional tests to check validation rules and error messages."
+          },
+          {
+            "id": 4,
+            "title": "Define TypeScript Types and Interfaces",
+            "description": "Create TypeScript types and interfaces for the puppy data model and API responses.",
+            "dependencies": [],
+            "details": "Define types for the puppy schema including id, name, breed, birth_date, gender, color, description, images, available, and price.\n<info added on 2025-07-10T02:52:04.147Z>\nCreated lib/types/puppy.ts:\n- Defined comprehensive Puppy interface including id, name, breed, birth_date, gender, color, description, images, available and price  \n- Added PuppyGender, PuppyBreed and PuppyStatus enums  \n- Created CreatePuppyInput and UpdatePuppyInput interfaces for CRUD operations  \n- Defined HealthCheck, VaccinationRecord and PuppyPedigree detailed types  \n- Added PuppyFilter and PuppiesResponse interfaces for queries and responses  \n- Provided full multilingual label mappings  \n\nUpdated lib/types.ts:\n- Removed old basic Puppy interface  \n- Imported and re-exported the new complete Puppy type system to ensure consistent exports and type safety\n</info added on 2025-07-10T02:52:04.147Z>",
+            "status": "done",
+            "testStrategy": "Type checking during development to ensure type safety."
+          },
+          {
+            "id": 5,
+            "title": "Implement Available Toggle Functionality",
+            "description": "Add the available toggle feature for puppies in the admin UI and API.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Ensure that the admin interface allows toggling the availability of puppies and that this change is reflected in the database.",
+            "status": "done",
+            "testStrategy": "End-to-end tests to verify that toggling availability updates the database correctly."
+          }
+        ]
       },
       {
         "id": 29,
@@ -1025,8 +1076,62 @@
         "dependencies": [
           28
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up Storage Bucket",
+            "description": "Create and configure a storage bucket in Supabase for puppy images.",
+            "dependencies": [],
+            "details": "Ensure the bucket has the correct permissions and settings for image uploads.",
+            "status": "done",
+            "testStrategy": "Verify bucket creation and access permissions."
+          },
+          {
+            "id": 2,
+            "title": "Develop API Endpoint",
+            "description": "Create an API endpoint for handling image uploads for puppies.",
+            "dependencies": [
+              1
+            ],
+            "details": "The endpoint should accept image files and store them in the Supabase storage bucket.",
+            "status": "done",
+            "testStrategy": "Test the API with various image formats and sizes."
+          },
+          {
+            "id": 3,
+            "title": "Create Frontend Component",
+            "description": "Build a frontend component for users to upload puppy images.",
+            "dependencies": [
+              2
+            ],
+            "details": "The component should include a file input and handle the upload process.\n<info added on 2025-07-10T07:14:03.799Z>\nSubtask 29.3 completed.\n\nImplemented front-end components:\n- PuppyPhotoUpload (app/admin/components/PuppyPhotoUpload.tsx): supports four photo types (cover, album, pedigree, health_check), drag-and-drop upload with validation and compression, preview and management, 5 MB limit, multiple image formats\n- PuppyPhotoManager (app/admin/components/PuppyPhotoManager.tsx): integrates the upload component, handles single and batch uploads, progress tracking, error handling, authentication and permission checks, real-time data updates\n\nAdmin interface integration:\n- Added “Manage Photos” button to PuppyDetail component\n- Extended PuppiesManager component with a ‘photos’ view, handleManagePhotos function, and full photo management page layout\n\nTechnical highlights:\n- Built on existing PhotoUpload architecture, tailored for puppy requirements\n- Uses the puppyPhotos.ts API with full TypeScript type safety\n- Responsive, user-friendly design fully integrated with authentication system\n\nNext step:\nSubtask 29.4 – final testing and adjustments before full integration.\n</info added on 2025-07-10T07:14:03.799Z>",
+            "status": "done",
+            "testStrategy": "Ensure the component correctly uploads images and displays success/error messages."
+          },
+          {
+            "id": 4,
+            "title": "Integrate with Admin Interface",
+            "description": "Add the image upload functionality to the admin interface for managing puppy images.",
+            "dependencies": [
+              3
+            ],
+            "details": "Ensure that admins can view, upload, and delete puppy images from the interface.\n<info added on 2025-07-10T07:22:56.346Z>\nSubtask 29.4 integration complete.\n\nCompleted work:\n1. PuppiesManager integration:\n   a. Imported PuppyPhotoManager component\n   b. Added “photos” view type to the View union type\n   c. Implemented handleManagePhotos function\n   d. Added photo management view in renderContent\n   e. Completed photo management page layout with back button and page title\n\n2. PuppyDetail integration:\n   a. Added optional onManagePhotos prop\n   b. Implemented “Manage Photos” button UI\n   c. Correctly invoked photo management functionality\n\n3. RLS policy fixes:\n   a. Created puppy-photos-storage-fixed.sql\n   b. Resolved consistency issues with member and post storage\n   c. Added full CRUD policies (SELECT, INSERT, UPDATE, DELETE)\n   d. Ensured RLS enabled and added troubleshooting guide\n\n4. Functional flow validation:\n   a. Users can navigate from puppy list to detail to manage photos\n   b. Return to detail page from photo management\n   c. Support uploading and managing four photo types\n   d. Live updates of puppy data\n\nTechnical highlights:\n- Full TypeScript type safety\n- Responsive design consistent with existing UI\n- Authentication and permissions integration\n- Error handling and user feedback\n\nDesign decisions:\n- Photo management located on detail page for better UX\n- Consistency with Member and Post photo management\n- Support for batch and single-file uploads\n\nIntegration tests for subtask 29.4 completed. Ready for subtask 29.5 documentation and final testing.\n</info added on 2025-07-10T07:22:56.346Z>",
+            "status": "done",
+            "testStrategy": "Test the integration to confirm that all functionalities work as expected."
+          },
+          {
+            "id": 5,
+            "title": "Documentation and Testing",
+            "description": "Document the image upload process and perform thorough testing.",
+            "dependencies": [
+              4
+            ],
+            "details": "Create user documentation and conduct tests to ensure reliability and performance.\n<info added on 2025-07-10T07:39:08.906Z>\nResolved SQL permission issue on 2025-01-10  \nEncountered error 42501 must be owner of table objects when running puppy-photos-storage-fixed.sql due to RLS policy modifications requiring superuser privileges. Supabase users lack permission to alter system table policies.\n\nImplemented:\n- Created database/puppy-photos-storage-simple.sql with only bucket creation, omitting RLS modifications.\n- Authored docs/SUPABASE_STORAGE_SETUP_GUIDE.md detailing how to configure RLS policies via the Supabase Dashboard, including steps for four required policies and troubleshooting/verification.\n\nSetup steps summary:\n1. Execute the simplified SQL script to create the storage bucket.\n2. In the Supabase Dashboard, configure these RLS policies:\n   - puppy_photos_select_policy (public read)\n   - puppy_photos_insert_policy (authenticated upload)\n   - puppy_photos_update_policy (authenticated update)\n   - puppy_photos_delete_policy (authenticated delete)\n\nNext steps: Follow the guide to finish storage setup and verify puppy photo upload functionality.\n</info added on 2025-07-10T07:39:08.906Z>\n<info added on 2025-07-10T08:05:57.190Z>\nResolved missing cover_image and related photo fields on 2025-01-10  \nProblem diagnosis: Could not find the ‘cover_image’ column of ‘puppies’ in the schema cache when testing photo uploads.  \nRoot cause: the puppies table lacked the cover_image column and other photo-related fields that the API expects.  \nSolution: created database/add-puppy-photo-fields.sql migration to add:  \n • cover_image (TEXT)  \n • pedigree_documents (TEXT[])  \n • health_certificates (TEXT[])  \n • health_checks (TEXT[])  \n • vaccination_records (TEXT[])  \n• Verified existence of images (TEXT[]) column.  \nAPI field mappings:  \n • ‘cover’ → cover_image  \n • ‘album’ → images  \n • ‘pedigree’ → pedigree_documents  \n • ‘health_check’ → health_certificates  \nNext steps:  \n1. Run database/add-puppy-photo-fields.sql in the Supabase Dashboard SQL editor  \n2. Confirm storage bucket and RLS policies are configured (using the simplified script)  \n3. Retest puppy photo upload functionality.\n</info added on 2025-07-10T08:05:57.190Z>\n<info added on 2025-07-10T08:25:26.829Z>\nResolved front-end photo display logic on 2025-01-10  \nUser report: photo upload succeeds but list and detail pages show album photo instead of cover image  \nDiagnosis: both the puppy list and detail pages were using puppy.images[0] rather than puppy.cover_image  \nFixes implemented:  \n• app/puppies/page.tsx (PuppyCard):  \n  – if puppy.cover_image exists, display it  \n  – else if puppy.images[0] exists, display that  \n  – else show default icon  \n• app/puppies/[id]/page.tsx (Detail page):  \n  – build images array by first pushing puppy.cover_image (if present)  \n  – then appending puppy.images filtered to exclude the cover_image  \nCode snippet:  \n```javascript\n// List page\n{puppy.cover_image ? (\n  <img src={puppy.cover_image} alt=\"Cover\" />\n) : puppy.images?.length ? (\n  <img src={puppy.images[0]} alt=\"Album\" />\n) : (\n  <DefaultIcon />\n)}\n\n// Detail page\nconst images = [];\nif (puppy.cover_image) images.push(puppy.cover_image);\nif (puppy.images?.length) {\n  images.push(...puppy.images.filter(img => img !== puppy.cover_image));\n}\n```  \nExpected result: cover_image is shown first on list and detail pages, album photos follow without duplicates  \nTest confirmation: refreshed front end and verified correct photo display priority\n</info added on 2025-07-10T08:25:26.829Z>\n<info added on 2025-07-10T08:29:25.467Z>\nResolved pedigree and health certificates display on 2025-01-10  \nUser report: certificate images not shown on puppy detail page  \nDiagnosis: detail page lacked components to render pedigree_documents and health_certificates arrays  \nImplemented:  \n• In app/puppies/[id]/page.tsx, added two new card sections:  \n  – Pedigree Certificates Card: displays all images from pedigree_documents in a responsive grid (2 columns desktop, 1 column mobile), amber-themed cards with rounded corners and shadow, hover scale animation and gradient overlay; images clickable to open full-size in a new tab; includes title and caption.  \n  – Health Certificates Card: identical responsive layout and interactions with green theme; displays all images from health_certificates.  \n• Conditional rendering: each card only appears if its corresponding array contains images.  \nTest steps:  \n1. Upload pedigree and health certificate images via admin.  \n2. Visit puppy detail page.  \n3. Verify both certificate cards display uploaded images.  \n4. Test click-to-open full image functionality.\n</info added on 2025-07-10T08:29:25.467Z>",
+            "status": "done",
+            "testStrategy": "Review documentation for clarity and conduct user acceptance testing."
+          }
+        ]
       },
       {
         "id": 30,
@@ -1168,9 +1273,9 @@
         "id": 36,
         "title": "Implement Front-End Puppies Display on New Puppies Page",
         "description": "Fetch and display puppy records from the CMS on the public New Puppies page, including listing, sale status filtering, and detailed views, fully synchronized with the backend CRUD and image upload features.",
-        "details": "1. Create or update the New Puppies page (e.g., app/puppies/page.tsx) to fetch puppy records from Supabase (puppies table) via the existing CRUD API. Query fields: id, name, breed, age, price, status, image_url, description.\n2. Use the design system’s card or list components to render each puppy’s image, name, breed, age, price, and sale status. Ensure a responsive grid layout on desktop and list view on mobile.\n3. Implement sale status filter controls (e.g., tabs or dropdown: All, Available, Sold) that apply server-side filtering via query parameters.\n4. Add clickable puppy cards that navigate to a detailed puppy page (e.g., app/puppies/[id]/page.tsx). Fetch and display detailed information including description, additional images, and pedigree details.\n5. Handle loading, error, and empty states with spinners, alerts, and fallback messages.\n6. Optimize image loading using next/image or equivalent with lazy loading.\n7. Ensure front-end reflects back-end CRUD changes: test by adding, updating, and deleting puppies in the admin CMS and verifying updates refresh on the public page.",
+        "details": "1. Create or update the New Puppies page (e.g., app/puppies/page.tsx) to fetch puppy records from Supabase (puppies table) via the existing CRUD API. Query fields: id, name, breed, age, price, status, image_url, description.\n2. Use the design system’s card or list components to render each puppy’s image, name, breed, age, price, and sale status. Ensure a responsive grid layout on desktop and list view on mobile.\n3. Implement sale status filter controls (e.g., tabs or dropdown: All, Available, Sold) that apply server-side filtering via query parameters.\n4. Add clickable puppy cards that navigate to a detailed puppy page (e.g., app/puppies/[id]/page.tsx). Fetch and display detailed information including description, additional images, and pedigree details.\n5. Handle loading, error, and empty states with spinners, alerts, and fallback messages.\n6. Optimize image loading using next/image or equivalent with lazy loading.\n7. Ensure front-end reflects back-end CRUD changes: test by adding, updating, and deleting puppies in the admin CMS and verifying updates refresh on the public page.\n<info added on 2025-07-10T06:22:31.504Z>\nFix API data format issue – 2025-01-10\n\nProblem diagnosis:\n- Backend has puppy records but front-end did not display them\n- TypeScript type definitions did not match API response format\n- API response missing required array fields\n\nFix details:\n1. Added data formatting logic to all puppies API endpoints\n2. Ensured response includes required array fields: health_checks, vaccination_records, pedigree_documents, health_certificates, images\n3. Removed the available field to avoid type conflicts\n\nUpdated endpoints:\n- GET /api/puppies\n- GET /api/puppies/[id]\n- POST /api/puppies\n- PUT /api/puppies/[id]\n- DELETE /api/puppies/[id]\n\nTest results:\n- API now returns correctly formatted data\n- Includes all required TypeScript fields\n- Data structure fully matches front-end expectations\n\nNext steps:\n- Validate that the front-end now displays puppy data correctly\n</info added on 2025-07-10T06:22:31.504Z>\n<info added on 2025-07-10T06:44:06.377Z>\nFix front-end data parsing issue – 2025-01-10\n\nProblem diagnosis:\n- API returns correct format but front end still shows empty state\n- Front-end code does not correctly parse the nested response structure\n\nRoot cause:\n- API response: { success: true, data: { puppies: [...], pagination: {...} } }\n- Front-end was accessing data.puppies instead of data.data.puppies\n\nFix details:\n- Update fetchPuppies function to destructure nested response\n- Parse data.data.puppies and data.data.pagination\n- Use destructuring assignment for clarity\n\nCode change:\n    // Destructure nested data from API response\n    const { puppies = [], pagination: paginationData } = data.data || {}\n\nTest instructions:\nRefresh the New Puppies page and verify that puppy listings and pagination display correctly.\n</info added on 2025-07-10T06:44:06.377Z>\n<info added on 2025-07-10T06:50:00.029Z>\nFix detailed page data parsing issue – 2025-01-10\n\nProblem diagnosis:\n- Puppies list page displays data correctly\n- Detailed page shows blank name, “NaN years”, “Invalid Date”, wrong gender\n\nRoot cause:\n- Detailed page has the same API response parsing issue as the list page\n- API response format: { success: true, data: {...}, message: \"...\" }\n- Detailed page was assigning the entire response object to the puppy state instead of response.data\n\nFix details:\n- Updated fetchPuppy function in app/puppies/[id]/page.tsx to destructure response_data.data\n- Added validation to ensure the data field exists before setting state\n\nFix code:\nconst response_data = await response.json()\nif (response_data.success && response_data.data) {\n  setPuppy(response_data.data)\n} else {\n  throw new Error('Invalid API response format')\n}\n\nExpected result:\n- Detailed page correctly shows all puppy details\n- Name: ddf\n- Age: correctly calculated from birthdate\n- Gender: Male ♂\n- Price: TWD $500\n- All other fields display correctly\n\nTest instructions:\nRefresh the puppy details page and verify that all data renders correctly.\n</info added on 2025-07-10T06:50:00.029Z>",
         "testStrategy": "1. Load the New Puppies page and verify all puppies from the CMS display correctly with images, names, breeds, ages, prices, and statuses.\n2. Test sale status filters by selecting each option and confirming correct puppies are shown.\n3. Click a puppy card to open its detail page; verify detailed information and images display correctly.\n4. Perform add/update/delete operations in the admin CMS and confirm the public page and detail views reflect changes after reload.\n5. Test responsive behavior across breakpoints (mobile, tablet, desktop).\n6. Simulate network delays/failures to verify loading and error states display appropriate UI feedback.",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [
           28,
           29
@@ -1192,11 +1297,26 @@
         ],
         "priority": "medium",
         "subtasks": []
+      },
+      {
+        "id": 38,
+        "title": "Implement Comprehensive Blog System Functionality",
+        "description": "Develop and integrate a professional-grade blog system featuring a redesigned front-end interface, content organization, user interactions, SEO optimizations, social sharing, analytics, and publishing workflows.",
+        "details": "1. Front-End Redesign: Replace the existing /diary page with a new blog layout using the shared design system; implement responsive grid/list views, hero banner, and post cards showing title, author, date, excerpt, thumbnail.\n2. Article Categories & Tags: Extend the Posts API to support category and tag models (CRUD endpoints); create database tables (categories, tags, post_categories, post_tags); build a category/tag filter UI on the blog listing and post detail pages.\n3. Comment System: Define a comments table in Supabase (id, post_id, author_name, email, content, parent_id, is_admin, created_at); implement API routes for fetching, adding, and moderating comments; build front-end components for guest comments and nested admin replies.\n4. Full-Text Search: Integrate Supabase full-text search on posts (title, content, tags); create a search API endpoint; add a search bar on the blog listing to query and display matching posts.\n5. SEO Optimization: In Next.js app routes, dynamically generate <meta> tags and JSON-LD schema for pages; implement getServerSideProps (or generateMetadata) for posts; create sitemap.xml generator script.\n6. Social Sharing: Add share buttons (Facebook SDK, Line URL, clipboard copy) on post detail pages; ensure proper Open Graph and Twitter Card meta tags.\n7. Related Posts Recommendation: Develop an API to fetch related posts based on shared categories/tags or content similarity (vector search or simple overlap); display recommendations under post content.\n8. Reading Statistics & Popular Posts: On each page view, record a view event (via an analytics table or Supabase edge function); build an API to aggregate views and return top N popular posts; create a sidebar widget to display popular posts.\n9. RSS Feed: Implement an RSS feed endpoint (/feed.xml) that serializes latest published posts into standard RSS 2.0 format.\n10. Archive Page: Create a new /archive route grouping posts by year and month; fetch and display counts with collapsible lists.\n11. Drafts & Scheduled Publishing: Extend admin post editor to support draft status and schedule fields; implement a scheduled publish job (Edge function or cron) to change status to published at the set time.\n12. Rich-Text Editor: Integrate a Markdown-capable editor component (e.g., React Markdown + Slate or TipTap) in the admin UI; support live preview, image uploads via Supabase Storage, and code syntax highlighting.",
+        "testStrategy": "• Front-End Redesign: Verify /diary renders new layout on desktop and mobile; check responsive behavior and UI consistency.\n• Categories & Tags: Create, update, delete categories/tags via API and admin UI; assign them to posts; confirm filtering on listing and post detail pages.\n• Comments: Submit guest comments and admin replies; verify nesting, moderation controls, and error handling on invalid input.\n• Search: Enter keywords; confirm search results accurately match title, content, and associated tags.\n• SEO: Inspect page source for correct meta tags and JSON-LD; validate sitemap.xml contains all published posts.\n• Social Sharing: Click share buttons; ensure dialogs open correctly and shared links render proper social previews.\n• Related Posts: Publish test posts with overlapping tags; verify the recommendation widget shows correct related items.\n• Analytics: Simulate page loads; verify view counts increment in database; confirm popular posts widget orders posts by view count.\n• RSS Feed: Fetch /feed.xml; validate XML structure and content against RSS 2.0 specification.\n• Archive: Navigate to /archive; confirm posts are correctly grouped by year and month.\n• Scheduling: Create a draft with future publish date; simulate scheduler run; verify status changes to published and appears on blog.\n• Editor: Test Markdown formatting, preview rendering, image upload, and code block highlighting.\n",
+        "status": "pending",
+        "dependencies": [
+          24,
+          33,
+          34
+        ],
+        "priority": "high",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-07-05T16:25:31.127Z",
-      "updated": "2025-07-09T16:27:12.760Z",
+      "updated": "2025-07-10T07:27:06.704Z",
       "description": "Tasks for master context"
     }
   }

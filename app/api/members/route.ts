@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, createAuthenticatedSupabaseClient } from '@/lib/supabase'
 import { 
   apiSuccess, 
   apiError, 
@@ -47,10 +47,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // 驗證用戶身份
-    const { user, error: authError } = await validateAuth(request)
-    if (authError || !user) {
+    const { user, token, error: authError } = await validateAuth(request)
+    if (authError || !user || !token) {
       return apiError(authError || '需要登入', 'UNAUTHORIZED', 401)
     }
+
+    // 創建帶有用戶認證上下文的Supabase客戶端
+    const authenticatedSupabase = createAuthenticatedSupabaseClient(token)
 
     // 驗證請求體
     const requiredFields = ['name', 'role']
@@ -69,14 +72,15 @@ export async function POST(request: NextRequest) {
       email: body.email?.trim()
     }
 
-    // 插入到資料庫
-    const { data, error } = await supabase
+    // 使用認證的客戶端插入到資料庫
+    const { data, error } = await authenticatedSupabase
       .from('members')
       .insert([memberData])
       .select()
       .single()
 
     if (error) {
+      console.error('Insert error:', error)
       return handleSupabaseError(error)
     }
 

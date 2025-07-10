@@ -61,7 +61,7 @@ export function parseQueryParams(request: NextRequest) {
     order: (searchParams.get('order') || 'desc') as 'asc' | 'desc',
     search: searchParams.get('search'),
     published: searchParams.get('published'),
-    available: searchParams.get('available'),
+    status: searchParams.get('status'),
     type: searchParams.get('type'),
     breed: searchParams.get('breed'),
     gender: searchParams.get('gender'),

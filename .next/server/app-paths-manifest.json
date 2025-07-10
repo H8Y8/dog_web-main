@@ -1,10 +1,10 @@
 {
-  "/not-found": "app/not-found.js",
-  "/about/page": "app/about/page.js",
+  "/page": "app/page.js",
+  "/puppies/page": "app/puppies/page.js",
+  "/puppies/[id]/page": "app/puppies/[id]/page.js",
+  "/api/puppies/route": "app/api/puppies/route.js",
+  "/contact/page": "app/contact/page.js",
   "/api/posts/route": "app/api/posts/route.js",
   "/api/members/route": "app/api/members/route.js",
-  "/environment/page": "app/environment/page.js",
-  "/contact/page": "app/contact/page.js",
-  "/puppies/page": "app/puppies/page.js",
   "/admin/page": "app/admin/page.js"
 }

@@ -6,6 +6,7 @@ import { Button } from '../../lib/ui/Button'
 import { cn } from '../../lib/ui/utils'
 import PostsManager from './components/PostsManager'
 import MembersManager from './components/MembersManager'
+import PuppiesManager from './components/PuppiesManager'
 
 export default function AdminPage() {
   const { user, session, loading, isAuthenticated, signOut } = useAuth()
@@ -303,7 +304,7 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
       case 'posts':
         return <PostsManager user={user} session={session} />
       case 'puppies':
-        return <ComingSoonPage title="幼犬管理" description="管理幼犬資訊和相片" />
+        return <PuppiesManager />
       case 'members':
         return <MembersManager />
       case 'environments':
