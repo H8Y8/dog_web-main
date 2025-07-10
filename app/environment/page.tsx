@@ -1,5 +1,5 @@
 import React from 'react'
-import Environment from '../components/Environment'
+import DynamicEnvironment from '../components/DynamicEnvironment'
 
 export const metadata = {
   title: '環境介紹 | 雷歐犬舍訓練工作室 - 專業蘇格蘭㹴犬舍',
@@ -10,7 +10,7 @@ export const metadata = {
 export default function EnvironmentPage() {
   return (
     <div className="pt-32 min-h-screen">
-      <Environment />
+      <DynamicEnvironment />
     </div>
   )
 } 

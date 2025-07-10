@@ -7,6 +7,7 @@ import { cn } from '../../lib/ui/utils'
 import PostsManager from './components/PostsManager'
 import MembersManager from './components/MembersManager'
 import PuppiesManager from './components/PuppiesManager'
+import EnvironmentsManager from './components/EnvironmentsManager'
 
 export default function AdminPage() {
   const { user, session, loading, isAuthenticated, signOut } = useAuth()
@@ -308,7 +309,7 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
       case 'members':
         return <MembersManager />
       case 'environments':
-        return <ComingSoonPage title="環境管理" description="管理犬舍環境設施資訊" />
+        return <EnvironmentsManager />
       case 'settings':
         return <ComingSoonPage title="系統設定" description="配置系統參數和偏好" />
       default:

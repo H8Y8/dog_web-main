@@ -91,10 +91,23 @@ export default function PuppyEditForm({ puppy, onSuccess, onCancel }: PuppyEditF
         return
       }
 
+      // 為業務規則驗證準備完整的資料（結合原始資料和變更）
+      const completeDataForValidation = {
+        ...puppy,  // 原始資料
+        ...cleanedData  // 變更的資料
+      }
+
       // 驗證表單資料
-      const validation = PuppyValidator.validateUpdateComplete(cleanedData)
-      if (!validation.isValid) {
-        setValidationErrors(formatValidationErrors(validation.errors))
+      const validation = PuppyValidator.validateUpdateInput(cleanedData)
+      const businessValidation = PuppyValidator.validateBusinessRules(completeDataForValidation)
+      
+      const combinedValidation = {
+        isValid: validation.isValid && businessValidation.isValid,
+        errors: [...validation.errors, ...businessValidation.errors]
+      }
+
+      if (!combinedValidation.isValid) {
+        setValidationErrors(formatValidationErrors(combinedValidation.errors))
         setLoading(false)
         return
       }

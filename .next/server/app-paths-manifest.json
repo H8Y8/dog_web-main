@@ -1,10 +1,13 @@
 {
-  "/page": "app/page.js",
-  "/puppies/page": "app/puppies/page.js",
-  "/puppies/[id]/page": "app/puppies/[id]/page.js",
-  "/api/puppies/route": "app/api/puppies/route.js",
-  "/contact/page": "app/contact/page.js",
+  "/environment/page": "app/environment/page.js",
   "/api/posts/route": "app/api/posts/route.js",
+  "/diary/[id]/page": "app/diary/[id]/page.js",
   "/api/members/route": "app/api/members/route.js",
+  "/diary/page": "app/diary/page.js",
+  "/puppies/page": "app/puppies/page.js",
+  "/api/environments/route": "app/api/environments/route.js",
+  "/api/puppies/route": "app/api/puppies/route.js",
+  "/puppies/[id]/page": "app/puppies/[id]/page.js",
+  "/api/puppies/[id]/route": "app/api/puppies/[id]/route.js",
   "/admin/page": "app/admin/page.js"
 }

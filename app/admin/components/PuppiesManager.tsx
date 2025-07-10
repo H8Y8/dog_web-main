@@ -20,7 +20,8 @@ function PuppiesListWithActions({
   onViewDetail, 
   onEdit, 
   onDelete,
-  onToggleAvailable 
+  onToggleAvailable,
+  onManagePhotos
 }: {
   puppies: Puppy[]
   loading: boolean
@@ -29,6 +30,7 @@ function PuppiesListWithActions({
   onEdit: (puppy: Puppy) => void
   onDelete: (puppy: Puppy) => void
   onToggleAvailable: (puppy: Puppy) => void
+  onManagePhotos: (puppy: Puppy) => void
 }) {
   if (loading) {
     return (
@@ -126,7 +128,7 @@ function PuppiesListWithActions({
                   </div>
                   {puppy.price && (
                     <p className="text-lg font-semibold text-blue-600">
-                      NT$ {puppy.price.toLocaleString()}
+                      {puppy.currency} ${puppy.price.toLocaleString()}
                     </p>
                   )}
                 </div>
@@ -150,19 +152,18 @@ function PuppiesListWithActions({
                     </Button>
                     <Button
                       size="sm"
-                      variant="danger"
-                      onClick={() => onDelete(puppy)}
+                      variant="outline"
+                      onClick={() => onManagePhotos(puppy)}
                     >
-                      刪除
+                      照片
                     </Button>
                   </div>
-                  
-                  {/* 狀態切換 */}
-                                      <Button
+                  <div className="flex space-x-2">
+                    <Button
                       size="sm"
                       variant={puppy.status === PuppyStatus.AVAILABLE ? "outline" : undefined}
                       onClick={() => onToggleAvailable(puppy)}
-                      className={`w-full ${
+                      className={`flex-1 ${
                         puppy.status === PuppyStatus.AVAILABLE
                           ? 'border-orange-300 text-orange-700 hover:bg-orange-50' 
                           : 'bg-green-600 hover:bg-green-700 text-white'
@@ -170,6 +171,14 @@ function PuppiesListWithActions({
                     >
                       {puppy.status === PuppyStatus.AVAILABLE ? '設為已預約' : '設為可預約'}
                     </Button>
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => onDelete(puppy)}
+                    >
+                      刪除
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -223,18 +232,19 @@ export default function PuppiesManager() {
     setShowDeleteConfirm(true)
   }
 
-  // 處理狀態切換（可預約 ↔ 已預約）
+  // 處理狀態切換
   const handleToggleAvailable = async (puppy: Puppy) => {
+    const newStatus = puppy.status === PuppyStatus.AVAILABLE ? PuppyStatus.RESERVED : PuppyStatus.AVAILABLE
+    
     try {
-      const newStatus = puppy.status === PuppyStatus.AVAILABLE ? PuppyStatus.RESERVED : PuppyStatus.AVAILABLE
       const result = await updatePuppy(puppy.id, { status: newStatus }, session?.access_token)
       if (result.success) {
         refresh()
       } else {
-        alert(`切換失敗：${result.error?.message || '未知錯誤'}`)
+        alert(`狀態更新失敗：${result.error?.message || '未知錯誤'}`)
       }
     } catch (error) {
-      alert('切換失敗：網路錯誤')
+      alert('狀態更新失敗：網路錯誤')
     }
   }
 
@@ -269,173 +279,137 @@ export default function PuppiesManager() {
   const handleSuccess = () => {
     setCurrentView('list')
     setSelectedPuppy(null)
+    // 重新整理列表
     refresh()
   }
 
-  // 處理幼犬更新後的回調
+  // 處理幼犬更新（例如照片上傳）
   const handlePuppyUpdated = () => {
-    setCurrentView('list')
-    setSelectedPuppy(null)
+    // 重新載入列表資料以顯示最新的資料
     refresh()
   }
 
-  // 處理返回列表
+  // 返回列表
   const handleBack = () => {
     setCurrentView('list')
     setSelectedPuppy(null)
   }
 
-  // 根據當前視圖渲染不同內容
-  const renderContent = () => {
-    switch (currentView) {
-      case 'list':
-        return (
-          <div className="space-y-6">
-            {/* 頁面標題和操作 */}
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">幼犬管理</h2>
-                <p className="text-gray-600">管理犬舍的幼犬資訊</p>
-              </div>
-              <div className="flex space-x-3">
-                <Button
-                  variant="outline"
-                  onClick={refresh}
-                  disabled={loading}
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                  重新整理
-                </Button>
-                <Button
-                  onClick={() => setCurrentView('create')}
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  新增幼犬
-                </Button>
-              </div>
-            </div>
-
-            {/* 幼犬列表 */}
-            <PuppiesListWithActions
-              puppies={puppies}
-              loading={loading}
-              error={error}
-              onViewDetail={handleViewDetail}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onToggleAvailable={handleToggleAvailable}
-            />
-          </div>
-        )
-
-      case 'detail':
-        return selectedPuppy && (
-          <PuppyDetail
-            puppy={selectedPuppy}
-            onBack={handleBack}
-            onEdit={() => setCurrentView('edit')}
-            onManagePhotos={() => handleManagePhotos(selectedPuppy)}
-          />
-        )
-
-      case 'create':
-        return (
-          <PuppyCreateForm
-            onSuccess={handleSuccess}
-            onCancel={handleBack}
-          />
-        )
-
-      case 'edit':
-        return selectedPuppy && (
-          <PuppyEditForm
-            puppy={selectedPuppy}
-            onSuccess={handlePuppyUpdated}
-            onCancel={handleBack}
-          />
-        )
-
-      case 'photos':
-        return selectedPuppy && (
-          <div className="space-y-6">
-            {/* 頁面標題和返回按鈕 */}
-            <div className="flex items-center">
-              <Button
-                variant="outline"
-                onClick={handleBack}
-                className="mr-4"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                返回詳情
-              </Button>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">照片管理</h2>
-                <p className="text-gray-600">{selectedPuppy.name} 的照片管理</p>
-              </div>
-            </div>
-            
-            {/* 照片管理組件 */}
-            <PuppyPhotoManager
-              puppy={selectedPuppy}
-              onPuppyUpdated={(updatedPuppy) => {
-                // 更新幼犬資料並保持在照片管理頁面
-                setSelectedPuppy(updatedPuppy)
-                refresh()
-              }}
-            />
-          </div>
-        )
-
-      default:
-        return null
-    }
-  }
-
   return (
     <div className="space-y-6">
-      {renderContent()}
+      {/* 頁面標題和操作 */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {currentView === 'list' && '幼犬管理'}
+            {currentView === 'detail' && `${selectedPuppy?.name} - 詳細資料`}
+            {currentView === 'create' && '新增幼犬'}
+            {currentView === 'edit' && `編輯 ${selectedPuppy?.name}`}
+            {currentView === 'photos' && `${selectedPuppy?.name} - 照片管理`}
+          </h1>
+        </div>
+        
+        <div className="flex space-x-3">
+          {currentView !== 'list' && (
+            <Button variant="outline" onClick={handleBack}>
+              返回列表
+            </Button>
+          )}
+          
+          {currentView === 'list' && (
+            <Button onClick={() => setCurrentView('create')}>
+              新增幼犬
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* 主要內容區域 */}
+      {currentView === 'list' && (
+        <PuppiesListWithActions
+          puppies={puppies}
+          loading={loading}
+          error={error}
+          onViewDetail={handleViewDetail}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onToggleAvailable={handleToggleAvailable}
+          onManagePhotos={handleManagePhotos}
+        />
+      )}
+
+      {currentView === 'detail' && selectedPuppy && (
+        <PuppyDetail
+          puppy={selectedPuppy}
+          onEdit={() => setCurrentView('edit')}
+          onDelete={() => handleDelete(selectedPuppy)}
+          onBack={handleBack}
+          onPuppyUpdated={handlePuppyUpdated}
+        />
+      )}
+
+      {currentView === 'create' && (
+        <PuppyCreateForm
+          onSuccess={handleSuccess}
+          onCancel={handleBack}
+        />
+      )}
+
+      {currentView === 'edit' && selectedPuppy && (
+        <PuppyEditForm
+          puppy={selectedPuppy}
+          onSuccess={handleSuccess}
+          onCancel={handleBack}
+        />
+      )}
+
+      {currentView === 'photos' && selectedPuppy && (
+        <PuppyPhotoManager
+          puppy={selectedPuppy}
+          onPuppyUpdated={(updatedPuppy) => {
+            // 更新幼犬資料並保持在照片管理頁面
+            setSelectedPuppy(updatedPuppy)
+            refresh()
+          }}
+        />
+      )}
 
       {/* 刪除確認對話框 */}
       {showDeleteConfirm && selectedPuppy && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-7-11l7 7 7-7h0l-7 7h0l-7-7z"/>
                 </svg>
               </div>
-              <div className="ml-4">
-                <h3 className="text-lg font-medium text-gray-900">確認刪除</h3>
-                <p className="text-sm text-gray-500">此操作無法復原</p>
+              <h3 className="text-lg leading-6 font-medium text-gray-900 mt-2">確認刪除</h3>
+              <div className="mt-2 px-7 py-3">
+                <p className="text-sm text-gray-500">
+                  您確定要刪除幼犬「{selectedPuppy.name}」嗎？此操作無法復原。
+                </p>
               </div>
-            </div>
-            
-            <p className="text-gray-700 mb-6">
-              確定要刪除幼犬「{selectedPuppy.name}」嗎？刪除後將無法復原。
-            </p>
-            
-            <div className="flex space-x-3 justify-end">
-              <Button
-                variant="outline"
-                onClick={cancelDelete}
-                disabled={deleteLoading}
-              >
-                取消
-              </Button>
-              <Button
-                variant="danger"
-                onClick={confirmDelete}
-                disabled={deleteLoading}
-              >
-                {deleteLoading ? '刪除中...' : '確認刪除'}
-              </Button>
+              <div className="items-center px-4 py-3">
+                <div className="flex space-x-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={cancelDelete}
+                    disabled={deleteLoading}
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="flex-1"
+                    onClick={confirmDelete}
+                    disabled={deleteLoading}
+                  >
+                    {deleteLoading ? '刪除中...' : '確認刪除'}
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
