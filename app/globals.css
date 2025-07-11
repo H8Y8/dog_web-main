@@ -26,22 +26,42 @@
   inherits: true;
 }
 
-/* 自定義滾動條 */
-::-webkit-scrollbar {
-  width: 8px;
+/* 自定義滾動條 - 僅適用於桌面版 */
+@media (min-width: 769px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #e8b744;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #d8b88e;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #e8b744;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #d8b88e;
+/* 手機版滾動條設定 */
+@media (max-width: 768px) {
+  /* 隱藏所有滾動條 */
+  ::-webkit-scrollbar {
+    display: none;
+    width: 0px;
+    height: 0px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
 }
 
 /* 基本樣式重置 */
@@ -53,6 +73,7 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
 }
 
 body {
@@ -61,6 +82,19 @@ body {
   color: #333;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  min-width: 320px;
+  overflow-x: hidden; /* 僅保留必要的水平滾動防護 */
+}
+
+/* 確保所有主要容器都不會造成水平滾動 */
+.container,
+.max-w-7xl,
+.max-w-6xl,
+.max-w-3xl,
+.max-w-2xl {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* 標題文字加粗效果優化 - 來自原始React應用 */
@@ -173,5 +207,84 @@ p {
     width: 8px !important;
     height: 8px !important;
     margin: 0 4px !important;
+  }
+  
+  /* 手機版特別處理 */
+  body {
+    min-width: 320px;
+  }
+  
+  /* 確保手機版不會有水平滾動 */
+  .container,
+  .max-w-7xl,
+  .max-w-6xl,
+  .max-w-3xl,
+  .max-w-2xl {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+} 
+
+/* 隱藏滾動條的實用類別 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* 確保圖片和媒體不會超出容器 */
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 防止文字溢出 */
+.break-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 確保flex容器不會溢出 */
+.flex {
+  max-width: 100%;
+}
+
+/* 修復潛在的表格溢出問題 */
+table {
+  table-layout: auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* 確保所有section都不會造成水平滾動 */
+section {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* 對於有固定定位的元素，確保它們不會超出螢幕 */
+.fixed {
+  max-width: 100vw;
+}
+
+/* 額外的手機版優化 */
+@media (max-width: 640px) {
+  /* 減少手機版的padding以節省空間 */
+  .px-4 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
+  /* 確保文字不會太大 */
+  h1, h2, h3, h4, h5, h6 {
+    word-break: break-word;
+  }
+  
+  /* 防止過大的邊距造成溢出 */
+  .space-x-10 > :not([hidden]) ~ :not([hidden]) {
+    margin-left: 1rem !important;
   }
 } 

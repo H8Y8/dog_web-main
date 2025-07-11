@@ -196,7 +196,7 @@ const DynamicEnvironment = () => {
 
   if (loading) {
     return (
-      <section className="py-16 bg-earth-50">
+      <section className="relative py-16 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="h-12 bg-gray-300 rounded w-96 mx-auto mb-4 animate-pulse"></div>
@@ -214,7 +214,7 @@ const DynamicEnvironment = () => {
 
   if (error) {
     return (
-      <section className="py-16 bg-earth-50">
+      <section className="relative py-16 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="bg-red-50 border border-red-200 rounded-lg p-8">
@@ -238,7 +238,7 @@ const DynamicEnvironment = () => {
 
   if (environments.length === 0) {
     return (
-      <section className="py-16 bg-earth-50">
+      <section className="relative py-16 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-8">
@@ -255,18 +255,45 @@ const DynamicEnvironment = () => {
   }
 
   return (
-    <section className="py-16 bg-earth-50">
+    <section className="relative py-0 bg-earth-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 頁面標題 */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">
-            專業犬舍環境介紹
-          </h2>
-          <p className="text-xl text-earth-700 mb-8" data-aos="fade-up" data-aos-delay="100">
-            為蘇格蘭㹴提供最專業、最舒適的生活與訓練環境
-          </p>
-          <div className="w-20 h-1 bg-primary-600 mx-auto" data-aos="fade-up" data-aos-delay="200"></div>
-        </div>
+        {/* Hero Section */}
+        <section className="relative pb-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-earth-200/5 to-earth-300/5"></div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="max-w-4xl mx-auto">
+              {/* 標題上方的裝飾線 */}
+              <div className="flex items-center justify-center mb-8">
+                <div className="h-px bg-gradient-to-r from-transparent via-earth-400 to-transparent w-24"></div>
+                <div className="mx-4 w-2 h-2 bg-earth-400 rounded-full"></div>
+                <div className="h-px bg-gradient-to-r from-transparent via-earth-400 to-transparent w-24"></div>
+              </div>
+              
+              <h1 className="text-5xl md:text-7xl font-bold text-earth-900 mb-6 tracking-tight">
+                環境
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-earth-600 to-earth-700">
+                  介紹
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-earth-800/80 leading-relaxed mb-8">
+                為蘇格蘭㹴提供最專業、最舒適的生活與訓練環境
+              </p>
+              
+              {/* 統計信息 */}
+              <div className="flex items-center justify-center space-x-8 text-earth-700">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-earth-800">{environments.length || '多種'}</div>
+                  <div className="text-sm">環境設施</div>
+                </div>
+                <div className="w-px h-12 bg-earth-300"></div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-earth-800">100%</div>
+                  <div className="text-sm">安全保障</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* 類型篩選 */}
         <div className="flex flex-wrap justify-center gap-4 mb-12" data-aos="fade-up" data-aos-delay="300">

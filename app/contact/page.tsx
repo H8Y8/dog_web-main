@@ -4,22 +4,54 @@ import React from 'react'
 
 export default function ContactPage() {
   return (
-    <div className="pt-32 min-h-screen">
-      <section className="py-20 bg-earth-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-                      <div className="flex justify-center mb-4" data-aos="fade-up">
-            <img 
-              src="/images/contact-icon.png" 
-              alt="聯絡我們" 
-              className="w-48 h-48"
-            />
-          </div>
-            <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">聯絡我們</h2>
-            <p className="text-xl text-earth-700" data-aos="fade-up" data-aos-delay="100">
+    <div className="min-h-screen bg-earth-50">
+      {/* 背景裝飾 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-earth-200/20 to-earth-300/20 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-earth-200/20 to-earth-300/20 rounded-full blur-3xl transform translate-x-1/2 translate-y-1/2"></div>
+      </div>
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-earth-200/5 to-earth-300/5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-4xl mx-auto">
+            {/* 標題上方的裝飾線 */}
+            <div className="flex items-center justify-center mb-8">
+              <div className="h-px bg-gradient-to-r from-transparent via-earth-400 to-transparent w-24"></div>
+              <div className="mx-4 w-2 h-2 bg-earth-400 rounded-full"></div>
+              <div className="h-px bg-gradient-to-r from-transparent via-earth-400 to-transparent w-24"></div>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold text-earth-900 mb-6 tracking-tight">
+              聯絡
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-earth-600 to-earth-700">
+                我們
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-earth-800/80 leading-relaxed mb-8">
               歡迎與我們聯繫，了解更多關於蘇格蘭㹴的資訊
             </p>
+            
+            {/* 統計信息 */}
+            <div className="flex items-center justify-center space-x-8 text-earth-700">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-earth-800">專業</div>
+                <div className="text-sm">諮詢服務</div>
+              </div>
+              <div className="w-px h-12 bg-earth-300"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-earth-800">即時</div>
+                <div className="text-sm">回覆保證</div>
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* 聯絡資訊區域 */}
+      <section className="relative pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="max-w-6xl mx-auto">
             <div 

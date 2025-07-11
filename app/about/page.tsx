@@ -64,16 +64,49 @@ export default function AboutPage() {
         <meta name="twitter:description" content="認識我們專業的蘇格蘭㹴犬舍，擁有優秀的種犬和專業的繁育經驗。" />
         <link rel="canonical" href="/about" />
       </Head>
-      <div className="pt-32 min-h-screen">
+      <div className="pt-32 min-h-screen bg-earth-50">
+        {/* 背景裝飾效果 */}
+
+
+        {/* Hero Section */}
+        <section className="relative py-0 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-earth-200/5 to-earth-300/5"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            {/* 裝飾線條 */}
+            <div className="flex items-center justify-center mb-8">
+              <div className="h-px bg-gradient-to-r from-transparent via-earth-300 to-transparent w-24"></div>
+              <div className="mx-4 w-3 h-3 bg-earth-400 rounded-full"></div>
+              <div className="h-px bg-gradient-to-r from-transparent via-earth-300 to-transparent w-24"></div>
+            </div>
+
+            {/* 主標題 */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-earth-800 via-earth-600 to-earth-800 bg-clip-text text-transparent">
+                關於我們
+              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-earth-700 mb-12 max-w-3xl mx-auto leading-relaxed">
+              蔡毛的蘇格蘭㹴專業犬舍
+            </p>
+
+            {/* 統計信息 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-earth-800 mb-2">10+</div>
+                <div className="text-earth-600">年專業育種經驗</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-earth-800 mb-2">100%</div>
+                <div className="text-earth-600">基因健康保證</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
       {/* About Section */}
       <section className="py-16 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">關於我們</h2>
-            <p className="text-xl text-earth-700 mb-8" data-aos="fade-up" data-aos-delay="100">
-              蔡毛的蘇格蘭㹴專業犬舍
-            </p>
-          </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
                       <div className="relative" data-aos="fade-right">

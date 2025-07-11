@@ -119,7 +119,7 @@ export default function DogMemberCard({ member, onMouseEnter, onMouseLeave }: Do
           {member.album_urls && member.album_urls.length > 0 && (
             <div className="mt-4">
               <h4 className="text-sm font-medium text-earth-900 mb-2">相簿</h4>
-              <div className="flex gap-2 overflow-x-auto">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide">
                 {member.album_urls.slice(0, 3).map((url, index) => (
                   <img
                     key={index}

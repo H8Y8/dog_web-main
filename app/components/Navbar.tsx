@@ -33,27 +33,27 @@ const Navbar = () => {
   }
 
   return (
-    <div className="fixed w-full z-50 px-0 sm:px-6 lg:px-8 top-0 sm:top-6">
-      <nav className="max-w-7xl mx-auto bg-earth-600/90 sm:rounded-full text-earth-50 backdrop-blur-sm sm:border sm:border-earth-500/50 shadow-lg">
+    <div className="fixed w-full z-50 px-0 sm:px-6 lg:px-8 top-0 sm:top-6 overflow-x-hidden">
+      <nav className="max-w-7xl mx-auto bg-earth-600/90 sm:rounded-full text-earth-50 backdrop-blur-sm sm:border sm:border-earth-500/50 shadow-lg overflow-x-hidden">
         <div className="px-4 sm:px-8">
-          <div className="flex justify-between h-14 sm:h-16">
-            <div className="flex-shrink-0 flex items-center">
+          <div className="flex justify-between h-14 sm:h-16 items-center">
+            <div className="flex-shrink-0 flex items-center min-w-0">
               <Link
                 href="/"
                 onClick={handleLogoClick}
-                className="text-lg sm:text-xl font-bold text-primary-900 hover:text-primary-800 transition duration-300"
+                className="text-base sm:text-lg md:text-xl font-bold text-primary-900 hover:text-primary-800 transition duration-300 truncate"
               >
                 雷歐犬舍訓練工作室
               </Link>
             </div>
             
             {/* 桌面版選單 */}
-            <div className="hidden md:flex items-center space-x-10">
+            <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
               {menuItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-base md:text-lg font-medium whitespace-nowrap transition-colors duration-200 ${
+                  className={`text-sm lg:text-base xl:text-lg font-medium whitespace-nowrap transition-colors duration-200 ${
                     isActive(item.href)
                       ? 'text-primary-300 font-bold'
                       : 'text-earth-100 hover:text-primary-200'
@@ -65,7 +65,7 @@ const Navbar = () => {
             </div>
 
             {/* 手機版選單按鈕 */}
-            <div className="md:hidden flex items-center">
+            <div className="md:hidden flex items-center flex-shrink-0">
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-earth-100 hover:text-primary-200 transition duration-200 p-2"
@@ -100,13 +100,13 @@ const Navbar = () => {
 
         {/* 手機版下拉選單 */}
         {isOpen && (
-          <div className="md:hidden bg-earth-600/95 sm:rounded-2xl mt-0 sm:mt-2 overflow-hidden sm:border sm:border-earth-500/50 shadow-lg">
+          <div className="md:hidden bg-earth-600/90 sm:rounded-2xl mt-0 sm:mt-2 overflow-hidden sm:border sm:border-earth-500/50 shadow-lg">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {menuItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`block px-4 py-2.5 text-base transition-colors duration-200 ${
+                  className={`block px-4 py-2.5 text-base transition-colors duration-200 break-words ${
                     isActive(item.href)
                       ? 'text-primary-300 font-semibold'
                       : 'text-earth-100 hover:text-primary-200'

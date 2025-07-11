@@ -83,7 +83,7 @@ export default function PostDetailPage() {
 
 
   return (
-    <div className="pt-32 min-h-screen">
+    <div className="pt-32 min-h-screen bg-earth-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 返回按鈕 */}
         <div className="mb-8">
@@ -133,11 +133,11 @@ export default function PostDetailPage() {
           <article className="bg-white rounded-xl shadow-lg overflow-hidden">
             {/* 文章封面 */}
             {post.cover_image && (
-              <div className="relative bg-gradient-to-br from-amber-100 to-yellow-100">
+              <div className="relative flex justify-center items-center p-4" style={{ backgroundColor: 'rgb(252, 249, 245)' }}>
                 <img
                   src={post.cover_image}
                   alt={`${post.title} 的封面圖片`}
-                  className="w-full h-auto object-contain"
+                  className="max-w-2xl w-full h-auto object-contain rounded-lg shadow-md"
                   loading="lazy"
                 />
               </div>

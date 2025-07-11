@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animation Test</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        .test-container { 
+            position: fixed; 
+            top: 10px; 
+            right: 10px; 
+            background: rgba(0,0,0,0.8); 
+            color: white; 
+            padding: 10px; 
+            border-radius: 5px;
+            z-index: 9999;
+        }
+        .status { margin: 5px 0; }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h3>ScrollText Animation Test</h3>
+        <div id="status-container">
+            <div class="status">Loading test...</div>
+        </div>
+        <button onclick="window.location.href='http://localhost:3000'">Go to App</button>
+    </div>
+
+    <script>
+        // 檢查動畫功能的腳本
+        function checkAnimation() {
+            const statusContainer = document.getElementById('status-container');
+            
+            function addStatus(message, type = 'status') {
+                const div = document.createElement('div');
+                div.className = `status ${type}`;
+                div.textContent = message;
+                statusContainer.appendChild(div);
+            }
+            
+            // 清除載入訊息
+            statusContainer.innerHTML = '';
+            
+            // 測試 1: 檢查是否能存取 localhost:3000
+            fetch('http://localhost:3000')
+                .then(response => {
+                    if (response.ok) {
+                        addStatus('✓ Server is running', 'success');
+                        
+                        // 開啟新視窗到應用
+                        const newWindow = window.open('http://localhost:3000', '_blank');
+                        
+                        addStatus('✓ App opened in new window', 'success');
+                        addStatus('Manual checks needed:', 'warning');
+                        addStatus('1. Scroll to ScrollText section');
+                        addStatus('2. Check if text highlights on scroll');
+                        addStatus('3. Check if dog icon moves');
+                        addStatus('4. Check animation smoothness');
+                        
+                    } else {
+                        addStatus('✗ Server response error', 'error');
+                    }
+                })
+                .catch(error => {
+                    addStatus('✗ Cannot connect to server', 'error');
+                    addStatus('Please run: npm run dev', 'warning');
+                });
+        }
+        
+        // 啟動測試
+        setTimeout(checkAnimation, 1000);
+    </script>
+</body>
+</html>

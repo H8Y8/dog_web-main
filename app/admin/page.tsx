@@ -213,8 +213,10 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [postsCount, setPostsCount] = useState(0)
   const [membersCount, setMembersCount] = useState(0)
+  const [puppiesCount, setPuppiesCount] = useState(0)
+  const [environmentsCount, setEnvironmentsCount] = useState(0)
 
-  // 獲取文章數量和成員數量
+  // 獲取所有數量統計
   useEffect(() => {
     const fetchCounts = async () => {
       try {
@@ -259,6 +261,40 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
         } else {
           console.error('Failed to fetch members count:', membersResponse.status, membersResponse.statusText)
         }
+
+        // 獲取幼犬數量
+        console.log('Fetching puppies count...') // 調試信息
+
+        const puppiesResponse = await fetch('/api/puppies', {
+          headers,
+        })
+
+        console.log('Puppies response status:', puppiesResponse.status) // 調試信息
+
+        if (puppiesResponse.ok) {
+          const puppiesData = await puppiesResponse.json()
+          console.log('Puppies count data:', puppiesData) // 調試信息
+          setPuppiesCount(puppiesData.data?.pagination?.total || 0)
+        } else {
+          console.error('Failed to fetch puppies count:', puppiesResponse.status, puppiesResponse.statusText)
+        }
+
+        // 獲取環境設施數量
+        console.log('Fetching environments count...') // 調試信息
+
+        const environmentsResponse = await fetch('/api/environments', {
+          headers,
+        })
+
+        console.log('Environments response status:', environmentsResponse.status) // 調試信息
+
+        if (environmentsResponse.ok) {
+          const environmentsData = await environmentsResponse.json()
+          console.log('Environments count data:', environmentsData) // 調試信息
+          setEnvironmentsCount(environmentsData.data?.pagination?.total || 0)
+        } else {
+          console.error('Failed to fetch environments count:', environmentsResponse.status, environmentsResponse.statusText)
+        }
       } catch (error) {
         console.error('Error fetching counts:', error)
       }
@@ -282,9 +318,9 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
       icon: <PostsIcon />,
       children: [
         { id: 'posts', label: '日誌管理', badge: postsCount.toString() },
-        { id: 'puppies', label: '幼犬管理', badge: '3' },
+        { id: 'puppies', label: '幼犬管理', badge: puppiesCount.toString() },
         { id: 'members', label: '成員管理', badge: membersCount.toString() },
-        { id: 'environments', label: '環境管理', badge: '1' },
+        { id: 'environments', label: '環境管理', badge: environmentsCount.toString() },
       ],
     },
     {

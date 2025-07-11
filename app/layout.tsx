@@ -50,17 +50,17 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" sizes="192x192" href="/logo192.png" />
         <link rel="apple-touch-icon" sizes="512x512" href="/logo512.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="theme-color" content="#e8b744" />
       </head>
       <body className="antialiased bg-earth-50">
         <AOSInit />
-        <div className="min-h-screen flex flex-col bg-earth-50">
+        <div className="min-h-screen flex flex-col bg-earth-50 w-full">
           {/* Conditional Navigation Bar */}
           <ConditionalNavbar />
           
           {/* Main Content Area */}
-          <main className="flex-grow bg-earth-50">
+          <main className="flex-grow bg-earth-50 w-full">
             {children}
           </main>
           
