@@ -287,4 +287,10 @@ section {
   .space-x-10 > :not([hidden]) ~ :not([hidden]) {
     margin-left: 1rem !important;
   }
+}
+
+/* 解決 AOS transform + overflow 衝突問題 - 不影響動畫本身 */
+.contact-card {
+  /* 確保動畫容器不會產生額外捲軸 */
+  contain: layout;
 } 

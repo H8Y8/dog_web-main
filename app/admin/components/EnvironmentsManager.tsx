@@ -169,7 +169,11 @@ function EnvironmentsListWithActions({
   )
 }
 
-export default function EnvironmentsManager() {
+interface EnvironmentsManagerProps {
+  initialView?: View
+}
+
+export default function EnvironmentsManager({ initialView = 'list' }: EnvironmentsManagerProps) {
   // 統一使用一個 useEnvironments hook 實例
   const { 
     environments, 
@@ -183,7 +187,7 @@ export default function EnvironmentsManager() {
   
   const { session } = useAuth()
   
-  const [currentView, setCurrentView] = useState<View>('list')
+  const [currentView, setCurrentView] = useState<View>(initialView)
   const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)

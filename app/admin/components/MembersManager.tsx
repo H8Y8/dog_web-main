@@ -11,7 +11,7 @@ import MemberEditForm from './MemberEditForm'
 
 type View = 'list' | 'detail' | 'create' | 'edit'
 
-// 帶操作的成員列表包裝組件
+// 帶操作的犬隻列表包裝組件
 function MembersListWithActions({ 
   members,
   loading,
@@ -32,7 +32,7 @@ function MembersListWithActions({
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">載入狗隻成員中...</span>
+          <span className="ml-3 text-gray-600">載入犬隻中...</span>
         </div>
       </div>
     )
@@ -67,8 +67,8 @@ function MembersListWithActions({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">暫無狗隻成員</h3>
-            <p className="text-gray-600">還沒有新增任何狗隻成員</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">暫無犬隻</h3>
+            <p className="text-gray-600">還沒有新增任何犬隻</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -130,7 +130,11 @@ function MembersListWithActions({
   )
 }
 
-export default function MembersManager() {
+interface MembersManagerProps {
+  initialView?: View
+}
+
+export default function MembersManager({ initialView = 'list' }: MembersManagerProps) {
   // 統一使用一個 useMembers hook 實例
   const { 
     members, 
@@ -144,7 +148,7 @@ export default function MembersManager() {
   
   const { session } = useAuth()
   
-  const [currentView, setCurrentView] = useState<View>('list')
+  const [currentView, setCurrentView] = useState<View>(initialView)
   const [selectedMember, setSelectedMember] = useState<Member | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
@@ -202,7 +206,7 @@ export default function MembersManager() {
     refresh()
   }
 
-  // 處理成員更新（例如照片上傳）
+  // 處理犬隻更新（例如照片上傳）
   const handleMemberUpdated = () => {
     // 重新載入列表資料以顯示最新的頭像
     refresh()
@@ -220,9 +224,9 @@ export default function MembersManager() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {currentView === 'list' && '狗隻成員管理'}
+            {currentView === 'list' && '犬隻管理'}
             {currentView === 'detail' && `${selectedMember?.name} - 詳細資料`}
-            {currentView === 'create' && '新增狗隻成員'}
+            {currentView === 'create' && '新增犬隻'}
             {currentView === 'edit' && `編輯 ${selectedMember?.name}`}
           </h1>
         </div>
@@ -236,7 +240,7 @@ export default function MembersManager() {
           
           {currentView === 'list' && (
             <Button onClick={() => setCurrentView('create')}>
-              新增狗隻成員
+              新增犬隻
             </Button>
           )}
         </div>
@@ -291,7 +295,7 @@ export default function MembersManager() {
               <h3 className="text-lg leading-6 font-medium text-gray-900 mt-2">確認刪除</h3>
               <div className="mt-2 px-7 py-3">
                 <p className="text-sm text-gray-500">
-                  您確定要刪除狗隻成員「{selectedMember.name}」嗎？此操作無法復原。
+                  您確定要刪除犬隻「{selectedMember.name}」嗎？此操作無法復原。
                 </p>
               </div>
               <div className="items-center px-4 py-3">

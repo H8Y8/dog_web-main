@@ -1,8 +1,12 @@
 {
   "/not-found": "app/not-found.js",
-  "/contact/page": "app/contact/page.js",
-  "/diary/[id]/page": "app/diary/[id]/page.js",
-  "/environment/page": "app/environment/page.js",
   "/page": "app/page.js",
-  "/about/page": "app/about/page.js"
+  "/diary/page": "app/diary/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/puppies/page": "app/puppies/page.js",
+  "/api/puppies/route": "app/api/puppies/route.js",
+  "/api/environments/route": "app/api/environments/route.js",
+  "/environment/page": "app/environment/page.js",
+  "/api/posts/route": "app/api/posts/route.js",
+  "/admin/page": "app/admin/page.js"
 }

@@ -130,7 +130,7 @@ export default function MemberEditForm({ member, onSuccess, onCancel }: MemberEd
       if (result.success && result.data) {
         onSuccess?.(result.data)
       } else {
-        setSubmitError(result.error?.message || '更新狗隻成員失敗')
+        setSubmitError(result.error?.message || '更新犬隻失敗')
       }
     } catch (error) {
       setSubmitError('網路錯誤，請稍後再試')
@@ -142,7 +142,7 @@ export default function MemberEditForm({ member, onSuccess, onCancel }: MemberEd
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">編輯狗隻成員 - {member.name}</h2>
+        <h2 className="text-2xl font-bold text-gray-900">編輯犬隻 - {member.name}</h2>
         {onCancel && (
           <button
             onClick={onCancel}

@@ -10,13 +10,14 @@ import { supabase } from '../../../lib/supabase'
 interface PostsManagerProps {
   user: any
   session: any
+  initialView?: 'list' | 'create' | 'edit'
 }
 
-export default function PostsManager({ user, session }: PostsManagerProps) {
+export default function PostsManager({ user, session, initialView = 'list' }: PostsManagerProps) {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [currentView, setCurrentView] = useState<'list' | 'create' | 'edit'>('list')
+  const [currentView, setCurrentView] = useState<'list' | 'create' | 'edit'>(initialView)
   const [editingPost, setEditingPost] = useState<Post | null>(null)
   const [pagination, setPagination] = useState({
     page: 1,

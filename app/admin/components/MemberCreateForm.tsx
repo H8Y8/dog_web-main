@@ -107,7 +107,7 @@ export default function MemberCreateForm({ onSuccess, onCancel }: MemberCreateFo
           personality_traits: ''
         })
       } else {
-        setSubmitError(result.error?.message || '新增狗隻成員失敗')
+        setSubmitError(result.error?.message || '新增犬隻失敗')
       }
     } catch (error) {
       setSubmitError('網路錯誤，請稍後再試')
@@ -119,7 +119,7 @@ export default function MemberCreateForm({ onSuccess, onCancel }: MemberCreateFo
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">新增狗隻成員</h2>
+        <h2 className="text-2xl font-bold text-gray-900">新增犬隻</h2>
         {onCancel && (
           <button
             onClick={onCancel}
@@ -333,7 +333,7 @@ export default function MemberCreateForm({ onSuccess, onCancel }: MemberCreateFo
             loading={loading}
             disabled={loading}
           >
-            {loading ? '新增中...' : '新增狗隻成員'}
+            {loading ? '新增中...' : '新增犬隻'}
           </Button>
         </div>
       </form>

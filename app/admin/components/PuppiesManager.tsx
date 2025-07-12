@@ -189,7 +189,11 @@ function PuppiesListWithActions({
   )
 }
 
-export default function PuppiesManager() {
+interface PuppiesManagerProps {
+  initialView?: View
+}
+
+export default function PuppiesManager({ initialView = 'list' }: PuppiesManagerProps) {
   // 統一使用一個 usePuppies hook 實例
   const { 
     puppies, 
@@ -203,7 +207,7 @@ export default function PuppiesManager() {
   
   const { session } = useAuth()
   
-  const [currentView, setCurrentView] = useState<View>('list')
+  const [currentView, setCurrentView] = useState<View>(initialView)
   const [selectedPuppy, setSelectedPuppy] = useState<Puppy | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)

@@ -16,12 +16,24 @@ export default function AOSInit() {
       console.log('📋 body overflow-x:', window.getComputedStyle(document.body).overflowX)
       console.log('📋 body overflow-y:', window.getComputedStyle(document.body).overflowY)
       
+      // 強制刷新 AOS
+      AOS.refresh()
+      
       AOS.init({
         duration: 1000, // 動畫持續時間
         once: true, // 只執行一次動畫
         offset: 100, // 距離視窗多少距離開始動畫
         easing: 'ease-in-out', // 動畫緩動效果
+        disable: false, // 確保動畫啟用
       })
+      
+      console.log('✅ AOS 初始化完成')
+      
+      // 手動觸發 AOS refresh
+      setTimeout(() => {
+        AOS.refresh()
+        console.log('✅ AOS refresh 完成')
+      }, 500)
       
       // AOS 初始化後檢查
       setTimeout(() => {

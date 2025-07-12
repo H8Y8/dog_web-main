@@ -50,7 +50,7 @@ export default function MembersList({ onSelectMember, onCreateNew }: MembersList
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">載入狗隻成員中...</span>
+          <span className="ml-3 text-gray-600">載入犬隻中...</span>
         </div>
       </div>
     )
@@ -80,10 +80,10 @@ export default function MembersList({ onSelectMember, onCreateNew }: MembersList
       {/* 標題和新增按鈕 */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-900">狗隻成員管理</h2>
+          <h2 className="text-2xl font-bold text-gray-900">犬隻管理</h2>
           {onCreateNew && (
             <Button onClick={onCreateNew}>
-              新增狗隻成員
+              新增犬隻
             </Button>
           )}
         </div>
@@ -148,7 +148,7 @@ export default function MembersList({ onSelectMember, onCreateNew }: MembersList
         </div>
       </div>
 
-      {/* 成員列表 */}
+      {/* 犬隻列表 */}
       <div className="px-6 py-4">
         {filteredMembers.length === 0 ? (
           <div className="text-center py-12">
@@ -157,13 +157,13 @@ export default function MembersList({ onSelectMember, onCreateNew }: MembersList
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">暫無狗隻成員</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">暫無犬隻</h3>
             <p className="text-gray-600 mb-4">
-              {searchTerm || selectedRole || selectedStatus ? '沒有符合篩選條件的成員' : '還沒有新增任何狗隻成員'}
+              {searchTerm || selectedRole || selectedStatus ? '沒有符合篩選條件的犬隻' : '還沒有新增任何犬隻'}
             </p>
             {onCreateNew && (
               <Button onClick={onCreateNew} variant="outline">
-                新增第一個狗隻成員
+                新增第一隻犬隻
               </Button>
             )}
           </div>
@@ -248,9 +248,9 @@ export default function MembersList({ onSelectMember, onCreateNew }: MembersList
       {/* 統計資訊 */}
       <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
         <div className="text-sm text-gray-600">
-          總共 {members.length} 隻狗隻成員
+          總共 {members.length} 隻犬隻
           {(searchTerm || selectedRole || selectedStatus) && 
-            ` • 顯示 ${filteredMembers.length} 隻符合篩選條件的成員`
+            ` • 顯示 ${filteredMembers.length} 隻符合篩選條件的犬隻`
           }
         </div>
       </div>

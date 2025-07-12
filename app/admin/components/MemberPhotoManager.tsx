@@ -12,9 +12,9 @@ import {
 import { Member } from '@/lib/types'
 
 interface MemberPhotoManagerProps {
-  /** 成員資料 */
+  /** 犬隻資料 */
   member: Member
-  /** 成員資料更新後的回調 */
+  /** 犬隻資料更新後的回調 */
   onMemberUpdated?: (updatedMember: Member) => void
   /** 自定義CSS類名 */
   className?: string
@@ -57,7 +57,7 @@ export default function MemberPhotoManager({
         const result = await uploadMemberPhoto(member.id, files[0], photoType, accessToken || undefined)
         
         if (result.success && result.data) {
-          // 更新本地成員資料
+          // 更新本地犬隻資料
           const updatedMember = result.data.member
           if (onMemberUpdated) {
             onMemberUpdated(updatedMember)
@@ -91,7 +91,7 @@ export default function MemberPhotoManager({
           alert(`${successCount} 張照片上傳成功，${failCount} 張失敗`)
         }
 
-        // 取最後一個成功的結果來更新成員資料
+        // 取最後一個成功的結果來更新犬隻資料
         const lastSuccess = results.reverse().find(r => r.success)
         if (lastSuccess && lastSuccess.data && onMemberUpdated) {
           onMemberUpdated(lastSuccess.data.member)
@@ -123,7 +123,7 @@ export default function MemberPhotoManager({
       const result = await deleteMemberPhoto(member.id, photoUrl, photoType, accessToken || undefined)
       
       if (result.success && result.data) {
-        // 更新本地成員資料
+        // 更新本地犬隻資料
         const updatedMember = result.data.member
         if (onMemberUpdated) {
           onMemberUpdated(updatedMember)

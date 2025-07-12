@@ -26,7 +26,7 @@ export default function MemberDetail({ memberId, onEdit, onDelete, onBack, onMem
     }
   }, [member])
 
-  // 處理成員更新
+  // 處理犬隻更新
   const handleMemberUpdated = (updatedMember: any) => {
     setCurrentMember(updatedMember)
     refresh() // 重新獲取最新數據
@@ -82,7 +82,7 @@ export default function MemberDetail({ memberId, onEdit, onDelete, onBack, onMem
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">載入失敗</h3>
-          <p className="text-gray-600 mb-4">{error?.message || '找不到此狗隻成員'}</p>
+          <p className="text-gray-600 mb-4">{error?.message || '找不到此犬隻'}</p>
           <div className="space-x-4">
             <Button onClick={() => refresh()} variant="outline">
               重新載入

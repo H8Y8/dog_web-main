@@ -215,6 +215,7 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
   const [membersCount, setMembersCount] = useState(0)
   const [puppiesCount, setPuppiesCount] = useState(0)
   const [environmentsCount, setEnvironmentsCount] = useState(0)
+  const [quickActionTrigger, setQuickActionTrigger] = useState<{ type: string, action: string } | null>(null)
 
   // 獲取所有數量統計
   useEffect(() => {
@@ -319,7 +320,7 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
       children: [
         { id: 'posts', label: '日誌管理', badge: postsCount.toString() },
         { id: 'puppies', label: '幼犬管理', badge: puppiesCount.toString() },
-        { id: 'members', label: '成員管理', badge: membersCount.toString() },
+        { id: 'members', label: '犬隻管理', badge: membersCount.toString() },
         { id: 'environments', label: '環境管理', badge: environmentsCount.toString() },
       ],
     },
@@ -332,24 +333,51 @@ function AdminDashboard({ user, session, onSignOut }: { user: any, session: any,
 
   const handleNavigationClick = (itemId: string) => {
     setCurrentView(itemId)
+    // 如果不是快速操作觸發的導航，清除觸發器
+    if (!quickActionTrigger || quickActionTrigger.type !== itemId) {
+      setQuickActionTrigger(null)
+    }
+  }
+
+  const handleQuickAction = (action: string) => {
+    // 設置快速操作觸發器，讓對應的管理組件知道要直接進入創建模式
+    setQuickActionTrigger({ type: action, action: 'create' })
+    setCurrentView(action)
   }
 
   const renderContent = () => {
+    // 檢查是否有快速操作觸發器，並在渲染後清除
+    const trigger = quickActionTrigger
+    if (trigger && trigger.type === currentView) {
+      // 在下一個事件循環中清除觸發器
+      setTimeout(() => setQuickActionTrigger(null), 0)
+    }
+
     switch (currentView) {
       case 'dashboard':
-        return <DashboardContent />
+        return <DashboardContent session={session} onViewChange={handleNavigationClick} onQuickAction={handleQuickAction} />
       case 'posts':
-        return <PostsManager user={user} session={session} />
+        return <PostsManager 
+          user={user} 
+          session={session} 
+          initialView={trigger?.type === 'posts' && trigger?.action === 'create' ? 'create' : undefined}
+        />
       case 'puppies':
-        return <PuppiesManager />
+        return <PuppiesManager 
+          initialView={trigger?.type === 'puppies' && trigger?.action === 'create' ? 'create' : undefined}
+        />
       case 'members':
-        return <MembersManager />
+        return <MembersManager 
+          initialView={trigger?.type === 'members' && trigger?.action === 'create' ? 'create' : undefined}
+        />
       case 'environments':
-        return <EnvironmentsManager />
+        return <EnvironmentsManager 
+          initialView={trigger?.type === 'environments' && trigger?.action === 'create' ? 'create' : undefined}
+        />
       case 'settings':
         return <ComingSoonPage title="系統設定" description="配置系統參數和偏好" />
       default:
-        return <DashboardContent />
+        return <DashboardContent session={session} onViewChange={handleNavigationClick} onQuickAction={handleQuickAction} />
     }
   }
 
@@ -537,19 +565,144 @@ function NavItem({ item, collapsed, onItemClick }: {
   )
 }
 
-function DashboardContent() {
+function DashboardContent({ session, onViewChange, onQuickAction }: { 
+  session: any, 
+  onViewChange: (view: string) => void,
+  onQuickAction: (action: string) => void 
+}) {
+  const [stats, setStats] = useState<{
+    posts: { total: number, change: string, trend: 'up' | 'down' | 'neutral' },
+    puppies: { total: number, change: string, trend: 'up' | 'down' | 'neutral' },
+    members: { total: number, change: string, trend: 'up' | 'down' | 'neutral' },
+    environments: { total: number, change: string, trend: 'up' | 'down' | 'neutral' }
+  }>({
+    posts: { total: 0, change: '0%', trend: 'neutral' },
+    puppies: { total: 0, change: '0%', trend: 'neutral' },
+    members: { total: 0, change: '0%', trend: 'neutral' },
+    environments: { total: 0, change: '0%', trend: 'neutral' }
+  })
+  const [activities, setActivities] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [clickedAction, setClickedAction] = useState<string | null>(null)
+
+  // 快速操作處理函數
+  const handleQuickAction = (action: string) => {
+    setClickedAction(action)
+    // 添加視覺反饋延遲
+    setTimeout(() => {
+      onQuickAction(action)
+      setClickedAction(null)
+    }, 150)
+  }
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json'
+        }
+
+        if (session?.access_token) {
+          headers['Authorization'] = `Bearer ${session.access_token}`
+        }
+
+        // 並行獲取統計數據和活動記錄
+        const [statsResponse, activitiesResponse] = await Promise.all([
+          fetch('/api/dashboard/stats', { headers }),
+          fetch('/api/dashboard/activities', { headers })
+        ])
+
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json()
+          if (statsData.success && statsData.data) {
+            const data = statsData.data
+            setStats({
+              posts: {
+                total: data.posts.total,
+                change: data.posts.change,
+                trend: data.posts.change.startsWith('+') ? 'up' : data.posts.change === '0%' ? 'neutral' : 'down'
+              },
+              puppies: {
+                total: data.puppies.total,
+                change: data.puppies.change,
+                trend: data.puppies.change.startsWith('+') ? 'up' : data.puppies.change === '0%' ? 'neutral' : 'down'
+              },
+              members: {
+                total: data.members.total,
+                change: data.members.change,
+                trend: data.members.change.startsWith('+') ? 'up' : data.members.change === '0%' ? 'neutral' : 'down'
+              },
+              environments: {
+                total: data.environments.total,
+                change: data.environments.change,
+                trend: data.environments.change.startsWith('+') ? 'up' : data.environments.change === '0%' ? 'neutral' : 'down'
+              }
+            })
+          }
+        } else {
+          console.error('Failed to fetch stats:', statsResponse.status)
+        }
+
+        if (activitiesResponse.ok) {
+          const activitiesData = await activitiesResponse.json()
+          if (activitiesData.success && activitiesData.data) {
+            setActivities(activitiesData.data)
+          }
+        } else {
+          console.error('Failed to fetch activities:', activitiesResponse.status)
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (session) {
+      fetchDashboardData()
+    }
+  }, [session])
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 rounded-2xl shadow-xl">
+          <div className="px-8 py-12 text-center">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-4xl font-bold text-white mb-4">
+                歡迎來到雷歐犬舍訓練工作室管理系統
+              </h1>
+              <p className="text-purple-100 text-lg leading-relaxed">
+                專業的犬舍管理平台，讓您輕鬆管理犬舍的日常運營、幼犬資訊和會員服務
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 animate-pulse">
+              <div className="h-12 bg-gray-200 rounded-xl mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded mb-2"></div>
+              <div className="h-8 bg-gray-200 rounded"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* 歡迎區域 */}
       <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 rounded-2xl shadow-xl">
         <div className="px-8 py-12 text-center">
-                     <div className="max-w-4xl mx-auto">
-             <h1 className="text-4xl font-bold text-white mb-4">
-               歡迎來到雷歐犬舍訓練工作室管理系統
-             </h1>
-             <p className="text-purple-100 text-lg leading-relaxed">
-               專業的犬舍管理平台，讓您輕鬆管理犬舍的日常運營、幼犬資訊和會員服務
-             </p>
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl font-bold text-white mb-4">
+              歡迎來到雷歐犬舍訓練工作室管理系統
+            </h1>
+            <p className="text-purple-100 text-lg leading-relaxed">
+              專業的犬舍管理平台，讓您輕鬆管理犬舍的日常運營、幼犬資訊和會員服務
+            </p>
             <div className="mt-8 flex justify-center space-x-4">
               <Button variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30">
                 查看統計報告
@@ -566,33 +719,33 @@ function DashboardContent() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="日誌文章"
-          value="12"
-          change="+8.2%"
-          trend="up"
+          value={stats.posts.total.toString()}
+          change={stats.posts.change}
+          trend={stats.posts.trend}
           icon={<PostsIcon />}
           color="blue"
         />
         <StatCard
           title="幼犬資料"
-          value="8"
-          change="+12.5%"
-          trend="up"
+          value={stats.puppies.total.toString()}
+          change={stats.puppies.change}
+          trend={stats.puppies.trend}
           icon={<PuppiesIcon />}
           color="red"
         />
         <StatCard
-          title="會員數量"
-          value="15"
-          change="+5.1%"
-          trend="up"
+          title="犬隻數量"
+          value={stats.members.total.toString()}
+          change={stats.members.change}
+          trend={stats.members.trend}
           icon={<MembersIcon />}
           color="green"
         />
         <StatCard
           title="環境設施"
-          value="6"
-          change="0%"
-          trend="neutral"
+          value={stats.environments.total.toString()}
+          change={stats.environments.change}
+          trend={stats.environments.trend}
           icon={<EnvironmentIcon />}
           color="purple"
         />
@@ -609,24 +762,32 @@ function DashboardContent() {
               description="記錄犬舍日常"
               icon={<PostsIcon />}
               color="blue"
+              onClick={() => handleQuickAction('posts')}
+              loading={clickedAction === 'posts'}
             />
             <QuickActionCard
               title="登記幼犬"
               description="新增幼犬資料"
               icon={<PuppiesIcon />}
               color="red"
+              onClick={() => handleQuickAction('puppies')}
+              loading={clickedAction === 'puppies'}
             />
             <QuickActionCard
-              title="新增會員"
-              description="註冊新會員"
+              title="新增犬隻"
+              description="註冊新犬隻"
               icon={<MembersIcon />}
               color="green"
+              onClick={() => handleQuickAction('members')}
+              loading={clickedAction === 'members'}
             />
             <QuickActionCard
               title="更新環境"
               description="維護設施資訊"
               icon={<EnvironmentIcon />}
               color="purple"
+              onClick={() => handleQuickAction('environments')}
+              loading={clickedAction === 'environments'}
             />
           </div>
         </div>
@@ -635,53 +796,26 @@ function DashboardContent() {
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6">最近活動</h2>
           <div className="space-y-4">
-            {[
-              { 
-                id: 1, 
-                action: '新增了日誌文章', 
-                target: '春季幼犬訓練記錄', 
-                time: '2 小時前',
-                type: 'post',
-                avatar: '📝'
-              },
-              { 
-                id: 2, 
-                action: '更新了幼犬資訊', 
-                target: 'Max 的健康檢查', 
-                time: '4 小時前',
-                type: 'puppy',
-                avatar: '🐕'
-              },
-              { 
-                id: 3, 
-                action: '新增了會員', 
-                target: '張先生', 
-                time: '1 天前',
-                type: 'member',
-                avatar: '👤'
-              },
-              { 
-                id: 4, 
-                action: '更新了環境設施', 
-                target: '遊戲區清潔記錄', 
-                time: '2 天前',
-                type: 'environment',
-                avatar: '🏠'
-              },
-            ].map((item) => (
-              <div key={item.id} className="flex items-center p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-100 to-blue-100 flex items-center justify-center text-lg">
-                  {item.avatar}
+            {activities.length > 0 ? (
+              activities.map((item) => (
+                <div key={item.id} className="flex items-center p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-100 to-blue-100 flex items-center justify-center text-lg">
+                    {item.avatar}
+                  </div>
+                  <div className="ml-4 flex-1">
+                    <p className="text-sm text-gray-900">
+                      {item.action} <span className="font-semibold">「{item.target}」</span>
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">{item.time}</p>
+                  </div>
+                  <ChevronRightIcon />
                 </div>
-                <div className="ml-4 flex-1">
-                  <p className="text-sm text-gray-900">
-                    {item.action} <span className="font-semibold">「{item.target}」</span>
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">{item.time}</p>
-                </div>
-                <ChevronRightIcon />
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p>暫無最近活動</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
@@ -736,11 +870,13 @@ function StatCard({ title, value, change, trend, icon, color }: {
   )
 }
 
-function QuickActionCard({ title, description, icon, color }: {
+function QuickActionCard({ title, description, icon, color, onClick, loading = false }: {
   title: string,
   description: string,
   icon: React.ReactNode,
-  color: 'blue' | 'red' | 'green' | 'purple'
+  color: 'blue' | 'red' | 'green' | 'purple',
+  onClick?: () => void,
+  loading?: boolean
 }) {
   const colorClasses = {
     blue: 'hover:border-blue-200 hover:bg-blue-50',
@@ -750,17 +886,31 @@ function QuickActionCard({ title, description, icon, color }: {
   }
 
   return (
-    <button className={cn(
-      "p-4 border border-gray-200 rounded-xl hover:shadow-md transition-all duration-200 text-left",
-      colorClasses[color]
-    )}>
+    <button 
+      onClick={onClick}
+      disabled={loading}
+      className={cn(
+        "p-4 border border-gray-200 rounded-xl hover:shadow-md transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 relative",
+        !loading && colorClasses[color],
+        loading && 'bg-gray-50 border-gray-300 cursor-not-allowed',
+        !loading && color === 'blue' && 'focus:ring-blue-500',
+        !loading && color === 'red' && 'focus:ring-red-500',
+        !loading && color === 'green' && 'focus:ring-green-500',
+        !loading && color === 'purple' && 'focus:ring-purple-500'
+      )}
+    >
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded-xl">
+          <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+        </div>
+      )}
       <div className="mb-3">
-        <div className="text-gray-600">
+        <div className={cn("transition-colors", loading ? "text-gray-400" : "text-gray-600")}>
           {icon}
         </div>
       </div>
-      <h3 className="font-semibold text-gray-900 mb-1">{title}</h3>
-      <p className="text-sm text-gray-500">{description}</p>
+      <h3 className={cn("font-semibold mb-1 transition-colors", loading ? "text-gray-500" : "text-gray-900")}>{title}</h3>
+      <p className={cn("text-sm transition-colors", loading ? "text-gray-400" : "text-gray-500")}>{description}</p>
     </button>
   )
 }
@@ -788,7 +938,7 @@ function getPageTitle(view: string): string {
   const titles: { [key: string]: string } = {
     posts: '日誌管理',
     puppies: '幼犬管理',
-    members: '成員管理',
+    members: '犬隻管理',
     environments: '環境管理',
     settings: '系統設定'
   }
