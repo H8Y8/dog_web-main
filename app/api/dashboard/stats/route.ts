@@ -77,11 +77,17 @@ export async function GET(request: NextRequest) {
       .select('*', { count: 'exact', head: true })
       .gte('created_at', oneWeekAgo.toISOString())
 
+    // 獲取最近添加的環境設施統計（本週）
+    const { count: recentEnvironmentsCount } = await authenticatedSupabase
+      .from('environments')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', oneWeekAgo.toISOString())
+
     // 計算變化百分比（如果之前一週有數據的話）
     const twoWeeksAgo = new Date()
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
     
-    const [prevPostsResult, prevPuppiesResult, prevMembersResult] = await Promise.all([
+    const [prevPostsResult, prevPuppiesResult, prevMembersResult, prevEnvironmentsResult] = await Promise.all([
       authenticatedSupabase
         .from('posts')
         .select('*', { count: 'exact', head: true })
@@ -96,6 +102,12 @@ export async function GET(request: NextRequest) {
       
       authenticatedSupabase
         .from('members')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', twoWeeksAgo.toISOString())
+        .lt('created_at', oneWeekAgo.toISOString()),
+      
+      authenticatedSupabase
+        .from('environments')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', twoWeeksAgo.toISOString())
         .lt('created_at', oneWeekAgo.toISOString())
@@ -126,8 +138,8 @@ export async function GET(request: NextRequest) {
       },
       environments: {
         total: environmentsResult.count || 0,
-        recent: 0, // 環境設施變化較少，暫時設為0
-        change: '0%'
+        recent: recentEnvironmentsCount || 0,
+        change: calculateChange(recentEnvironmentsCount || 0, prevEnvironmentsResult.count || 0)
       }
     }
 

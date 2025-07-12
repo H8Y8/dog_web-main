@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { Puppy, PuppyStatus, PuppyBreed } from '../../lib/types/puppy'
 import { cn } from '../../lib/ui/utils'
-import { FadeIn, FadeUp } from '../components/MotionWrapper'
+import { FadeIn } from '../components/MotionWrapper'
 
 export default function PuppiesPage() {
   const [puppies, setPuppies] = useState<Puppy[]>([])

@@ -71,20 +71,20 @@ function MembersListWithActions({
             <p className="text-gray-600">還沒有新增任何犬隻</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {members.map((member) => (
-              <div key={member.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div key={member.id} className="border border-gray-200 rounded-lg p-3 md:p-4 hover:shadow-md transition-shadow">
                 {/* 狗狗照片 */}
-                <div className="mb-4">
+                <div className="mb-3 md:mb-4">
                   {member.avatar_url ? (
                     <img
                       src={member.avatar_url}
                       alt={member.name}
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-40 md:h-48 object-cover rounded-lg"
                     />
                   ) : (
-                    <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
-                      <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-full h-40 md:h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                      <svg className="w-10 h-10 md:w-12 md:h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
@@ -92,34 +92,39 @@ function MembersListWithActions({
                 </div>
 
                 {/* 基本資訊 */}
-                <div className="space-y-2 mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
-                  <p className="text-sm text-gray-600">{member.breed}</p>
+                <div className="space-y-1 md:space-y-2 mb-3 md:mb-4">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900 truncate">{member.name}</h3>
+                  <p className="text-sm text-gray-600 truncate">{member.breed}</p>
                 </div>
 
                 {/* 操作按鈕 */}
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => onViewDetail(member)}
+                    className="flex-1"
                   >
                     查看
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => onEdit(member)}
-                  >
-                    編輯
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() => onDelete(member)}
-                  >
-                    刪除
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onEdit(member)}
+                      className="flex-1"
+                    >
+                      編輯
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => onDelete(member)}
+                      className="flex-1"
+                    >
+                      刪除
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -132,9 +137,11 @@ function MembersListWithActions({
 
 interface MembersManagerProps {
   initialView?: View
+  selectedId?: string
+  onDetailViewActivated?: () => void
 }
 
-export default function MembersManager({ initialView = 'list' }: MembersManagerProps) {
+export default function MembersManager({ initialView = 'list', selectedId, onDetailViewActivated }: MembersManagerProps) {
   // 統一使用一個 useMembers hook 實例
   const { 
     members, 
@@ -152,6 +159,46 @@ export default function MembersManager({ initialView = 'list' }: MembersManagerP
   const [selectedMember, setSelectedMember] = useState<Member | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
+
+  // 當有 selectedId 時，尋找對應的成員並顯示詳細頁面
+  React.useEffect(() => {
+    if (selectedId && members.length > 0 && !loading) {
+      console.log('Searching for member with selectedId:', selectedId)
+      console.log('Available members:', members.map(m => ({ id: m.id, name: m.name })))
+      
+      // 嘗試不同的 ID 匹配策略
+      let member = null
+      
+      // 1. 直接匹配完整 ID
+      member = members.find(m => m.id === selectedId)
+      if (member) {
+        console.log('Found member with direct match:', member.name)
+      } else {
+        // 2. 移除 'member-' 前綴
+        const actualId = selectedId.replace('member-', '')
+        member = members.find(m => m.id === actualId)
+        if (member) {
+          console.log('Found member after removing prefix:', member.name)
+        } else {
+          // 3. 檢查是否 ID 包含在 selectedId 中
+          member = members.find(m => selectedId.includes(m.id))
+          if (member) {
+            console.log('Found member with partial match:', member.name)
+          }
+        }
+      }
+      
+      if (member) {
+        setSelectedMember(member)
+        setCurrentView('detail')
+        // 通知主頁面已經處理了 selectedId
+        onDetailViewActivated?.()
+      } else {
+        console.warn('Member not found with any matching strategy. selectedId:', selectedId)
+        console.warn('Available member IDs:', members.map(m => m.id))
+      }
+    }
+  }, [selectedId, members, loading])
 
   // 處理查看詳情
   const handleViewDetail = (member: Member) => {
@@ -221,9 +268,9 @@ export default function MembersManager({ initialView = 'list' }: MembersManagerP
   return (
     <div className="space-y-6">
       {/* 頁面標題和操作 */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
+        <div className="min-w-0">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 truncate">
             {currentView === 'list' && '犬隻管理'}
             {currentView === 'detail' && `${selectedMember?.name} - 詳細資料`}
             {currentView === 'create' && '新增犬隻'}
@@ -231,15 +278,15 @@ export default function MembersManager({ initialView = 'list' }: MembersManagerP
           </h1>
         </div>
         
-        <div className="flex space-x-3">
+        <div className="flex space-x-2 sm:space-x-3 flex-shrink-0">
           {currentView !== 'list' && (
-            <Button variant="outline" onClick={handleBack}>
+            <Button variant="outline" onClick={handleBack} size="sm" className="sm:size-default">
               返回列表
             </Button>
           )}
           
           {currentView === 'list' && (
-            <Button onClick={() => setCurrentView('create')}>
+            <Button onClick={() => setCurrentView('create')} size="sm" className="sm:size-default">
               新增犬隻
             </Button>
           )}
@@ -284,8 +331,8 @@ export default function MembersManager({ initialView = 'list' }: MembersManagerP
 
       {/* 刪除確認對話框 */}
       {showDeleteConfirm && selectedMember && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4">
+          <div className="relative top-20 mx-auto p-4 md:p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
                 <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -298,8 +345,8 @@ export default function MembersManager({ initialView = 'list' }: MembersManagerP
                   您確定要刪除犬隻「{selectedMember.name}」嗎？此操作無法復原。
                 </p>
               </div>
-              <div className="items-center px-4 py-3">
-                <div className="flex space-x-3">
+              <div className="items-center px-0 md:px-4 py-3">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <Button
                     variant="outline"
                     className="flex-1"

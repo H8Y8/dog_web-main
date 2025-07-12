@@ -35,7 +35,7 @@ const Navbar = () => {
   return (
     <div className="fixed w-full z-50 px-0 sm:px-6 lg:px-8 top-0 sm:top-6 overflow-x-hidden">
       <nav className="max-w-7xl mx-auto bg-earth-600/90 sm:rounded-full text-earth-50 backdrop-blur-sm sm:border sm:border-earth-500/50 shadow-lg overflow-x-hidden">
-        <div className="px-4 sm:px-8">
+        <div className="px-4 sm:px-8 bg-inherit">
           <div className="flex justify-between h-14 sm:h-16 items-center">
             <div className="flex-shrink-0 flex items-center min-w-0">
               <Link
@@ -100,8 +100,8 @@ const Navbar = () => {
 
         {/* 手機版下拉選單 */}
         {isOpen && (
-          <div className="md:hidden bg-earth-600/90 sm:rounded-2xl mt-0 sm:mt-2 overflow-hidden sm:border sm:border-earth-500/50 shadow-lg">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="md:hidden bg-earth-600/90 backdrop-blur-sm sm:rounded-2xl mt-0 sm:mt-2 overflow-hidden sm:border sm:border-earth-500/50 shadow-lg">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-inherit">
               {menuItems.map((item) => (
                 <Link
                   key={item.href}

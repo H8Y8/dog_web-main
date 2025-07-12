@@ -9,12 +9,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const slides = [
-  {
-    image: '/images/hero/首頁輪播001.jpg',
-  },
-  {
-    image: '/images/hero/首頁輪播002.jpg',
-  },
+
   {
     image: '/images/hero/首頁輪播003.jpg',
   },
@@ -111,7 +106,7 @@ const HeroSlider = () => {
               <img
                 src={slide.image}
                 alt="雷歐犬舍訓練工作室 - 專業蘇格蘭㹴犬舍"
-                className="w-full h-full object-cover object-[center_50%] sm:object-[center_45%] md:object-[center_42%] lg:object-[center_35%] slide-image"
+                className="w-full h-full object-cover object-center slide-image"
                 loading={index === 0 ? "eager" : "lazy"}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-earth-800/20 via-earth-700/10 to-earth-800/20"></div>

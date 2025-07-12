@@ -5,7 +5,7 @@ const About = () => {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">關於我們</h2>
           <p className="text-xl text-earth-700 mb-8" data-aos="fade-up" data-aos-delay="100">
-            蔡毛的蘇格蘭㹴專業犬舍
+            雷歐犬舍訓練工作室
           </p>
         </div>
 

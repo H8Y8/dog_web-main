@@ -9,14 +9,14 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="relative min-h-screen bg-gradient-to-b from-primary-50 to-earth-50 flex items-center justify-center">
         <HeroSlider />
-        <div className="text-center">
-          <FadeIn delay={0.1} className="text-4xl md:text-6xl font-bold text-white mb-4">
+        <div className="text-center relative z-10 px-4">
+          <FadeIn delay={0.1} className="text-4xl md:text-6xl font-bold text-white mb-4" style={{textShadow: '2px 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5)'}}>
             雷歐犬舍訓練工作室
           </FadeIn>
-          <FadeIn delay={0.2} className="text-2xl md:text-3xl text-white mb-8">
-            Scottish Terrier Kennel
+          <FadeIn delay={0.2} className="text-2xl md:text-3xl text-white mb-8" style={{textShadow: '2px 2px 6px rgba(0,0,0,0.7), 0 0 15px rgba(0,0,0,0.4)'}}>
+            Scottish Reo Sora
           </FadeIn>
-          <FadeIn delay={0.3} className="text-lg text-white max-w-2xl mx-auto">
+          <FadeIn delay={0.3} className="text-lg text-white max-w-2xl mx-auto" style={{textShadow: '1px 1px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)'}}>
             專業的蘇格蘭㹴犬舍，提供優質的蘇格蘭㹴幼犬、專業飼養建議、健康認證及完整的犬隻訓練服務。
           </FadeIn>
         </div>
@@ -37,16 +37,16 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-            <FadeRight className="relative">
+            <FadeLeft className="relative">
               <img
                 src="/images/about-us/about-scottie.jpg"
                 alt="蘇格蘭㹴"
-                className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover"
+                className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover object-[center_20%]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-earth-900/20 to-transparent rounded-lg"></div>
-            </FadeRight>
+            </FadeLeft>
 
-            <FadeLeft className="space-y-4">
+            <FadeRight className="space-y-4">
               <p className="text-lg text-earth-800 leading-relaxed">
                 我們是一個專注於蘇格蘭㹴繁育的專業犬舍，擁有超過十年的育種經驗。結合傳統工藝與現代科技，致力於培育優質的蘇格蘭㹴幼犬。
               </p>
@@ -77,12 +77,12 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </FadeLeft>
+            </FadeRight>
           </div>
 
           {/* 專業訓練師介紹區塊 */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <FadeRight className="space-y-4">
+            <FadeLeft className="space-y-4">
               <h3 className="text-3xl font-bold text-earth-900 mb-4">專業訓練團隊</h3>
               <p className="text-lg text-earth-800 leading-relaxed mb-6">
                 我們的訓練師團隊擁有豐富的蘇格蘭㹴培育經驗，專注於培養每一隻幼犬的優良特質。透過科學化的訓練方法，我們致力於發展狗狗的天賦潛能。
@@ -112,16 +112,16 @@ export default function HomePage() {
                   </ul>
                 </div>
               </div>
-            </FadeRight>
+            </FadeLeft>
 
-            <FadeLeft className="relative">
+            <FadeRight className="relative">
               <img
                 src="/images/about-us/trainer-scottie.jpg"
                 alt="專業訓練師"
                 className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-earth-900/20 to-transparent rounded-lg"></div>
-            </FadeLeft>
+            </FadeRight>
           </div>
         </div>
       </section>

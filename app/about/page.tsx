@@ -53,15 +53,15 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>關於我們 - 蔡毛的蘇格蘭㹴專業犬舍</title>
-        <meta name="description" content="認識蔡毛的蘇格蘭㹴專業犬舍，我們擁有超過十年的育種經驗，專注於培育優質、健康的蘇格蘭㹴幼犬。了解我們的專業團隊、優秀成員和嚴格的基因檢測流程。" />
-        <meta name="keywords" content="蘇格蘭㹴,專業犬舍,狗狗繁育,寵物,蔡毛,基因檢測,健康狗狗" />
-        <meta property="og:title" content="關於我們 - 蔡毛的蘇格蘭㹴專業犬舍" />
+        <title>關於我們 - 雷歐犬舍訓練工作室</title>
+        <meta name="description" content="認識雷歐犬舍訓練工作室，我們擁有超過十年的育種經驗，專注於培育優質、健康的蘇格蘭㹴幼犬。了解我們的專業團隊、優秀成員和嚴格的基因檢測流程。" />
+        <meta name="keywords" content="蘇格蘭㹴,專業犬舍,狗狗繁育,寵物,雷歐,基因檢測,健康狗狗" />
+        <meta property="og:title" content="關於我們 - 雷歐犬舍訓練工作室" />
         <meta property="og:description" content="認識我們專業的蘇格蘭㹴犬舍，擁有優秀的種犬和專業的繁育經驗。" />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="蔡毛的蘇格蘭㹴專業犬舍" />
+        <meta property="og:site_name" content="雷歐犬舍訓練工作室" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="關於我們 - 蔡毛的蘇格蘭㹴專業犬舍" />
+        <meta name="twitter:title" content="關於我們 - 雷歐犬舍訓練工作室" />
         <meta name="twitter:description" content="認識我們專業的蘇格蘭㹴犬舍，擁有優秀的種犬和專業的繁育經驗。" />
         <link rel="canonical" href="/about" />
       </Head>
@@ -88,7 +88,7 @@ export default function AboutPage() {
             </h1>
             
             <p className="text-xl md:text-2xl text-earth-700 mb-12 max-w-3xl mx-auto leading-relaxed">
-              蔡毛的蘇格蘭㹴專業犬舍
+              雷歐犬舍訓練工作室
             </p>
 
             {/* 統計信息 */}
@@ -114,7 +114,7 @@ export default function AboutPage() {
             <img
               src="/images/about-us/about-scottie.jpg"
               alt="蘇格蘭㹴"
-              className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover"
+              className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover object-[center_20%]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-earth-900/20 to-transparent rounded-lg"></div>
             </FadeRight>

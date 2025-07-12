@@ -6,7 +6,7 @@ import ConditionalFooter from './components/ConditionalFooter'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://scottish-terrier-kennel.com'),
-  title: '雷歐犬舍訓練工作室 | Leo Kennel Training Studio',
+  title: '雷歐犬舍訓練工作室 | Scottish Reo Sora',
   description: '專業的蘇格蘭㹴犬舍，提供優質的蘇格蘭㹴幼犬、專業飼養建議、健康認證及完整的犬隻訓練服務。',
   keywords: '蘇格蘭㹴,犬舍,幼犬,寵物,狗,Scottish Terrier',
   authors: [{ name: '雷歐犬舍訓練工作室' }],
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'zh_TW',
     url: 'https://scottish-terrier-kennel.com',
-    title: '雷歐犬舍訓練工作室 | Leo Kennel Training Studio',
+    title: '雷歐犬舍訓練工作室 | Scottish Reo Sora',
     description: '專業的蘇格蘭㹴犬舍，提供優質的蘇格蘭㹴幼犬、專業飼養建議、健康認證及完整的犬隻訓練服務。',
     siteName: '雷歐犬舍訓練工作室',
   },

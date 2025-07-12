@@ -9,7 +9,7 @@ import {
   ENVIRONMENT_TYPE_COLORS,
   ENVIRONMENT_TYPE_ICONS
 } from '../../lib/types/environment'
-import { FadeIn, FadeUp } from './MotionWrapper'
+import { FadeIn } from './MotionWrapper'
 
 // Carousel 組件
 interface CarouselProps {
@@ -49,13 +49,13 @@ function ImageCarousel({ images, environmentName }: CarouselProps) {
   return (
     <div className="relative group">
       {/* 主圖 */}
-      <div className="relative overflow-clip rounded-xl shadow-lg">
+      <div className="relative overflow-clip rounded-xl shadow-lg max-w-4xl mx-auto">
         <Image
           src={images[currentIndex]}
           alt={`${environmentName} - 圖片 ${currentIndex + 1}`}
-          width={1920}
-          height={1080}
-          className="w-full aspect-video object-cover"
+          width={800}
+          height={450}
+          className="w-full max-w-4xl mx-auto aspect-video object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement
             target.src = '/placeholder-image.jpg'
@@ -352,7 +352,7 @@ const DynamicEnvironment = () => {
 
                 {/* 特色功能 */}
                 {environment.features && environment.features.length > 0 && (
-                  <FadeIn delay={0.3} className="bg-white rounded-xl p-8 shadow-lg">
+                  <FadeIn delay={0.3} className="bg-white rounded-xl max-w-4xl mx-auto p-8 shadow-lg">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       {environment.features.map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center">
@@ -371,7 +371,7 @@ const DynamicEnvironment = () => {
         </div>
 
         {/* 底部總結 */}
-        <FadeIn className="bg-primary-600 rounded-2xl p-8 text-center text-white mt-20">
+        <FadeIn className="bg-primary-600 rounded-2xl max-w-4xl mx-auto p-8 text-center text-white mt-16 mb-16">
           <h3 className="text-3xl font-bold mb-4">專業認證的犬舍環境</h3>
           <p className="text-xl mb-6">
             我們致力於為每隻蘇格蘭㹴提供最優質的生活環境，從專業訓練到舒適住宿，每個細節都體現我們的專業與用心

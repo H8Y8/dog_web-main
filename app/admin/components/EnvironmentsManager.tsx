@@ -71,9 +71,9 @@ function EnvironmentsListWithActions({
             <p className="text-gray-600">還沒有新增任何環境設施</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {environments.map((environment) => (
-              <div key={environment.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div key={environment.id} className="border border-gray-200 rounded-lg p-3 md:p-4 hover:shadow-md transition-shadow">
                 {/* 環境設施照片 */}
                 <div className="mb-4">
                   {(() => {
@@ -171,9 +171,10 @@ function EnvironmentsListWithActions({
 
 interface EnvironmentsManagerProps {
   initialView?: View
+  selectedId?: string
 }
 
-export default function EnvironmentsManager({ initialView = 'list' }: EnvironmentsManagerProps) {
+export default function EnvironmentsManager({ initialView = 'list', selectedId }: EnvironmentsManagerProps) {
   // 統一使用一個 useEnvironments hook 實例
   const { 
     environments, 
@@ -191,6 +192,21 @@ export default function EnvironmentsManager({ initialView = 'list' }: Environmen
   const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
+
+  // 當有 selectedId 時，尋找對應的環境設施並顯示詳細頁面
+  React.useEffect(() => {
+    if (selectedId && environments.length > 0 && !loading) {
+      // 提取真實的 ID（移除可能的前綴）
+      const actualId = selectedId.replace(/^(environment-|environments-)/, '')
+      const environment = environments.find(e => e.id === actualId)
+      if (environment) {
+        setSelectedEnvironment(environment)
+        setCurrentView('detail')
+      } else {
+        console.warn('Environment not found with ID:', actualId)
+      }
+    }
+  }, [selectedId, environments, loading])
 
   // 處理查看詳情
   const handleViewDetail = (environment: Environment) => {
@@ -263,9 +279,9 @@ export default function EnvironmentsManager({ initialView = 'list' }: Environmen
       case 'list':
         return (
           <>
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">環境設施管理</h1>
-              <Button onClick={() => setCurrentView('create')}>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4 md:mb-6">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">環境設施管理</h1>
+              <Button onClick={() => setCurrentView('create')} size="sm" className="sm:size-default self-start sm:self-auto">
                 新增環境設施
               </Button>
             </div>

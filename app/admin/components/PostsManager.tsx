@@ -10,14 +10,17 @@ import { supabase } from '../../../lib/supabase'
 interface PostsManagerProps {
   user: any
   session: any
-  initialView?: 'list' | 'create' | 'edit'
+  initialView?: 'list' | 'create' | 'edit' | 'detail'
+  selectedId?: string
+  onEditViewActivated?: () => void
 }
 
-export default function PostsManager({ user, session, initialView = 'list' }: PostsManagerProps) {
+export default function PostsManager({ user, session, initialView = 'list', selectedId, onEditViewActivated }: PostsManagerProps) {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [currentView, setCurrentView] = useState<'list' | 'create' | 'edit'>(initialView)
+  const [currentView, setCurrentView] = useState<'list' | 'create' | 'edit' | 'detail'>(initialView)
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
   const [editingPost, setEditingPost] = useState<Post | null>(null)
   const [pagination, setPagination] = useState({
     page: 1,
@@ -25,6 +28,47 @@ export default function PostsManager({ user, session, initialView = 'list' }: Po
     total: 0,
     totalPages: 0
   })
+
+  // 當有 selectedId 時，尋找對應的文章並進入編輯頁面
+  useEffect(() => {
+    if (selectedId && posts.length > 0 && !loading) {
+      console.log('Searching for post with selectedId:', selectedId)
+      console.log('Available posts:', posts.map(p => ({ id: p.id, title: p.title })))
+      
+      // 嘗試不同的 ID 匹配策略
+      let post = null
+      
+      // 1. 直接匹配完整 ID
+      post = posts.find(p => p.id === selectedId)
+      if (post) {
+        console.log('Found post with direct match:', post.title)
+      } else {
+        // 2. 移除可能的前綴
+        const actualId = selectedId.replace(/^(post-|posts-)/, '')
+        post = posts.find(p => p.id === actualId)
+        if (post) {
+          console.log('Found post after removing prefix:', post.title)
+        } else {
+          // 3. 檢查是否 ID 包含在 selectedId 中
+          post = posts.find(p => selectedId.includes(p.id))
+          if (post) {
+            console.log('Found post with partial match:', post.title)
+          }
+        }
+      }
+      
+      if (post) {
+        setEditingPost(post)
+        setCurrentView('edit')
+        console.log('Entering edit mode for post:', post.title)
+        // 通知主頁面已經處理了 selectedId
+        onEditViewActivated?.()
+      } else {
+        console.warn('Post not found with any matching strategy. selectedId:', selectedId)
+        console.warn('Available post IDs:', posts.map(p => p.id))
+      }
+    }
+  }, [selectedId, posts, loading])
 
   // 獲取文章列表
   const fetchPosts = async (page: number = 1) => {
@@ -155,11 +199,12 @@ export default function PostsManager({ user, session, initialView = 'list' }: Po
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">文章管理</h2>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900">文章管理</h2>
         <Button
           onClick={handleCreate}
-          className="bg-blue-600 hover:bg-blue-700 text-white"
+          className="bg-blue-600 hover:bg-blue-700 text-white self-start sm:self-auto"
+          size="sm"
         >
           新增文章
         </Button>
@@ -221,7 +266,8 @@ function PostsList({ posts, loading, pagination, onEdit, onDelete, onTogglePubli
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
-      <div className="overflow-x-auto">
+      {/* 桌面版表格 */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -270,34 +316,136 @@ function PostsList({ posts, loading, pagination, onEdit, onDelete, onTogglePubli
                   {new Date(post.updated_at).toLocaleDateString('zh-TW')}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button
-                    onClick={() => onTogglePublish(post.id, post.published)}
-                    className={cn(
-                      "mr-2",
-                      post.published 
-                        ? "text-yellow-600 hover:text-yellow-900" 
-                        : "text-green-600 hover:text-green-900"
-                    )}
-                  >
-                    {post.published ? '取消發布' : '發布'}
-                  </button>
-                  <button
-                    onClick={() => onEdit(post)}
-                    className="text-blue-600 hover:text-blue-900 mr-2"
-                  >
-                    編輯
-                  </button>
-                  <button
-                    onClick={() => onDelete(post.id)}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    刪除
-                  </button>
+                  <div className="flex items-center justify-end space-x-2">
+                    <button
+                      onClick={() => onTogglePublish(post.id, post.published)}
+                      className={cn(
+                        "inline-flex items-center px-3 py-1.5 border text-xs font-medium rounded-md transition-colors duration-200",
+                        post.published 
+                          ? "border-yellow-300 text-yellow-700 bg-yellow-50 hover:bg-yellow-100 hover:border-yellow-400" 
+                          : "border-green-300 text-green-700 bg-green-50 hover:bg-green-100 hover:border-green-400"
+                      )}
+                    >
+                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {post.published ? (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 16.5m6.878-6.622L21 3m-10.5 10.5l7.5 7.5" />
+                        ) : (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        )}
+                      </svg>
+                      {post.published ? '取消發布' : '發布'}
+                    </button>
+                    
+                    <button
+                      onClick={() => onEdit(post)}
+                      className="inline-flex items-center px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 hover:border-blue-400 transition-colors duration-200"
+                    >
+                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      編輯
+                    </button>
+                    
+                    <button
+                      onClick={() => onDelete(post.id)}
+                      className="inline-flex items-center px-3 py-1.5 border border-red-300 text-xs font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 hover:border-red-400 transition-colors duration-200"
+                    >
+                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      刪除
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* 手機版卡片式佈局 */}
+      <div className="md:hidden divide-y divide-gray-200">
+        {posts.map((post) => (
+          <div key={post.id} className="p-4 hover:bg-gray-50">
+            {/* 標題和狀態 */}
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-medium text-gray-900 truncate">{post.title}</h3>
+                {post.excerpt && (
+                  <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                )}
+              </div>
+              <div className="ml-3 flex-shrink-0">
+                <span className={cn(
+                  'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
+                  post.published 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-yellow-100 text-yellow-800'
+                )}>
+                  {post.published ? '已發布' : '草稿'}
+                </span>
+              </div>
+            </div>
+
+            {/* 時間資訊 */}
+            <div className="flex items-center text-xs text-gray-500 mb-3 space-x-4">
+              <div>
+                <span className="font-medium">建立：</span>
+                {new Date(post.created_at).toLocaleDateString('zh-TW')}
+              </div>
+              <div>
+                <span className="font-medium">更新：</span>
+                {new Date(post.updated_at).toLocaleDateString('zh-TW')}
+              </div>
+            </div>
+
+            {/* 操作按鈕 */}
+            <div className="flex flex-col space-y-2">
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => onTogglePublish(post.id, post.published)}
+                  className={cn(
+                    "flex-1 inline-flex items-center justify-center px-3 py-2 border text-xs font-medium rounded-md transition-colors duration-200",
+                    post.published 
+                      ? "border-yellow-300 text-yellow-700 bg-yellow-50 hover:bg-yellow-100 hover:border-yellow-400" 
+                      : "border-green-300 text-green-700 bg-green-50 hover:bg-green-100 hover:border-green-400"
+                  )}
+                >
+                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {post.published ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 16.5m6.878-6.622L21 3m-10.5 10.5l7.5 7.5" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    )}
+                  </svg>
+                  {post.published ? '取消發布' : '發布'}
+                </button>
+                
+                <button
+                  onClick={() => onEdit(post)}
+                  className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-blue-300 text-xs font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 hover:border-blue-400 transition-colors duration-200"
+                >
+                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  編輯
+                </button>
+              </div>
+              
+              <button
+                onClick={() => onDelete(post.id)}
+                className="w-full inline-flex items-center justify-center px-3 py-2 border border-red-300 text-xs font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 hover:border-red-400 transition-colors duration-200"
+              >
+                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                刪除
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {pagination.totalPages > 1 && (
