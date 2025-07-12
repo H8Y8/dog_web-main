@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { FadeUp } from './MotionWrapper'
 
 const Environment = () => {
   // 環境區域配置
@@ -45,32 +46,37 @@ const Environment = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 頁面標題 */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">
-            專業犬舍環境介紹
-          </h2>
-          <p className="text-xl text-earth-700 mb-8" data-aos="fade-up" data-aos-delay="100">
-            為蘇格蘭㹴提供最專業、最舒適的生活與訓練環境
-          </p>
-          <div className="w-20 h-1 bg-primary-600 mx-auto" data-aos="fade-up" data-aos-delay="200"></div>
+          <FadeUp>
+            <h2 className="text-4xl font-bold text-earth-900 mb-4">
+              專業犬舍環境介紹
+            </h2>
+          </FadeUp>
+          <FadeUp delay={0.1}>
+            <p className="text-xl text-earth-700 mb-8">
+              為蘇格蘭㹴提供最專業、最舒適的生活與訓練環境
+            </p>
+          </FadeUp>
+          <FadeUp delay={0.2}>
+            <div className="w-20 h-1 bg-primary-600 mx-auto"></div>
+          </FadeUp>
         </div>
 
         {/* 環境區域展示 */}
         {environmentAreas.map((area, index) => (
           <div key={area.id} className={`mb-20 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
             {/* 區域標題和描述 */}
-            <div className="text-center mb-12" data-aos="fade-up">
+            <FadeUp className="text-center mb-12">
               <h3 className="text-3xl font-bold text-earth-900 mb-4">{area.title}</h3>
               <p className="text-lg text-earth-700 max-w-3xl mx-auto">{area.description}</p>
-            </div>
+            </FadeUp>
 
             {/* 圖片展示 */}
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               {area.images.map((image, imgIndex) => (
-                <div 
+                <FadeUp 
                   key={imgIndex}
+                  delay={imgIndex * 0.1}
                   className="relative group overflow-hidden rounded-xl shadow-lg"
-                  data-aos="fade-up"
-                  data-aos-delay={imgIndex * 100}
                 >
                   <Image
                     src={image.src}
@@ -84,12 +90,12 @@ const Environment = () => {
                       <p className="font-semibold">{image.alt}</p>
                     </div>
                   </div>
-                </div>
+                </FadeUp>
               ))}
             </div>
 
             {/* 特色功能 */}
-            <div className="bg-white rounded-xl p-8 shadow-lg" data-aos="fade-up" data-aos-delay="300">
+            <FadeUp delay={0.3} className="bg-white rounded-xl p-8 shadow-lg">
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {area.features.map((feature, featureIndex) => (
@@ -101,12 +107,12 @@ const Environment = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </FadeUp>
           </div>
         ))}
 
         {/* 底部總結 */}
-        <div className="bg-primary-600 rounded-2xl p-8 text-center text-white" data-aos="fade-up">
+        <FadeUp className="bg-primary-600 rounded-2xl p-8 text-center text-white">
           <h3 className="text-3xl font-bold mb-4">專業認證的犬舍環境</h3>
           <p className="text-xl mb-6">
             我們致力於為每隻蘇格蘭㹴提供最優質的生活環境，從專業訓練到舒適住宿，每個細節都體現我們的專業與用心
@@ -129,7 +135,7 @@ const Environment = () => {
               <div className="text-primary-100">專業服務</div>
             </div>
           </div>
-        </div>
+        </FadeUp>
       </div>
     </section>
   )

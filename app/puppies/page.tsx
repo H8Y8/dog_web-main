@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { Puppy, PuppyStatus, PuppyBreed } from '../../lib/types/puppy'
 import { cn } from '../../lib/ui/utils'
+import { FadeIn, FadeUp } from '../components/MotionWrapper'
 
 export default function PuppiesPage() {
   const [puppies, setPuppies] = useState<Puppy[]>([])
@@ -132,13 +133,13 @@ export default function PuppiesPage() {
   return (
     <div className="min-h-screen bg-earth-50">
       {/* 背景裝飾 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-clip pointer-events-none">
         <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-earth-200/20 to-earth-300/20 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-earth-200/20 to-earth-300/20 rounded-full blur-3xl transform translate-x-1/2 translate-y-1/2"></div>
       </div>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-32 pb-20 overflow-clip">
         <div className="absolute inset-0 bg-gradient-to-r from-earth-200/5 to-earth-300/5"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="max-w-4xl mx-auto">
@@ -255,15 +256,20 @@ export default function PuppiesPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
                 {puppies.map((puppy, index) => (
-                  <PuppyCard 
-                    key={puppy.id} 
-                    puppy={puppy} 
-                    index={index}
-                    calculateAge={calculateAge}
-                    formatPrice={formatPrice}
-                    getStatusDisplay={getStatusDisplay}
-                    getBreedDisplay={getBreedDisplay}
-                  />
+                  <FadeIn 
+                    key={puppy.id}
+                    delay={index * 0.1}
+                    duration={0.6}
+                  >
+                    <PuppyCard 
+                      puppy={puppy} 
+                      index={index}
+                      calculateAge={calculateAge}
+                      formatPrice={formatPrice}
+                      getStatusDisplay={getStatusDisplay}
+                      getBreedDisplay={getBreedDisplay}
+                    />
+                  </FadeIn>
                 ))}
               </div>
 
@@ -322,11 +328,11 @@ function PuppyCard({
   return (
     <Link href={`/puppies/${puppy.id}`}>
       <div 
-        className="group bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-amber-100/50 transform hover:scale-105 cursor-pointer"
+        className="group bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 card-motion border border-amber-100/50 transform hover:scale-105 cursor-pointer"
         style={{ animationDelay: `${index * 100}ms` }}
       >
         {/* 圖片區域 */}
-        <div className="relative aspect-square overflow-hidden">
+        <div className="relative aspect-square overflow-clip">
           {/* 優先顯示主要照片 (cover_image)，然後才是相簿照片 */}
           {puppy.cover_image ? (
             <img

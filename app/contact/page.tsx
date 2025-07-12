@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { FadeIn, FadeUp } from '../components/MotionWrapper'
 
 export default function ContactPage() {
   return (
@@ -55,10 +56,7 @@ export default function ContactPage() {
 
           <div className="max-w-6xl mx-auto">
             <div className="relative overflow-hidden rounded-2xl shadow-xl">
-              <div 
-                className="grid md:grid-cols-2 gap-8 items-center bg-white contact-card"
-                data-aos="fade-up"
-              >
+              <FadeUp className="grid md:grid-cols-2 gap-8 items-center bg-white contact-card">
                 {/* 左側圖片 */}
                 <div className="relative h-full bg-earth-100" style={{ minHeight: '400px' }}>
                   <img
@@ -139,14 +137,14 @@ export default function ContactPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </FadeUp>
             </div>
           </div>
 
           {/* 底部裝飾元素 */}
-          <div className="mt-16 text-center text-earth-600" data-aos="fade-up">
+          <FadeIn className="mt-16 text-center text-earth-600">
             <p>歡迎來電詢問，我們將為您提供最專業的服務</p>
-          </div>
+          </FadeIn>
         </div>
       </section>
     </div>

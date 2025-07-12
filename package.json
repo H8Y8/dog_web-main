@@ -18,9 +18,9 @@
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.50.3",
     "@tailwindcss/forms": "^0.5.7",
-    "aos": "^2.3.4",
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.3",
     "next": "14.0.0",
     "puppeteer": "^24.12.1",
     "react": "^18.2.0",
@@ -29,7 +29,6 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
-    "@types/aos": "^3.0.7",
     "@types/node": "^20",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",

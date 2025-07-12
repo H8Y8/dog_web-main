@@ -9,6 +9,7 @@ import {
   ENVIRONMENT_TYPE_COLORS,
   ENVIRONMENT_TYPE_ICONS
 } from '../../lib/types/environment'
+import { FadeIn, FadeUp } from './MotionWrapper'
 
 // Carousel 組件
 interface CarouselProps {
@@ -48,7 +49,7 @@ function ImageCarousel({ images, environmentName }: CarouselProps) {
   return (
     <div className="relative group">
       {/* 主圖 */}
-      <div className="relative overflow-hidden rounded-xl shadow-lg">
+      <div className="relative overflow-clip rounded-xl shadow-lg">
         <Image
           src={images[currentIndex]}
           alt={`${environmentName} - 圖片 ${currentIndex + 1}`}
@@ -296,7 +297,7 @@ const DynamicEnvironment = () => {
         </section>
 
         {/* 類型篩選 */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12" data-aos="fade-up" data-aos-delay="300">
+        <FadeIn delay={0.3} className="flex flex-wrap justify-center gap-4 mb-12">
           <button
             onClick={() => setSelectedType('all')}
             className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
@@ -321,7 +322,7 @@ const DynamicEnvironment = () => {
               <span>{ENVIRONMENT_TYPE_LABELS[type]}</span>
             </button>
           ))}
-        </div>
+        </FadeIn>
 
         {/* 環境區域展示 */}
         <div className="space-y-20">
@@ -331,7 +332,7 @@ const DynamicEnvironment = () => {
             return (
               <div key={environment.id} className={`${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
                 {/* 區域標題和描述 */}
-                <div className="text-center mb-12" data-aos="fade-up">
+                <FadeIn className="text-center mb-12">
                   <div className="flex items-center justify-center mb-4">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mr-3 ${ENVIRONMENT_TYPE_COLORS[environment.type]}`}>
                       <span className="mr-1">{ENVIRONMENT_TYPE_ICONS[environment.type]}</span>
@@ -342,16 +343,16 @@ const DynamicEnvironment = () => {
                   {environment.description && (
                     <p className="text-lg text-earth-700 max-w-3xl mx-auto">{environment.description}</p>
                   )}
-                </div>
+                </FadeIn>
 
                 {/* 圖片輪播 */}
-                <div className="mb-8" data-aos="fade-up" data-aos-delay="100">
+                <FadeIn delay={0.1} className="mb-8">
                   <ImageCarousel images={allImages} environmentName={environment.name} />
-                </div>
+                </FadeIn>
 
                 {/* 特色功能 */}
                 {environment.features && environment.features.length > 0 && (
-                  <div className="bg-white rounded-xl p-8 shadow-lg" data-aos="fade-up" data-aos-delay="300">
+                  <FadeIn delay={0.3} className="bg-white rounded-xl p-8 shadow-lg">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       {environment.features.map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center">
@@ -362,7 +363,7 @@ const DynamicEnvironment = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </FadeIn>
                 )}
               </div>
             )
@@ -370,7 +371,7 @@ const DynamicEnvironment = () => {
         </div>
 
         {/* 底部總結 */}
-        <div className="bg-primary-600 rounded-2xl p-8 text-center text-white mt-20" data-aos="fade-up">
+        <FadeIn className="bg-primary-600 rounded-2xl p-8 text-center text-white mt-20">
           <h3 className="text-3xl font-bold mb-4">專業認證的犬舍環境</h3>
           <p className="text-xl mb-6">
             我們致力於為每隻蘇格蘭㹴提供最優質的生活環境，從專業訓練到舒適住宿，每個細節都體現我們的專業與用心
@@ -393,7 +394,7 @@ const DynamicEnvironment = () => {
               <div className="text-primary-100">專業服務</div>
             </div>
           </div>
-        </div>
+        </FadeIn>
       </div>
     </section>
   )

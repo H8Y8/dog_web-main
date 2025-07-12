@@ -1,6 +1,7 @@
 import React from 'react'
 import HeroSlider from './components/HeroSlider'
 import ScrollText from './components/ScrollText'
+import { FadeIn, FadeLeft, FadeRight } from './components/MotionWrapper'
 
 export default function HomePage() {
   return (
@@ -9,51 +10,43 @@ export default function HomePage() {
       <div className="relative min-h-screen bg-gradient-to-b from-primary-50 to-earth-50 flex items-center justify-center">
         <HeroSlider />
         <div className="text-center">
-          <h1 
-            className="text-4xl md:text-6xl font-bold text-white mb-4"
-            data-aos="fade-down"
-            data-aos-delay="100"
-          >
+          <FadeIn delay={0.1} className="text-4xl md:text-6xl font-bold text-white mb-4">
             雷歐犬舍訓練工作室
-          </h1>
-          <h2 
-            className="text-2xl md:text-3xl text-white mb-8"
-            data-aos="fade-up"
-            data-aos-delay="200"
-          >
+          </FadeIn>
+          <FadeIn delay={0.2} className="text-2xl md:text-3xl text-white mb-8">
             Scottish Terrier Kennel
-          </h2>
-          <p 
-            className="text-lg text-white max-w-2xl mx-auto"
-            data-aos="fade-up"
-            data-aos-delay="300"
-          >
+          </FadeIn>
+          <FadeIn delay={0.3} className="text-lg text-white max-w-2xl mx-auto">
             專業的蘇格蘭㹴犬舍，提供優質的蘇格蘭㹴幼犬、專業飼養建議、健康認證及完整的犬隻訓練服務。
-          </p>
+          </FadeIn>
         </div>
       </div>
       
       {/* About Section - 完整內容 */}
-      <section className="py-16 bg-earth-50" data-aos="fade-up">
+      <section className="py-16 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">關於我們</h2>
-            <p className="text-xl text-earth-700 mb-8" data-aos="fade-up" data-aos-delay="100">
-              蘇格蘭㹴專業犬舍
-            </p>
+            <FadeIn>
+              <h2 className="text-4xl font-bold text-earth-900 mb-4">關於我們</h2>
+            </FadeIn>
+            <FadeIn delay={0.1}>
+              <p className="text-xl text-earth-700 mb-8">
+                蘇格蘭㹴專業犬舍
+              </p>
+            </FadeIn>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-            <div className="relative" data-aos="fade-right">
+            <FadeRight className="relative">
               <img
                 src="/images/about-us/about-scottie.jpg"
                 alt="蘇格蘭㹴"
                 className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-earth-900/20 to-transparent rounded-lg"></div>
-            </div>
+            </FadeRight>
 
-            <div className="space-y-4" data-aos="fade-left">
+            <FadeLeft className="space-y-4">
               <p className="text-lg text-earth-800 leading-relaxed">
                 我們是一個專注於蘇格蘭㹴繁育的專業犬舍，擁有超過十年的育種經驗。結合傳統工藝與現代科技，致力於培育優質的蘇格蘭㹴幼犬。
               </p>
@@ -84,12 +77,12 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </FadeLeft>
           </div>
 
           {/* 專業訓練師介紹區塊 */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-4" data-aos="fade-right">
+            <FadeRight className="space-y-4">
               <h3 className="text-3xl font-bold text-earth-900 mb-4">專業訓練團隊</h3>
               <p className="text-lg text-earth-800 leading-relaxed mb-6">
                 我們的訓練師團隊擁有豐富的蘇格蘭㹴培育經驗，專注於培養每一隻幼犬的優良特質。透過科學化的訓練方法，我們致力於發展狗狗的天賦潛能。
@@ -119,16 +112,16 @@ export default function HomePage() {
                   </ul>
                 </div>
               </div>
-            </div>
+            </FadeRight>
 
-            <div className="relative" data-aos="fade-left">
+            <FadeLeft className="relative">
               <img
                 src="/images/about-us/trainer-scottie.jpg"
                 alt="專業訓練師"
                 className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-earth-900/20 to-transparent rounded-lg"></div>
-            </div>
+            </FadeLeft>
           </div>
         </div>
       </section>
@@ -137,27 +130,28 @@ export default function HomePage() {
       <ScrollText />
       
       {/* Contact Section - 完整內容 */}
-      <section className="py-20 bg-earth-50" data-aos="fade-up">
+      <section className="py-20 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="flex justify-center mb-4" data-aos="fade-up">
+            <FadeIn className="flex justify-center mb-4">
               <img 
                 src="/images/contact-icon.png" 
                 alt="聯絡我們" 
                 className="w-48 h-48"
               />
-            </div>
-            <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">聯絡我們</h2>
-            <p className="text-xl text-earth-700" data-aos="fade-up" data-aos-delay="100">
-              歡迎與我們聯繫，了解更多關於蘇格蘭㹴的資訊
-            </p>
+            </FadeIn>
+            <FadeIn>
+              <h2 className="text-4xl font-bold text-earth-900 mb-4">聯絡我們</h2>
+            </FadeIn>
+            <FadeIn delay={0.1}>
+              <p className="text-xl text-earth-700">
+                歡迎與我們聯繫，了解更多關於蘇格蘭㹴的資訊
+              </p>
+            </FadeIn>
           </div>
 
           <div className="max-w-6xl mx-auto">
-            <div 
-              className="grid md:grid-cols-2 gap-8 items-center bg-white rounded-2xl shadow-xl overflow-hidden"
-              data-aos="fade-up"
-            >
+            <FadeIn className="grid md:grid-cols-2 gap-8 items-center bg-white rounded-2xl shadow-xl card-motion">
               {/* 左側圖片 */}
               <div className="relative h-full min-h-[400px] bg-earth-100">
                 <img
@@ -238,13 +232,13 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </FadeIn>
           </div>
 
           {/* 底部裝飾元素 */}
-          <div className="mt-16 text-center text-earth-600" data-aos="fade-up">
+          <FadeIn className="mt-16 text-center text-earth-600">
             <p>歡迎來電詢問，我們將為您提供最專業的服務</p>
-          </div>
+          </FadeIn>
         </div>
       </section>
     </div>

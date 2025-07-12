@@ -5,6 +5,7 @@ import Head from 'next/head'
 import { useMembers } from '../../lib/hooks/useMembers'
 import { MemberRole, ROLE_LABELS } from '../../lib/types'
 import DogMemberCard from '@/app/components/DogMemberCard'
+import { FadeUp, FadeLeft, FadeRight } from '../components/MotionWrapper'
 
 export default function AboutPage() {
   const [, setActiveId] = useState<number | null>(null);
@@ -109,16 +110,16 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-                      <div className="relative" data-aos="fade-right">
+            <FadeRight className="relative">
             <img
               src="/images/about-us/about-scottie.jpg"
               alt="蘇格蘭㹴"
               className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-earth-900/20 to-transparent rounded-lg"></div>
-          </div>
+            </FadeRight>
 
-            <div className="space-y-4" data-aos="fade-left">
+            <FadeLeft className="space-y-4">
               <p className="text-lg text-earth-800 leading-relaxed">
                 我們是一個專注於蘇格蘭㹴繁育的專業犬舍，擁有超過十年的育種經驗。結合傳統工藝與現代科技，致力於培育優質的蘇格蘭㹴幼犬。
               </p>
@@ -149,12 +150,12 @@ export default function AboutPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </FadeLeft>
           </div>
 
           {/* 專業訓練師介紹區塊 */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-4" data-aos="fade-right">
+            <FadeRight className="space-y-4">
               <h3 className="text-3xl font-bold text-earth-900 mb-4">專業訓練團隊</h3>
               <p className="text-lg text-earth-800 leading-relaxed mb-6">
                 我們的訓練師團隊擁有豐富的蘇格蘭㹴培育經驗，專注於培養每一隻幼犬的優良特質。透過科學化的訓練方法，我們致力於發展狗狗的天賦潛能。
@@ -184,16 +185,16 @@ export default function AboutPage() {
                   </ul>
                 </div>
               </div>
-            </div>
+            </FadeRight>
 
-                      <div className="relative" data-aos="fade-left">
+            <FadeLeft className="relative">
             <img
               src="/images/about-us/trainer-scottie.jpg"
               alt="專業訓練師"
               className="rounded-lg shadow-xl w-full h-80 md:h-96 lg:h-[500px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-earth-900/20 to-transparent rounded-lg"></div>
-          </div>
+            </FadeLeft>
           </div>
         </div>
       </section>
@@ -202,24 +203,25 @@ export default function AboutPage() {
       <section className="py-20 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-earth-900 mb-6" data-aos="fade-up">基因檢測證書</h2>
-            <div className="max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+            <FadeUp>
+              <h2 className="text-4xl font-bold text-earth-900 mb-6">基因檢測證書</h2>
+            </FadeUp>
+            <FadeUp delay={0.1} className="max-w-3xl mx-auto">
               <p className="text-lg text-earth-700 mb-4 leading-relaxed">
                 我們堅信健康的基因是培育優秀蘇格蘭㹴的基石。
               </p>
               <p className="text-lg text-earth-700 leading-relaxed">
                 這些嚴謹的基因檢測流程不僅確保了我們犬隻的遺傳優勢，也為後續的繁殖計畫提供了科學依據。所有檢測結果均以正式證書形式出具，讓每位選擇我們犬舍的家庭都能安心享受專業、透明且值得信賴的服務。
               </p>
-            </div>
+            </FadeUp>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {certificates.map((cert) => (
-              <div
+              <FadeUp
                 key={cert.id}
+                delay={cert.id * 0.1}
                 className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
-                data-aos="fade-up"
-                data-aos-delay={cert.id * 100}
               >
                 <div className="relative h-40">
                   <img
@@ -244,15 +246,15 @@ export default function AboutPage() {
                     ))}
                   </ul>
                 </div>
-              </div>
+              </FadeUp>
             ))}
           </div>
 
-          <div className="mt-16 text-center" data-aos="fade-up">
+          <FadeUp className="mt-16 text-center">
             <p className="text-earth-600 italic">
               * 所有證書都可供查驗，確保完全透明的育種過程
             </p>
-          </div>
+          </FadeUp>
         </div>
       </section>
       
@@ -260,13 +262,17 @@ export default function AboutPage() {
       <section className="py-20 bg-earth-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-earth-900 mb-4" data-aos="fade-up">成員介紹</h2>
-            <p className="text-xl text-earth-700 mb-8" data-aos="fade-up" data-aos-delay="100">
-              認識我們可愛的蘇格蘭㹴家族
-            </p>
+            <FadeUp>
+              <h2 className="text-4xl font-bold text-earth-900 mb-4">成員介紹</h2>
+            </FadeUp>
+            <FadeUp delay={0.1}>
+              <p className="text-xl text-earth-700 mb-8">
+                認識我們可愛的蘇格蘭㹴家族
+              </p>
+            </FadeUp>
             
             {/* 角色篩選標籤 */}
-            <div className="flex flex-wrap justify-center gap-3 mb-8" data-aos="fade-up" data-aos-delay="200">
+            <FadeUp delay={0.2} className="flex flex-wrap justify-center gap-3 mb-8">
               {roleOptions.map((option) => (
                 <button
                   key={option.value}
@@ -280,7 +286,7 @@ export default function AboutPage() {
                   {option.label}
                 </button>
               ))}
-            </div>
+            </FadeUp>
           </div>
           
           {/* 載入狀態 */}
@@ -328,17 +334,16 @@ export default function AboutPage() {
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                   {filteredMembers.map((member, index) => (
-                    <div
+                    <FadeUp
                       key={member.id}
-                      data-aos="fade-up"
-                      data-aos-delay={index * 200}
+                      delay={index * 0.2}
                     >
                       <DogMemberCard
                         member={member}
                         onMouseEnter={() => setActiveId(parseInt(member.id))}
                         onMouseLeave={() => setActiveId(null)}
                       />
-                    </div>
+                    </FadeUp>
                   ))}
                 </div>
               )}

@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import './globals.css'
 import ConditionalNavbar from './components/ConditionalNavbar'
 import ConditionalFooter from './components/ConditionalFooter'
-import AOSInit from './components/AOSInit'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://scottish-terrier-kennel.com'),
@@ -54,7 +53,6 @@ export default function RootLayout({
         <meta name="theme-color" content="#e8b744" />
       </head>
       <body className="antialiased bg-earth-50">
-        <AOSInit />
         <div className="min-h-screen flex flex-col bg-earth-50 w-full">
           {/* Conditional Navigation Bar */}
           <ConditionalNavbar />
